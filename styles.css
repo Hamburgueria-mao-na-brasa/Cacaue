@@ -101,6 +101,14 @@ img {
   background: linear-gradient(140deg, var(--brown), #6b4b32);
 }
 
+.brand-logo-img {
+  display: block;
+  width: min(156px, 38vw);
+  height: 46px;
+  object-fit: contain;
+  object-position: left center;
+}
+
 .desktop-nav {
   display: flex;
   align-items: center;
@@ -289,6 +297,16 @@ img {
   z-index: 1;
   width: min(660px, 100%);
   padding-bottom: 3vh;
+}
+
+.hero-logo-img {
+  display: block;
+  width: min(360px, 78vw);
+  max-height: 118px;
+  margin-bottom: 18px;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.18));
 }
 
 h1,
@@ -1244,6 +1262,13 @@ body.admin-panel-open {
   object-fit: cover;
   border-radius: var(--radius);
   background: rgba(232, 211, 163, 0.18);
+}
+
+.admin-image-preview.logo-preview img {
+  aspect-ratio: 4 / 3;
+  padding: 10px;
+  object-fit: contain;
+  background: var(--white);
 }
 
 .admin-image-preview span,

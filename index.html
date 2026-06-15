@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -6,12 +6,12 @@
     <meta name="theme-color" content="#fffaf0" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Cacauê" />
+    <meta name="apple-mobile-web-app-title" content="CacauÃª" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/icon-192.png" />
-    <title>Cacauê | Vitrine Digital Premium</title>
+    <title>CacauÃª | Vitrine Digital Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -19,33 +19,33 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="#home" aria-label="Cacauê">
-        <span class="brand-mark">C</span>
-        <span>Cacauê</span>
+      <a class="brand" href="#home" aria-label="CacauÃª">
+        <img class="brand-logo-img" src="assets/logo-cacaue.svg" alt="Cacaue" />
       </a>
-      <nav class="desktop-nav" aria-label="Navegação principal">
-        <a href="#cardapio">Cardápio</a>
+      <nav class="desktop-nav" aria-label="NavegaÃ§Ã£o principal">
+        <a href="#cardapio">CardÃ¡pio</a>
         <a href="#contato">Contato</a>
         <button class="admin-open-button" type="button" data-open-admin>Admin</button>
       </nav>
       <div class="top-actions">
         <button class="admin-top-button" type="button" aria-label="Abrir admin" data-open-admin>Admin</button>
-        <button class="icon-button" id="favoriteButton" type="button" aria-label="Ver favoritos" title="Favoritos">♡ <span id="favoriteCount">0</span></button>
+        <button class="icon-button" id="favoriteButton" type="button" aria-label="Ver favoritos" title="Favoritos">â™¡ <span id="favoriteCount">0</span></button>
         <button class="bag-button" id="bagButton" type="button" aria-label="Abrir sacola">Sacola <span id="bagCount">0</span></button>
       </div>
     </header>
 
     <main id="home">
       <section class="hero menu-cover">
-        <img class="hero-image" src="assets/hero-cacaue.png" alt="Vitrine premium da Cacauê com bolos e doces finos" />
+        <img class="hero-image" src="assets/hero-cacaue.png" alt="Vitrine premium da CacauÃª com bolos e doces finos" />
         <div class="hero-overlay"></div>
         <div class="hero-content">
-          <span class="eyebrow">Cardápio online</span>
-          <h1>Cacauê</h1>
-          <p>Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.</p>
+          <img class="hero-logo-img" src="assets/logo-cacaue.svg" alt="Cacaue" />
+          <span class="eyebrow">CardÃ¡pio online</span>
+          <h1>CacauÃª</h1>
+          <p>Bolos, doces, sobremesas, kits e presenteÃ¡veis feitos com carinho em Mineiros - GO.</p>
           <div class="store-info">
-            <span>Seg a sáb: 08h às 18h</span>
-            <span>Domingo: 09h às 15h</span>
+            <span>Seg a sÃ¡b: 08h Ã s 18h</span>
+            <span>Domingo: 09h Ã s 15h</span>
             <span>Retirada ou entrega</span>
           </div>
         </div>
@@ -54,7 +54,7 @@
       <section class="section care-section page-extra">
         <div class="section-heading">
           <span class="eyebrow">Feito com carinho</span>
-          <h2>Detalhes que fazem a experiência ser lembrada.</h2>
+          <h2>Detalhes que fazem a experiÃªncia ser lembrada.</h2>
         </div>
         <div class="value-grid" id="careGrid"></div>
       </section>
@@ -62,7 +62,7 @@
       <section class="section campaign-band page-extra" id="eventos">
         <div class="section-heading">
           <span class="eyebrow">Campanhas e eventos</span>
-          <h2>Novidades da vitrine Cacauê.</h2>
+          <h2>Novidades da vitrine CacauÃª.</h2>
         </div>
         <div class="campaign-grid" id="campaignGrid"></div>
       </section>
@@ -70,8 +70,8 @@
       <section class="section" id="cardapio">
         <div class="section-heading menu-heading">
           <div>
-            <span class="eyebrow">Escolha e peça</span>
-            <h2>Cardápio</h2>
+            <span class="eyebrow">Escolha e peÃ§a</span>
+            <h2>CardÃ¡pio</h2>
           </div>
           <button class="text-button" id="showFavoritesOnly" type="button">Ver favoritos</button>
         </div>
@@ -80,7 +80,7 @@
             <div class="category-tabs" id="categoryTabs"></div>
             <div class="menu-note page-extra">
               <span>Retirada e entrega</span>
-              <p>Produtos esgotados continuam no cardápio para você conhecer tudo que a Cacauê prepara.</p>
+              <p>Produtos esgotados continuam no cardÃ¡pio para vocÃª conhecer tudo que a CacauÃª prepara.</p>
             </div>
           </aside>
           <div>
@@ -89,7 +89,7 @@
                 <strong id="menuTitle">Todos os produtos</strong>
                 <span id="menuCount">0 itens</span>
               </div>
-              <button class="secondary-button compact" id="showAllProducts" type="button">Cardápio completo</button>
+              <button class="secondary-button compact" id="showAllProducts" type="button">CardÃ¡pio completo</button>
             </div>
             <div class="menu-grid" id="menuProducts"></div>
           </div>
@@ -107,19 +107,19 @@
       <section class="section reviews-section page-extra">
         <div class="section-heading with-action">
           <div>
-            <span class="eyebrow">Avaliações dos clientes</span>
-            <h2>Comentários aprovados pela Cacauê.</h2>
+            <span class="eyebrow">AvaliaÃ§Ãµes dos clientes</span>
+            <h2>ComentÃ¡rios aprovados pela CacauÃª.</h2>
           </div>
-          <button class="secondary-button compact" id="reviewButton" type="button">Enviar avaliação</button>
+          <button class="secondary-button compact" id="reviewButton" type="button">Enviar avaliaÃ§Ã£o</button>
         </div>
         <div class="review-grid" id="reviewGrid"></div>
       </section>
 
-      <section class="gallery-section page-extra" id="galeria" aria-label="Galeria Cacauê">
-        <img src="assets/products/fatia-belga.png" alt="Fatia belga Cacauê" />
-        <img src="assets/products/torta-pistache.png" alt="Torta de pistache Cacauê" />
-        <img src="assets/products/doces-finos.png" alt="Doces finos Cacauê" />
-        <img src="assets/products/bolo-red.png" alt="Bolo red velvet Cacauê" />
+      <section class="gallery-section page-extra" id="galeria" aria-label="Galeria CacauÃª">
+        <img src="assets/products/fatia-belga.png" alt="Fatia belga CacauÃª" />
+        <img src="assets/products/torta-pistache.png" alt="Torta de pistache CacauÃª" />
+        <img src="assets/products/doces-finos.png" alt="Doces finos CacauÃª" />
+        <img src="assets/products/bolo-red.png" alt="Bolo red velvet CacauÃª" />
       </section>
 
       <section class="section contact-section" id="contato">
@@ -131,14 +131,14 @@
           <a href="https://wa.me/5564992538620" target="_blank" rel="noreferrer">(64) 99253-8620</a>
           <a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
           <span>Mineiros - GO</span>
-          <span>Seg a sáb 08h às 18h / Dom 09h às 15h</span>
+          <span>Seg a sÃ¡b 08h Ã s 18h / Dom 09h Ã s 15h</span>
         </div>
       </section>
 
       <section class="admin-shell hidden" id="admin" aria-hidden="true" role="dialog" aria-modal="true">
         <aside class="admin-sidebar">
           <span class="eyebrow">Painel administrativo</span>
-          <h2>Gestão simples da Cacauê.</h2>
+          <h2>GestÃ£o simples da CacauÃª.</h2>
           <button class="close-admin-button" id="closeAdminButton" type="button">Fechar admin</button>
           <div class="role-pill" id="adminRole">Acesso restrito</div>
           <form class="admin-login" id="adminLoginForm" autocomplete="off">
@@ -147,7 +147,7 @@
             <label for="adminPassword">Senha</label>
             <input id="adminPassword" type="password" placeholder="Digite sua senha" autocomplete="new-password" value="" required />
             <button class="primary-button full" type="submit">Entrar no admin</button>
-            <p id="adminLoginMessage">Use um e-mail autorizado para liberar a gestão.</p>
+            <p id="adminLoginMessage">Use um e-mail autorizado para liberar a gestÃ£o.</p>
           </form>
           <button class="secondary-button compact hidden" id="adminLogoutButton" type="button">Sair do admin</button>
           <p class="admin-sync-message" id="adminSyncMessage">Entre no admin para salvar as alteracoes no servidor.</p>
@@ -157,7 +157,7 @@
             <a href="#admin-products" data-admin-tab="products">Editar produtos</a>
             <a href="#admin-orders" data-admin-tab="orders">Pedidos recebidos</a>
             <a href="#admin-campaigns" data-admin-tab="campaigns">Campanhas</a>
-            <a href="#admin-settings">Configurações</a>
+            <a href="#admin-settings">ConfiguraÃ§Ãµes</a>
           </nav>
         </aside>
         <div class="admin-content hidden" id="adminContent">
@@ -178,7 +178,7 @@
             </article>
             <article id="admin-product-add" data-admin-tab="product-add">
               <span class="admin-section-label">Cardapio</span>
-              <h3>Produtos do cardápio</h3>
+              <h3>Produtos do cardÃ¡pio</h3>
               <p class="admin-helper">Preencha os dados do doce e clique em salvar. Se nao tiver preco definido, use 0 para aparecer como consultar.</p>
               <form id="productForm" class="admin-product-form">
                 <input type="hidden" id="productId" />
@@ -190,8 +190,8 @@
                 <select id="productCategory" required></select>
                 <label for="productPrice">Preco e pedido minimo</label>
                 <small>Preco 0 mostra "Consultar". Pedido minimo e a menor quantidade aceita.</small>
-                <input id="productPrice" type="number" min="0" step="0.01" placeholder="Preço (0 = consultar)" required />
-                <input id="productMinimum" type="number" min="1" step="1" placeholder="Pedido mínimo" required />
+                <input id="productPrice" type="number" min="0" step="0.01" placeholder="PreÃ§o (0 = consultar)" required />
+                <input id="productMinimum" type="number" min="1" step="1" placeholder="Pedido mÃ­nimo" required />
                 <label for="productImage">Imagem</label>
                 <small>Voce pode colar o caminho da imagem ou escolher uma foto direto do telefone.</small>
                 <input id="productImage" placeholder="Imagem" value="assets/products/doces-finos.png" />
@@ -217,9 +217,9 @@
                 </select>
                 <label for="productShort">Descricao curta e completa</label>
                 <small>A curta aparece no cardapio. A completa aparece quando o cliente abre o produto.</small>
-                <textarea id="productShort" placeholder="Descrição curta" required></textarea>
-                <textarea id="productDescription" placeholder="Descrição completa" required></textarea>
-                <label class="admin-check"><input id="productAvailable" type="checkbox" checked /> Disponível</label>
+                <textarea id="productShort" placeholder="DescriÃ§Ã£o curta" required></textarea>
+                <textarea id="productDescription" placeholder="DescriÃ§Ã£o completa" required></textarea>
+                <label class="admin-check"><input id="productAvailable" type="checkbox" checked /> DisponÃ­vel</label>
                 <label class="admin-check"><input id="productMadeToOrder" type="checkbox" checked /> Sob encomenda</label>
                 <div class="admin-status-box">
                   <strong>Status na vitrine</strong>
@@ -230,7 +230,7 @@
                 <input id="productTags" placeholder="Favorito, Destaque, Novidade" />
                 <div class="admin-form-actions">
                   <button class="primary-button compact" type="submit">Salvar produto</button>
-                  <button class="secondary-button compact" id="cancelProductEdit" type="button">Cancelar edição</button>
+                  <button class="secondary-button compact" id="cancelProductEdit" type="button">Cancelar ediÃ§Ã£o</button>
                 </div>
               </form>
             </article>
@@ -252,7 +252,7 @@
               <form id="campaignForm" class="admin-product-form">
                 <label for="campaignTitle">Nome da campanha</label>
                 <small>Exemplo: Festival de Fatias, Dia dos Namorados, Kit Especial.</small>
-                <input name="title" placeholder="Título da campanha" required />
+                <input name="title" placeholder="TÃ­tulo da campanha" required />
                 <label for="campaignDescription">Descricao da campanha</label>
                 <small>Explique o que o cliente vai encontrar nessa campanha.</small>
                 <textarea id="campaignDescription" name="description" placeholder="Descricao que aparece no site" required></textarea>
@@ -273,7 +273,7 @@
               <div id="adminCampaigns"></div>
             </article>
             <article>
-              <h3>Avaliações pendentes</h3>
+              <h3>AvaliaÃ§Ãµes pendentes</h3>
               <div id="pendingReviews"></div>
             </article>
             <article>
@@ -283,7 +283,7 @@
             </article>
             <article id="admin-settings" data-admin-tab="settings">
               <span class="admin-section-label">Loja</span>
-              <h3>Configurações da loja</h3>
+              <h3>ConfiguraÃ§Ãµes da loja</h3>
               <p class="admin-helper">Altere aqui os dados que aparecem na area de contato e no topo do site.</p>
               <form id="storeSettingsForm" class="admin-product-form">
                 <label for="storeWhatsapp">WhatsApp</label>
@@ -312,13 +312,21 @@
                   <img src="assets/hero-cacaue.png" alt="Previa da capa" />
                   <span>Previa da capa</span>
                 </div>
+                <label for="storeLogoImage">Logo da marca</label>
+                <small>Escolha a logo que aparece no topo e na capa do site.</small>
+                <input id="storeLogoImage" name="logoImage" placeholder="assets/logo-cacaue.svg" />
+                <input id="storeLogoImageFile" type="file" accept="image/*" />
+                <div class="admin-image-preview logo-preview" id="storeLogoImagePreview">
+                  <img src="assets/logo-cacaue.svg" alt="Previa da logo" />
+                  <span>Previa da logo</span>
+                </div>
                 <button class="primary-button compact" type="submit">Salvar dados da loja</button>
               </form>
               <div class="admin-setting-list" id="storeSettingsPreview">
                 <div><span>WhatsApp</span><strong>(64) 99253-8620</strong></div>
                 <div><span>Cidade</span><strong>Mineiros - GO</strong></div>
-                <div><span>Funcionamento</span><strong>Seg a sáb 08h às 18h / Dom 09h às 15h</strong></div>
-                <div><span>Pedidos</span><strong>50% na confirmação e restante na retirada</strong></div>
+                <div><span>Funcionamento</span><strong>Seg a sÃ¡b 08h Ã s 18h / Dom 09h Ã s 15h</strong></div>
+                <div><span>Pedidos</span><strong>50% na confirmaÃ§Ã£o e restante na retirada</strong></div>
               </div>
             </article>
           </div>
@@ -328,7 +336,7 @@
 
     <div class="modal" id="productModal" aria-hidden="true">
       <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <button class="close-button" type="button" data-close-modal aria-label="Fechar">×</button>
+        <button class="close-button" type="button" data-close-modal aria-label="Fechar">Ã—</button>
         <div class="product-detail" id="productDetail"></div>
       </div>
     </div>
@@ -350,12 +358,12 @@
           <span class="eyebrow">Sacola</span>
           <h2>Seu pedido</h2>
         </div>
-        <button class="close-button" type="button" id="closeBag" aria-label="Fechar sacola">×</button>
+        <button class="close-button" type="button" id="closeBag" aria-label="Fechar sacola">Ã—</button>
       </div>
       <div class="drawer-body">
         <div id="bagItems"></div>
         <div class="customer-form">
-          <h3>Cadastro rápido</h3>
+          <h3>Cadastro rÃ¡pido</h3>
           <input id="customerName" placeholder="Nome completo" />
           <input id="customerWhatsapp" placeholder="WhatsApp" />
           <input id="customerEmail" placeholder="E-mail opcional" />
@@ -370,11 +378,11 @@
             <input id="pickupTime" type="time" />
           </div>
           <div id="deliveryFields" class="field-grid hidden">
-            <input placeholder="Endereço" />
-            <input placeholder="Número" />
+            <input placeholder="EndereÃ§o" />
+            <input placeholder="NÃºmero" />
             <input placeholder="Complemento" />
             <input placeholder="Bairro" />
-            <input placeholder="Referência" />
+            <input placeholder="ReferÃªncia" />
           </div>
         </div>
         <div class="totals" id="totals"></div>
@@ -385,23 +393,23 @@
 
     <div class="modal" id="reviewModal" aria-hidden="true">
       <div class="modal-panel small" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
-        <button class="close-button" type="button" data-close-review aria-label="Fechar">×</button>
-        <h2 id="reviewTitle">Enviar avaliação</h2>
+        <button class="close-button" type="button" data-close-review aria-label="Fechar">Ã—</button>
+        <h2 id="reviewTitle">Enviar avaliaÃ§Ã£o</h2>
         <form id="reviewForm" class="review-form">
           <input name="name" placeholder="Seu nome" required />
-          <textarea name="message" placeholder="Conte como foi sua experiência" required></textarea>
-          <button class="primary-button full" type="submit">Enviar para aprovação</button>
+          <textarea name="message" placeholder="Conte como foi sua experiÃªncia" required></textarea>
+          <button class="primary-button full" type="submit">Enviar para aprovaÃ§Ã£o</button>
         </form>
       </div>
     </div>
 
-    <div class="install-app hidden" id="installAppPrompt" role="dialog" aria-live="polite" aria-label="Salvar app Cacauê">
+    <div class="install-app hidden" id="installAppPrompt" role="dialog" aria-live="polite" aria-label="Salvar app CacauÃª">
       <div>
-        <strong>Salvar Cacauê no celular</strong>
-        <span id="installAppText">Acesse a vitrine mais rápido pela tela inicial.</span>
+        <strong>Salvar CacauÃª no celular</strong>
+        <span id="installAppText">Acesse a vitrine mais rÃ¡pido pela tela inicial.</span>
       </div>
       <div class="install-app-actions">
-        <button class="secondary-button compact" id="dismissInstallApp" type="button">Agora não</button>
+        <button class="secondary-button compact" id="dismissInstallApp" type="button">Agora nÃ£o</button>
         <button class="primary-button compact" id="installAppButton" type="button">Salvar app</button>
       </div>
     </div>
@@ -409,3 +417,6 @@
     <script src="app.js"></script>
   </body>
 </html>
+
+
+

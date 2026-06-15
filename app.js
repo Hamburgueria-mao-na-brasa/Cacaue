@@ -750,6 +750,7 @@ let storeSettings = JSON.parse(localStorage.getItem("cacaue:storeSettings") || "
   heroTitle: "Cacaue",
   heroText: "Bolos, doces, sobremesas, kits e presenteaveis feitos com carinho em Mineiros - GO.",
   heroImage: "assets/hero-cacaue.png",
+  logoImage: "assets/logo-cacaue.svg",
 };
 
 const orderCategories = [
@@ -1016,6 +1017,9 @@ async function saveStoreSettingsToSupabase() {
   try {
     if (storeSettings.heroImage?.startsWith("data:")) {
       storeSettings.heroImage = await uploadDataUrlToSupabase(storeSettings.heroImage, "store", "hero");
+    }
+    if (storeSettings.logoImage?.startsWith("data:")) {
+      storeSettings.logoImage = await uploadDataUrlToSupabase(storeSettings.logoImage, "store", "logo");
     }
     await supabaseJson("/store_settings?on_conflict=id", {
       method: "POST",
@@ -1286,6 +1290,13 @@ function updateStoreHeroPreview(src = "") {
   image.src = src || "assets/hero-cacaue.png";
 }
 
+function updateStoreLogoPreview(src = "") {
+  const preview = $("#storeLogoImagePreview");
+  if (!preview) return;
+  const image = preview.querySelector("img");
+  image.src = src || "assets/logo-cacaue.svg";
+}
+
 function productFromForm() {
   const name = $("#productName").value.trim();
   const existingId = $("#productId").value.trim();
@@ -1476,10 +1487,14 @@ function renderStoreSettings() {
   if (storeInfoItems[1]) storeInfoItems[1].textContent = storeSettings.sundayHours;
 
   const heroImage = $(".menu-cover .hero-image");
+  const brandLogo = $(".brand-logo-img");
+  const heroLogo = $(".hero-logo-img");
   const heroEyebrow = $(".menu-cover .eyebrow");
   const heroTitle = $(".menu-cover h1");
   const heroText = $(".menu-cover p");
   if (heroImage) heroImage.src = storeSettings.heroImage || "assets/hero-cacaue.png";
+  if (brandLogo) brandLogo.src = storeSettings.logoImage || "assets/logo-cacaue.svg";
+  if (heroLogo) heroLogo.src = storeSettings.logoImage || "assets/logo-cacaue.svg";
   if (heroEyebrow) heroEyebrow.textContent = storeSettings.heroEyebrow || "Cardapio online";
   if (heroTitle) heroTitle.textContent = storeSettings.heroTitle || "Cacaue";
   if (heroText) heroText.textContent = storeSettings.heroText || "Bolos, doces, sobremesas, kits e presenteaveis feitos com carinho em Mineiros - GO.";
@@ -1495,7 +1510,9 @@ function renderStoreSettings() {
     $("#storeHeroTitle").value = storeSettings.heroTitle || "";
     $("#storeHeroText").value = storeSettings.heroText || "";
     $("#storeHeroImage").value = storeSettings.heroImage || "assets/hero-cacaue.png";
+    $("#storeLogoImage").value = storeSettings.logoImage || "assets/logo-cacaue.svg";
     updateStoreHeroPreview(storeSettings.heroImage || "assets/hero-cacaue.png");
+    updateStoreLogoPreview(storeSettings.logoImage || "assets/logo-cacaue.svg");
   }
 
   if ($("#storeSettingsPreview")) {
@@ -1506,6 +1523,7 @@ function renderStoreSettings() {
       ["Funcionamento", `${storeSettings.weekHours} / ${storeSettings.sundayHours}`],
       ["Pedidos", storeSettings.orderRule],
       ["Capa", storeSettings.heroTitle || "Cacaue"],
+      ["Logo", storeSettings.logoImage ? "Configurada" : "Padrao"],
     ]
       .map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`)
       .join("");
@@ -2021,6 +2039,13 @@ function bindEvents() {
     const [file] = event.target.files;
     await applyImageFileToInput(file, "#storeHeroImage", updateStoreHeroPreview, { maxWidth: 1600, maxHeight: 1100 });
   });
+  $("#storeLogoImage").addEventListener("input", (event) => {
+    updateStoreLogoPreview(event.target.value);
+  });
+  $("#storeLogoImageFile").addEventListener("change", async (event) => {
+    const [file] = event.target.files;
+    await applyImageFileToInput(file, "#storeLogoImage", updateStoreLogoPreview, { maxWidth: 1200, maxHeight: 500 });
+  });
   $("#storeSettingsForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -2035,6 +2060,7 @@ function bindEvents() {
       heroTitle: formData.get("heroTitle") || "Cacaue",
       heroText: formData.get("heroText") || "Bolos, doces, sobremesas, kits e presenteaveis feitos com carinho em Mineiros - GO.",
       heroImage: formData.get("heroImage") || "assets/hero-cacaue.png",
+      logoImage: formData.get("logoImage") || "assets/logo-cacaue.svg",
     };
     persistStoreSettings();
     renderStoreSettings();

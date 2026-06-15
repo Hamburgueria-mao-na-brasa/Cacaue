@@ -1,4 +1,4 @@
-const CACHE_NAME = "cacaue-vitrine-v4";
+const CACHE_NAME = "cacaue-vitrine-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const APP_SHELL = [
   "./app.js",
   "./manifest.webmanifest",
   "./assets/app-icon.svg",
+  "./assets/logo-cacaue.svg",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./assets/maskable-512.png",

@@ -161,7 +161,8 @@ values (
     "heroEyebrow": "Cardapio online",
     "heroTitle": "Cacaue",
     "heroText": "Bolos, doces, sobremesas, kits e presenteaveis feitos com carinho em Mineiros - GO.",
-    "heroImage": "assets/hero-cacaue.png"
+    "heroImage": "assets/hero-cacaue.png",
+    "logoImage": "assets/logo-cacaue.svg"
   }'::jsonb
 )
 on conflict (id) do nothing;
