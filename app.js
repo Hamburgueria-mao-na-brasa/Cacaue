@@ -1452,6 +1452,12 @@ function whatsappLinkFromText(value) {
   return digits ? `https://wa.me/55${digits.replace(/^55/, "")}` : "https://wa.me/";
 }
 
+function whatsappOrderLink(message) {
+  const digits = String(storeSettings.whatsapp || "").replace(/\D/g, "").replace(/^55/, "");
+  const phone = digits ? `55${digits}` : "5564992538620";
+  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+}
+
 function renderStoreSettings() {
   const contactItems = document.querySelectorAll(".contact-grid a, .contact-grid span");
   if (contactItems[0]) {
@@ -1770,10 +1776,42 @@ async function checkout() {
   const summary = bag
     .map((item) => {
       const product = products.find((entry) => entry.id === item.id);
-      return `${item.quantity}x ${product.name}`;
+      return `${item.quantity}x ${product?.name || item.id} - ${money.format((product?.price || 0) * item.quantity)}`;
     })
-    .join(", ");
+    .join("\n");
   const subtotal = bagSubtotal();
+  const delivery = fulfillmentMode === "entrega" && subtotal > 0 ? 12 : 0;
+  const total = subtotal + delivery;
+  const fulfillmentText =
+    fulfillmentMode === "entrega"
+      ? [
+          "Entrega",
+          `Endereco: ${document.querySelector("#deliveryFields input:nth-child(1)")?.value || "nao informado"}`,
+          `Numero: ${document.querySelector("#deliveryFields input:nth-child(2)")?.value || "nao informado"}`,
+          `Complemento: ${document.querySelector("#deliveryFields input:nth-child(3)")?.value || "-"}`,
+          `Bairro: ${document.querySelector("#deliveryFields input:nth-child(4)")?.value || "nao informado"}`,
+          `Referencia: ${document.querySelector("#deliveryFields input:nth-child(5)")?.value || "-"}`,
+        ].join("\n")
+      : [`Retirada`, `Data: ${$("#pickupDate").value || "a combinar"}`, `Horario: ${$("#pickupTime").value || "a combinar"}`].join("\n");
+  const whatsappMessage = [
+    `Ola, Cacaue! Quero finalizar meu pedido ${protocol}.`,
+    "",
+    `Cliente: ${customer.name}`,
+    `WhatsApp: ${customer.whatsapp}`,
+    customer.email ? `E-mail: ${customer.email}` : "",
+    "",
+    "Itens:",
+    summary,
+    "",
+    fulfillmentText,
+    "",
+    `Subtotal: ${money.format(subtotal)}`,
+    `Entrega: ${money.format(delivery)}`,
+    `Total: ${money.format(total)}`,
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+  const whatsappUrl = whatsappOrderLink(whatsappMessage);
 
   try {
     await supabaseJson("/orders", {
@@ -1793,8 +1831,8 @@ async function checkout() {
             };
           }),
           subtotal,
-          delivery_fee: 0,
-          total: subtotal,
+          delivery_fee: delivery,
+          total,
           status: "novo",
         },
       ]),
@@ -1809,7 +1847,8 @@ async function checkout() {
   renderCounts();
   renderAdmin();
   $("#thanksBox").classList.remove("hidden");
-  $("#thanksBox").textContent = `Pedido ${protocol} salvo. Mensagem para WhatsApp gerada: ${summary}.`;
+  $("#thanksBox").innerHTML = `Pedido ${protocol} salvo. <a href="${whatsappUrl}" target="_blank" rel="noreferrer">Enviar mensagem para a loja</a>`;
+  window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 }
 
 function bindEvents() {
