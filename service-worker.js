@@ -1,4 +1,4 @@
-const CACHE_NAME = "cacaue-vitrine-v1";
+const CACHE_NAME = "cacaue-vitrine-v2";
 const APP_SHELL = [
   "./",
   "./index.html",

@@ -131,10 +131,20 @@ values (
     "city": "Mineiros - GO",
     "weekHours": "Seg a sab 08h as 18h",
     "sundayHours": "Domingo 09h as 15h",
-    "orderRule": "50% na confirmacao e restante na retirada"
+    "orderRule": "50% na confirmacao e restante na retirada",
+    "heroEyebrow": "Cardapio online",
+    "heroTitle": "Cacaue",
+    "heroText": "Bolos, doces, sobremesas, kits e presenteaveis feitos com carinho em Mineiros - GO.",
+    "heroImage": "assets/hero-cacaue.png"
   }'::jsonb
 )
 on conflict (id) do nothing;
+
+grant usage on schema public to anon, authenticated;
+grant select on public.products, public.campaigns, public.store_settings to anon, authenticated;
+grant insert on public.orders to anon, authenticated;
+grant select, insert, update, delete on public.products, public.campaigns, public.store_settings to authenticated;
+grant select on public.orders to authenticated;
 
 insert into storage.buckets (id, name, public)
 values ('cacaue-images', 'cacaue-images', true)

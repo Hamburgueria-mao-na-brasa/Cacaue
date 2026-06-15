@@ -149,9 +149,11 @@
             <p id="adminLoginMessage">Use um e-mail autorizado para liberar a gestão.</p>
           </form>
           <button class="secondary-button compact hidden" id="adminLogoutButton" type="button">Sair do admin</button>
+          <p class="admin-sync-message" id="adminSyncMessage">Entre no admin para salvar as alteracoes no servidor.</p>
           <nav class="admin-menu" aria-label="Menu administrativo">
             <a href="#admin-summary" data-admin-tab="summary">Resumo</a>
-            <a href="#admin-products" data-admin-tab="products">Cadastrar produto</a>
+            <a href="#admin-product-add" data-admin-tab="product-add">Adicionar produto</a>
+            <a href="#admin-products" data-admin-tab="products">Editar produtos</a>
             <a href="#admin-orders" data-admin-tab="orders">Pedidos recebidos</a>
             <a href="#admin-campaigns" data-admin-tab="campaigns">Campanhas</a>
             <a href="#admin-settings">Configurações</a>
@@ -164,7 +166,7 @@
               <h3>Controle rapido da loja</h3>
               <p>Veja os pedidos, cadastre produtos e confira o que aparece no cardapio.</p>
             </div>
-            <button class="primary-button compact" type="button" data-admin-tab="products">Adicionar produto</button>
+            <button class="primary-button compact" type="button" data-admin-tab="product-add">Adicionar produto</button>
           </div>
           <div class="metric-grid" id="metricGrid"></div>
           <div class="admin-panels">
@@ -173,7 +175,7 @@
               <h3>Pedidos recebidos hoje</h3>
               <div id="orderList"></div>
             </article>
-            <article id="admin-products" data-admin-tab="products">
+            <article id="admin-product-add" data-admin-tab="product-add">
               <span class="admin-section-label">Cardapio</span>
               <h3>Produtos do cardápio</h3>
               <p class="admin-helper">Preencha os dados do doce e clique em salvar. Se nao tiver preco definido, use 0 para aparecer como consultar.</p>
@@ -230,6 +232,11 @@
                   <button class="secondary-button compact" id="cancelProductEdit" type="button">Cancelar edição</button>
                 </div>
               </form>
+            </article>
+            <article id="admin-products" data-admin-tab="products">
+              <span class="admin-section-label">Editar</span>
+              <h3>Editar produtos cadastrados</h3>
+              <p class="admin-helper">Escolha uma categoria, toque em editar e altere foto, preco, descricao, disponibilidade e selos.</p>
               <div class="admin-filter-row">
                 <select id="adminCategoryFilter" aria-label="Filtrar produtos por categoria"></select>
                 <span id="adminProductCount"></span>
@@ -293,6 +300,17 @@
                 <label for="storeOrderRule">Regra de pedidos</label>
                 <small>Exemplo: 50% na confirmacao e restante na retirada.</small>
                 <textarea id="storeOrderRule" name="orderRule" placeholder="Regra de pagamento ou retirada" required></textarea>
+                <label for="storeHeroTitle">Capa do site</label>
+                <small>Edite a chamada principal, frase e foto que aparecem no topo da vitrine.</small>
+                <input id="storeHeroEyebrow" name="heroEyebrow" placeholder="Cardapio online" />
+                <input id="storeHeroTitle" name="heroTitle" placeholder="Cacaue" />
+                <textarea id="storeHeroText" name="heroText" placeholder="Frase da capa"></textarea>
+                <input id="storeHeroImage" name="heroImage" placeholder="assets/hero-cacaue.png" />
+                <input id="storeHeroImageFile" type="file" accept="image/*" />
+                <div class="admin-image-preview" id="storeHeroImagePreview">
+                  <img src="assets/hero-cacaue.png" alt="Previa da capa" />
+                  <span>Previa da capa</span>
+                </div>
                 <button class="primary-button compact" type="submit">Salvar dados da loja</button>
               </form>
               <div class="admin-setting-list" id="storeSettingsPreview">

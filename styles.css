@@ -1129,6 +1129,28 @@ body.admin-panel-open {
   line-height: 1.5;
 }
 
+.admin-sync-message {
+  margin: 0;
+  padding: 10px 12px;
+  color: var(--muted);
+  background: rgba(255, 254, 251, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.admin-sync-message[data-type="success"] {
+  color: #285943;
+  background: rgba(219, 246, 232, 0.82);
+}
+
+.admin-sync-message[data-type="warning"],
+.admin-sync-message[data-type="error"] {
+  color: #6d3b20;
+  background: rgba(255, 238, 214, 0.88);
+}
+
 .metric-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-bottom: 18px;

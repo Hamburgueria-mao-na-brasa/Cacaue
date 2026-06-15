@@ -747,6 +747,10 @@ let storeSettings = JSON.parse(localStorage.getItem("cacaue:storeSettings") || "
   weekHours: "Seg a sab 08h as 18h",
   sundayHours: "Domingo 09h as 15h",
   orderRule: "50% na confirmacao e restante na retirada",
+  heroEyebrow: "Cardapio online",
+  heroTitle: "Cacaue",
+  heroText: "Bolos, doces, sobremesas, kits e presenteaveis feitos com carinho em Mineiros - GO.",
+  heroImage: "assets/hero-cacaue.png",
 };
 
 const orderCategories = [
@@ -803,6 +807,13 @@ function persistCampaigns() {
 
 function persistStoreSettings() {
   localStorage.setItem("cacaue:storeSettings", JSON.stringify(storeSettings));
+}
+
+function setAdminSyncMessage(message, type = "info") {
+  const target = $("#adminSyncMessage");
+  if (!target) return;
+  target.textContent = message;
+  target.dataset.type = type;
 }
 
 function supabaseHeaders(useSession = false) {
@@ -906,7 +917,7 @@ async function loadRemoteData() {
       localStorage.setItem("cacaue:campaigns", JSON.stringify(campaigns));
     }
     if (remoteSettings?.[0]) {
-      storeSettings = remoteSettings[0].settings;
+      storeSettings = { ...storeSettings, ...remoteSettings[0].settings };
       localStorage.setItem("cacaue:storeSettings", JSON.stringify(storeSettings));
     }
 
@@ -914,13 +925,18 @@ async function loadRemoteData() {
     renderCampaigns();
     renderProducts();
     renderAdminAccess();
+    setAdminSyncMessage("Dados carregados do servidor.", "success");
   } catch (error) {
     console.warn("Supabase ainda nao carregou dados remotos.", error);
+    setAdminSyncMessage("Sem conexao com o servidor agora. As alteracoes podem ficar apenas neste telefone.", "warning");
   }
 }
 
 async function saveProductsToSupabase() {
-  if (!adminSession?.access_token) return;
+  if (!adminSession?.access_token) {
+    setAdminSyncMessage("Produto salvo apenas neste telefone. Entre no admin com Supabase para salvar no servidor.", "warning");
+    return false;
+  }
   try {
     const rows = [];
     for (const [index, product] of products.entries()) {
@@ -934,13 +950,21 @@ async function saveProductsToSupabase() {
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
       body: JSON.stringify(rows),
     });
+    persistProducts();
+    setAdminSyncMessage("Produtos salvos no servidor. Outros telefones vao carregar essa alteracao.", "success");
+    return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar produtos no Supabase.", error);
+    setAdminSyncMessage("Nao consegui salvar produtos no servidor. Confira login, SQL e permissoes do Supabase.", "error");
+    return false;
   }
 }
 
 async function saveCampaignsToSupabase() {
-  if (!adminSession?.access_token) return;
+  if (!adminSession?.access_token) {
+    setAdminSyncMessage("Campanha salva apenas neste telefone. Entre no admin com Supabase para salvar no servidor.", "warning");
+    return false;
+  }
   try {
     const rows = [];
     for (const [index, campaign] of campaigns.entries()) {
@@ -955,22 +979,38 @@ async function saveCampaignsToSupabase() {
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
       body: JSON.stringify(rows),
     });
+    persistCampaigns();
+    setAdminSyncMessage("Campanhas salvas no servidor.", "success");
+    return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar campanhas no Supabase.", error);
+    setAdminSyncMessage("Nao consegui salvar campanhas no servidor. Confira login, SQL e permissoes do Supabase.", "error");
+    return false;
   }
 }
 
 async function saveStoreSettingsToSupabase() {
-  if (!adminSession?.access_token) return;
+  if (!adminSession?.access_token) {
+    setAdminSyncMessage("Dados da loja salvos apenas neste telefone. Entre no admin com Supabase para salvar no servidor.", "warning");
+    return false;
+  }
   try {
+    if (storeSettings.heroImage?.startsWith("data:")) {
+      storeSettings.heroImage = await uploadDataUrlToSupabase(storeSettings.heroImage, "store", "hero");
+    }
     await supabaseJson("/store_settings?on_conflict=id", {
       method: "POST",
       useSession: true,
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
       body: JSON.stringify([{ id: "main", settings: storeSettings }]),
     });
+    persistStoreSettings();
+    setAdminSyncMessage("Dados da loja e capa salvos no servidor.", "success");
+    return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar dados da loja no Supabase.", error);
+    setAdminSyncMessage("Nao consegui salvar dados da loja no servidor. Confira login, SQL e permissoes do Supabase.", "error");
+    return false;
   }
 }
 
@@ -1007,6 +1047,10 @@ function renderAdminAccess() {
   $("#adminLoginForm").classList.toggle("hidden", authorized);
   $("#adminLogoutButton").classList.toggle("hidden", !authorized);
   $("#adminRole").textContent = authorized ? `Admin: ${adminSession.email}` : "Acesso restrito";
+  setAdminSyncMessage(
+    authorized ? "Admin conectado ao servidor. Ao salvar, outros telefones receberao as alteracoes." : "Entre no admin para salvar as alteracoes no servidor.",
+    authorized ? "success" : "info",
+  );
   if (authorized) {
     renderAdmin();
     showAdminTab(adminActiveTab);
@@ -1136,7 +1180,8 @@ function fillProductForm(product) {
   $("#productTags").value = (product.tags || []).join(", ");
   $("#productAvailable").checked = product.available;
   $("#productMadeToOrder").checked = product.madeToOrder;
-  document.querySelector("#admin-products").scrollIntoView({ behavior: "smooth", block: "start" });
+  showAdminTab("product-add");
+  document.querySelector("#admin-product-add").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function updateProductImagePreview(src = "") {
@@ -1150,6 +1195,13 @@ function updateProductImagePreview(src = "") {
 
 function updateCampaignImagePreview(src = "") {
   const preview = $("#campaignImagePreview");
+  if (!preview) return;
+  const image = preview.querySelector("img");
+  image.src = src || "assets/hero-cacaue.png";
+}
+
+function updateStoreHeroPreview(src = "") {
+  const preview = $("#storeHeroImagePreview");
   if (!preview) return;
   const image = preview.querySelector("img");
   image.src = src || "assets/hero-cacaue.png";
@@ -1180,7 +1232,7 @@ function productFromForm() {
   };
 }
 
-function saveProductFromForm() {
+async function saveProductFromForm() {
   const product = productFromForm();
   const index = products.findIndex((entry) => entry.id === product.id);
   if (index >= 0) {
@@ -1192,6 +1244,7 @@ function saveProductFromForm() {
   resetProductForm();
   renderProducts();
   renderAdmin();
+  await saveProductsToSupabase();
 }
 
 function isCampaignActive(campaign) {
@@ -1337,6 +1390,15 @@ function renderStoreSettings() {
   if (storeInfoItems[0]) storeInfoItems[0].textContent = storeSettings.weekHours;
   if (storeInfoItems[1]) storeInfoItems[1].textContent = storeSettings.sundayHours;
 
+  const heroImage = $(".menu-cover .hero-image");
+  const heroEyebrow = $(".menu-cover .eyebrow");
+  const heroTitle = $(".menu-cover h1");
+  const heroText = $(".menu-cover p");
+  if (heroImage) heroImage.src = storeSettings.heroImage || "assets/hero-cacaue.png";
+  if (heroEyebrow) heroEyebrow.textContent = storeSettings.heroEyebrow || "Cardapio online";
+  if (heroTitle) heroTitle.textContent = storeSettings.heroTitle || "Cacaue";
+  if (heroText) heroText.textContent = storeSettings.heroText || "Bolos, doces, sobremesas, kits e presenteaveis feitos com carinho em Mineiros - GO.";
+
   if ($("#storeSettingsForm")) {
     $("#storeWhatsapp").value = storeSettings.whatsapp;
     $("#storeInstagram").value = storeSettings.instagram;
@@ -1344,6 +1406,11 @@ function renderStoreSettings() {
     $("#storeWeekHours").value = storeSettings.weekHours;
     $("#storeSundayHours").value = storeSettings.sundayHours;
     $("#storeOrderRule").value = storeSettings.orderRule;
+    $("#storeHeroEyebrow").value = storeSettings.heroEyebrow || "";
+    $("#storeHeroTitle").value = storeSettings.heroTitle || "";
+    $("#storeHeroText").value = storeSettings.heroText || "";
+    $("#storeHeroImage").value = storeSettings.heroImage || "assets/hero-cacaue.png";
+    updateStoreHeroPreview(storeSettings.heroImage || "assets/hero-cacaue.png");
   }
 
   if ($("#storeSettingsPreview")) {
@@ -1353,6 +1420,7 @@ function renderStoreSettings() {
       ["Cidade", storeSettings.city],
       ["Funcionamento", `${storeSettings.weekHours} / ${storeSettings.sundayHours}`],
       ["Pedidos", storeSettings.orderRule],
+      ["Capa", storeSettings.heroTitle || "Cacaue"],
     ]
       .map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`)
       .join("");
@@ -1688,7 +1756,6 @@ function bindEvents() {
       event.stopPropagation();
       const product = products.find((entry) => entry.id === editProductButton.dataset.editProduct);
       if (product) {
-        showAdminTab("products");
         fillProductForm(product);
       }
       return;
@@ -1711,6 +1778,7 @@ function bindEvents() {
       const href = entry.getAttribute("href") || "";
       const tab = entry.dataset.adminTab || {
         "#admin-summary": "summary",
+        "#admin-product-add": "product-add",
         "#admin-products": "products",
         "#admin-orders": "orders",
         "#admin-campaigns": "campaigns",
@@ -1732,9 +1800,9 @@ function bindEvents() {
     loginAdminSupabase($("#adminEmail").value, $("#adminPassword").value);
   });
   $("#adminLogoutButton").addEventListener("click", logoutAdmin);
-  $("#productForm").addEventListener("submit", (event) => {
+  $("#productForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-    saveProductFromForm();
+    await saveProductFromForm();
   });
   $("#cancelProductEdit").addEventListener("click", resetProductForm);
   $("#productImage").addEventListener("input", (event) => {
@@ -1809,7 +1877,7 @@ function bindEvents() {
     $("#reviewModal").classList.remove("open");
     renderAdmin();
   });
-  $("#campaignForm").addEventListener("submit", (event) => {
+  $("#campaignForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     campaigns.push({
@@ -1825,6 +1893,7 @@ function bindEvents() {
     updateCampaignImagePreview("assets/hero-cacaue.png");
     renderCampaigns();
     renderAdmin();
+    await saveCampaignsToSupabase();
   });
   $("#campaignImage").addEventListener("input", (event) => {
     updateCampaignImagePreview(event.target.value);
@@ -1839,7 +1908,20 @@ function bindEvents() {
     });
     reader.readAsDataURL(file);
   });
-  $("#storeSettingsForm").addEventListener("submit", (event) => {
+  $("#storeHeroImage").addEventListener("input", (event) => {
+    updateStoreHeroPreview(event.target.value);
+  });
+  $("#storeHeroImageFile").addEventListener("change", (event) => {
+    const [file] = event.target.files;
+    if (!file) return;
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      $("#storeHeroImage").value = reader.result;
+      updateStoreHeroPreview(reader.result);
+    });
+    reader.readAsDataURL(file);
+  });
+  $("#storeSettingsForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     storeSettings = {
@@ -1849,8 +1931,14 @@ function bindEvents() {
       weekHours: formData.get("weekHours"),
       sundayHours: formData.get("sundayHours"),
       orderRule: formData.get("orderRule"),
+      heroEyebrow: formData.get("heroEyebrow") || "Cardapio online",
+      heroTitle: formData.get("heroTitle") || "Cacaue",
+      heroText: formData.get("heroText") || "Bolos, doces, sobremesas, kits e presenteaveis feitos com carinho em Mineiros - GO.",
+      heroImage: formData.get("heroImage") || "assets/hero-cacaue.png",
     };
     persistStoreSettings();
+    renderStoreSettings();
+    await saveStoreSettingsToSupabase();
     renderStoreSettings();
   });
 }
