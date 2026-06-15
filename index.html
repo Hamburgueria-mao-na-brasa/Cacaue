@@ -150,10 +150,10 @@
           </form>
           <button class="secondary-button compact hidden" id="adminLogoutButton" type="button">Sair do admin</button>
           <nav class="admin-menu" aria-label="Menu administrativo">
-            <a href="#admin-summary">Resumo</a>
-            <a href="#admin-products">Cadastrar produto</a>
-            <a href="#admin-orders">Pedidos recebidos</a>
-            <a href="#admin-campaigns">Campanhas</a>
+            <a href="#admin-summary" data-admin-tab="summary">Resumo</a>
+            <a href="#admin-products" data-admin-tab="products">Cadastrar produto</a>
+            <a href="#admin-orders" data-admin-tab="orders">Pedidos recebidos</a>
+            <a href="#admin-campaigns" data-admin-tab="campaigns">Campanhas</a>
             <a href="#admin-settings">Configurações</a>
           </nav>
         </aside>
@@ -164,16 +164,16 @@
               <h3>Controle rapido da loja</h3>
               <p>Veja os pedidos, cadastre produtos e confira o que aparece no cardapio.</p>
             </div>
-            <a class="primary-button compact" href="#admin-products">Adicionar produto</a>
+            <button class="primary-button compact" type="button" data-admin-tab="products">Adicionar produto</button>
           </div>
           <div class="metric-grid" id="metricGrid"></div>
           <div class="admin-panels">
-            <article id="admin-orders">
+            <article id="admin-orders" data-admin-tab="orders">
               <span class="admin-section-label">Acompanhar</span>
               <h3>Pedidos recebidos hoje</h3>
               <div id="orderList"></div>
             </article>
-            <article id="admin-products">
+            <article id="admin-products" data-admin-tab="products">
               <span class="admin-section-label">Cardapio</span>
               <h3>Produtos do cardápio</h3>
               <p class="admin-helper">Preencha os dados do doce e clique em salvar. Se nao tiver preco definido, use 0 para aparecer como consultar.</p>
@@ -197,6 +197,21 @@
                   <img src="assets/products/doces-finos.png" alt="Previa da foto do produto" />
                   <span>Previa da foto</span>
                 </div>
+                <label for="productImageFit">Como a foto aparece</label>
+                <small>Use preencher para vitrine 3x4. Use foto inteira quando nao quiser cortar nada.</small>
+                <select id="productImageFit">
+                  <option value="cover">Preencher 3x4</option>
+                  <option value="contain">Mostrar foto inteira</option>
+                </select>
+                <label for="productImagePosition">Enquadramento da foto</label>
+                <small>Escolha qual parte da foto deve ficar mais visivel.</small>
+                <select id="productImagePosition">
+                  <option value="center">Centro</option>
+                  <option value="top">Topo</option>
+                  <option value="bottom">Baixo</option>
+                  <option value="left">Esquerda</option>
+                  <option value="right">Direita</option>
+                </select>
                 <label for="productShort">Descricao curta e completa</label>
                 <small>A curta aparece no cardapio. A completa aparece quando o cliente abre o produto.</small>
                 <textarea id="productShort" placeholder="Descrição curta" required></textarea>
@@ -222,7 +237,7 @@
               <h4 class="admin-list-title">Produtos ja cadastrados</h4>
               <div class="admin-product-list" id="adminProductList"></div>
             </article>
-            <article id="admin-campaigns">
+            <article id="admin-campaigns" data-admin-tab="campaigns">
               <span class="admin-section-label">Divulgacao</span>
               <h3>Cadastrar campanha</h3>
               <p class="admin-helper">Use para divulgar festival, promocao, data comemorativa ou lancamento. A campanha so aparece enquanto estiver dentro das datas.</p>
@@ -258,7 +273,7 @@
               <h3>Clientes</h3>
               <div id="clientList"></div>
             </article>
-            <article id="admin-settings">
+            <article id="admin-settings" data-admin-tab="settings">
               <span class="admin-section-label">Loja</span>
               <h3>Configurações da loja</h3>
               <p class="admin-helper">Altere aqui os dados que aparecem na area de contato e no topo do site.</p>

@@ -223,6 +223,186 @@ let products = [
     tags: ["Canva", "Salgados"],
   },
   {
+    id: "brigadeiro-ninho-nutella",
+    name: "Brigadeiro Ninho com Nutella",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "A combinação perfeita do leite ninho com o recheio de Nutella.",
+    description: "Brigadeiro delicado com acabamento premium, leite ninho e recheio cremoso de Nutella. Ideal para eventos e mesas especiais.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Destaque", "Evento"],
+  },
+  {
+    id: "copinho-cereja",
+    name: "Copinho de Cereja",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Doce, delicado e irresistível. Um clássico que encanta sempre.",
+    description: "Copinho fino com creme delicado e finalização com cereja. Sofisticado para casamentos, aniversários e eventos.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Novidade", "Evento"],
+  },
+  {
+    id: "surpresa-uva",
+    name: "Surpresa de Uva",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Casquinha delicada com recheio suculento de uva.",
+    description: "Doce leve, refrescante e cheio de sabor, com apresentação elegante para compor mesas de doces finos.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Favorito", "Evento"],
+  },
+  {
+    id: "copinho-physales",
+    name: "Copinho Physales",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Equilíbrio perfeito entre chocolate e o azedinho do physalis.",
+    description: "Copinho sofisticado e marcante, finalizado com physalis para uma apresentação premium.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Destaque", "Premium"],
+  },
+  {
+    id: "coracao-dourado",
+    name: "Coração Dourado",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Coração meio amargo com gel intenso e ganache de Jack Daniels.",
+    description: "Doce fino em formato de coração, com chocolate meio amargo, gel intenso e ganache de Jack Daniels. Sofisticado para eventos premium.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Premium", "Evento"],
+  },
+  {
+    id: "chanfrado-cafe",
+    name: "Chanfrado de Café",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Bombom meio amargo recheado com ganache de café.",
+    description: "Bombom de chocolate meio amargo com formato chanfrado e recheio de ganache de café.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Destaque", "Café"],
+  },
+  {
+    id: "amendoas",
+    name: "Amêndoas",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Brigadeiro de doce de leite envolto em amêndoas laminadas douradas.",
+    description: "Brigadeiro de doce de leite com cobertura de amêndoas laminadas douradas, delicado e elegante para mesa de doces.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Evento", "Dourado"],
+  },
+  {
+    id: "gota-maracuja",
+    name: "Gota de Maracujá",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Gota de chocolate meio amargo com gel cítrico e ganache de maracujá.",
+    description: "Gota de chocolate meio amargo recheada com gel cítrico e ganache de maracujá. Leve, marcante e refrescante.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Novidade", "Frutado"],
+  },
+  {
+    id: "quadradinho-coco",
+    name: "Quadradinho de Coco",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Bombom meio amargo com recheio de coco cremoso.",
+    description: "Bombom de chocolate meio amargo em formato quadrado, com recheio de coco cremoso e acabamento delicado.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Evento", "Coco"],
+  },
+  {
+    id: "camafeu-nozes-premium",
+    name: "Camafeu de Nozes",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Creme de nozes envolto em chocolate branco com noz dourada.",
+    description: "Camafeu com creme de nozes, cobertura de chocolate branco e noz dourada para decorar.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Clássico", "Premium"],
+  },
+  {
+    id: "flor-sakura",
+    name: "Flor de Sakura",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Bombom meio amargo com recheio de Nutella crocante.",
+    description: "Bombom de chocolate meio amargo em formato de flor, recheado com Nutella crocante.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Novidade", "Nutella"],
+  },
+  {
+    id: "jarrinho-cereja",
+    name: "Jarrinho de Cereja",
+    image: "assets/products/doces-finos.png",
+    imageFit: "cover",
+    imagePosition: "center",
+    category: "Doces Finos",
+    price: 0,
+    short: "Jarrinho meio amargo com ganache de cereja e cereja para decorar.",
+    description: "Jarrinho de chocolate meio amargo recheado com ganache de cereja, finalizado com cereja decorativa.",
+    minimum: 20,
+    available: true,
+    madeToOrder: true,
+    tags: ["Favorito", "Cereja"],
+  },
+  {
     id: "brigadeiro-belga",
     name: "Brigadeiro Belga",
     image: "assets/products/doces-finos.png",
@@ -511,7 +691,8 @@ let adminSession = JSON.parse(localStorage.getItem("cacaue:adminSession") || "nu
 
 const savedProducts = JSON.parse(localStorage.getItem("cacaue:products") || "null");
 if (Array.isArray(savedProducts) && savedProducts.length) {
-  products = savedProducts;
+  const savedIds = new Set(savedProducts.map((product) => product.id));
+  products = [...products.filter((product) => !savedIds.has(product.id)), ...savedProducts];
 }
 
 products = products.map((product) => ({
@@ -599,6 +780,7 @@ let pendingReviews = JSON.parse(localStorage.getItem("cacaue:pendingReviews") ||
 let fulfillmentMode = "retirada";
 let selectedCategory = "Todos";
 let adminSelectedCategory = "Todos";
+let adminActiveTab = "summary";
 let deferredInstallPrompt = null;
 const menuCategories = ["Todos", "Vitrine", "Doces Finos", "Despedida de Solteiro", "Bolos", "Bolos Simples", "Kits"];
 
@@ -654,6 +836,8 @@ function productToDb(product, index = 0) {
     image: product.image,
     category: product.category,
     price: product.price,
+    image_fit: product.imageFit || "cover",
+    image_position: product.imagePosition || "center",
     short_description: product.short,
     description: product.description,
     minimum: product.minimum,
@@ -671,6 +855,8 @@ function productFromDb(row) {
     image: row.image,
     category: row.category,
     price: Number(row.price || 0),
+    imageFit: row.image_fit || "cover",
+    imagePosition: row.image_position || "center",
     short: row.short_description || "",
     description: row.description || "",
     minimum: row.minimum || 1,
@@ -823,14 +1009,33 @@ function renderAdminAccess() {
   $("#adminRole").textContent = authorized ? `Admin: ${adminSession.email}` : "Acesso restrito";
   if (authorized) {
     renderAdmin();
+    showAdminTab(adminActiveTab);
   }
 }
 
+function showAdminTab(tab) {
+  adminActiveTab = tab || "summary";
+  const isSummary = adminActiveTab === "summary";
+  $("#admin-summary")?.classList.toggle("hidden", !isSummary);
+  $("#metricGrid")?.classList.toggle("hidden", !isSummary);
+  document.querySelectorAll(".admin-panels > article").forEach((panel) => {
+    panel.classList.toggle("hidden", panel.dataset.adminTab !== adminActiveTab);
+  });
+  document.querySelectorAll(".admin-menu [data-admin-tab]").forEach((link) => {
+    const active = link.dataset.adminTab === adminActiveTab;
+    link.classList.toggle("active", active);
+    link.setAttribute("aria-current", active ? "page" : "false");
+  });
+  $("#adminContent")?.scrollTo?.({ top: 0, behavior: "smooth" });
+}
+
 function openAdminPanel() {
+  adminActiveTab = "summary";
   $("#admin").classList.remove("hidden");
   $("#admin").setAttribute("aria-hidden", "false");
   document.body.classList.add("admin-panel-open");
   renderAdminAccess();
+  showAdminTab("summary");
   $("#admin").scrollTop = 0;
   setTimeout(() => {
     const target = isAdminAuthorized() ? "#admin-summary" : "#adminEmail";
@@ -905,6 +1110,8 @@ function resetProductForm() {
   $("#productMinimum").value = "1";
   $("#productImage").value = "assets/products/doces-finos.png";
   $("#productImageFile").value = "";
+  $("#productImageFit").value = "cover";
+  $("#productImagePosition").value = "center";
   updateProductImagePreview("assets/products/doces-finos.png");
   $("#productShort").value = "";
   $("#productDescription").value = "";
@@ -921,6 +1128,8 @@ function fillProductForm(product) {
   $("#productMinimum").value = product.minimum;
   $("#productImage").value = product.image;
   $("#productImageFile").value = "";
+  $("#productImageFit").value = product.imageFit || "cover";
+  $("#productImagePosition").value = product.imagePosition || "center";
   updateProductImagePreview(product.image);
   $("#productShort").value = product.short;
   $("#productDescription").value = product.description;
@@ -935,6 +1144,8 @@ function updateProductImagePreview(src = "") {
   if (!preview) return;
   const image = preview.querySelector("img");
   image.src = src || "assets/products/doces-finos.png";
+  image.style.objectFit = $("#productImageFit")?.value || "cover";
+  image.style.objectPosition = $("#productImagePosition")?.value || "center";
 }
 
 function updateCampaignImagePreview(src = "") {
@@ -956,6 +1167,8 @@ function productFromForm() {
     id,
     name,
     image: $("#productImage").value.trim() || "assets/products/doces-finos.png",
+    imageFit: $("#productImageFit").value || "cover",
+    imagePosition: $("#productImagePosition").value || "center",
     category: $("#productCategory").value,
     price: Number($("#productPrice").value || 0),
     short: $("#productShort").value.trim(),
@@ -988,18 +1201,39 @@ function isCampaignActive(campaign) {
   return today >= starts && today <= ends;
 }
 
-function productCard(product) {
+function fineSweetSubtitle(name) {
+  const map = {
+    "Brigadeiro Ninho com Nutella": "ninho com nutella",
+    "Copinho de Cereja": "de cereja",
+    "Surpresa de Uva": "de uva",
+    "Copinho Physales": "physales",
+    "Coração Dourado": "meio amargo",
+    "Chanfrado de Café": "ganache de café",
+    "Amêndoas": "doce de leite",
+    "Gota de Maracujá": "gel cítrico",
+    "Quadradinho de Coco": "coco cremoso",
+    "Camafeu de Nozes": "noz dourada",
+    "Flor de Sakura": "nutella crocante",
+    "Jarrinho de Cereja": "ganache de cereja",
+  };
+  return map[name] || "";
+}
+
+function productCard(product, index = 0) {
   const favorited = favorites.includes(product.id);
   const statusClass = product.available ? "status" : "status soldout";
   const statusText = product.available ? "Disponível" : "Esgotado";
   const orderText = product.madeToOrder ? `Sob encomenda · mínimo ${product.minimum}` : `Pronta entrega · mínimo ${product.minimum}`;
   const hasPrice = product.price > 0;
   const actionDisabled = !product.available || !hasPrice;
+  const usePremiumCard = true;
+  const subtitle = fineSweetSubtitle(product.name) || product.category;
 
   return `
-    <article class="menu-card" data-product="${product.id}">
+    <article class="menu-card ${usePremiumCard ? "fine-sweet-card" : ""}" data-product="${product.id}">
+      ${usePremiumCard ? `<span class="fine-sweet-number">${String(index + 1).padStart(2, "0")}</span>` : ""}
       <div class="menu-card-media">
-        <img src="${product.image}" alt="${product.name}" />
+        <img src="${product.image}" alt="${product.name}" style="object-fit: ${product.imageFit || "cover"}; object-position: ${product.imagePosition || "center"};" />
       </div>
       <div class="menu-card-body">
         <div class="badge-row">${(product.tags || []).filter((tag) => tag.toLowerCase() !== "canva").map((tag) => `<span class="badge">${tag}</span>`).join("")}</div>
@@ -1007,6 +1241,7 @@ function productCard(product) {
           <h3>${product.name}</h3>
           <button class="heart ${favorited ? "active" : ""}" type="button" data-favorite="${product.id}" aria-label="Favoritar ${product.name}">♡</button>
         </div>
+        ${subtitle ? `<span class="fine-sweet-subtitle">${subtitle}</span>` : ""}
         <p>${product.short}</p>
         <span class="menu-meta">${orderText}</span>
         <div class="product-footer">
@@ -1199,7 +1434,7 @@ function renderAdminProducts() {
     .map(
       (product) => `
         <div class="admin-product-row">
-          <img src="${product.image}" alt="${product.name}" />
+          <img src="${product.image}" alt="${product.name}" style="object-fit: ${product.imageFit || "cover"}; object-position: ${product.imagePosition || "center"};" />
           <div>
             <strong>${product.name}</strong>
             <p>Status: ${product.available ? "Disponivel" : "Esgotado"}</p>
@@ -1248,7 +1483,7 @@ function openProduct(id) {
   let quantity = product.minimum || 1;
   const favorited = favorites.includes(product.id);
   $("#productDetail").innerHTML = `
-    <div class="detail-media"><img src="${product.image}" alt="${product.name}" /></div>
+    <div class="detail-media"><img src="${product.image}" alt="${product.name}" style="object-fit: ${product.imageFit || "cover"}; object-position: ${product.imagePosition || "center"};" /></div>
     <div>
       <div class="badge-row">${(product.tags || []).filter((tag) => tag.toLowerCase() !== "canva").map((tag) => `<span class="badge">${tag}</span>`).join("")}</div>
       <h2 id="modalTitle">${product.name}</h2>
@@ -1452,7 +1687,10 @@ function bindEvents() {
     if (editProductButton) {
       event.stopPropagation();
       const product = products.find((entry) => entry.id === editProductButton.dataset.editProduct);
-      if (product) fillProductForm(product);
+      if (product) {
+        showAdminTab("products");
+        fillProductForm(product);
+      }
       return;
     }
 
@@ -1467,6 +1705,21 @@ function bindEvents() {
   $("#summaryCheckout").addEventListener("click", openCheckout);
   document.querySelectorAll("[data-open-admin]").forEach((button) => {
     button.addEventListener("click", openAdminPanel);
+  });
+  document.querySelectorAll(".admin-menu a, button[data-admin-tab]").forEach((entry) => {
+    entry.addEventListener("click", (event) => {
+      const href = entry.getAttribute("href") || "";
+      const tab = entry.dataset.adminTab || {
+        "#admin-summary": "summary",
+        "#admin-products": "products",
+        "#admin-orders": "orders",
+        "#admin-campaigns": "campaigns",
+        "#admin-settings": "settings",
+      }[href];
+      if (!tab) return;
+      event.preventDefault();
+      showAdminTab(tab);
+    });
   });
   $("#closeAdminButton").addEventListener("click", closeAdminPanel);
   document.addEventListener("keydown", (event) => {
@@ -1486,6 +1739,12 @@ function bindEvents() {
   $("#cancelProductEdit").addEventListener("click", resetProductForm);
   $("#productImage").addEventListener("input", (event) => {
     updateProductImagePreview(event.target.value);
+  });
+  $("#productImageFit").addEventListener("change", () => {
+    updateProductImagePreview($("#productImage").value);
+  });
+  $("#productImagePosition").addEventListener("change", () => {
+    updateProductImagePreview($("#productImage").value);
   });
   $("#productImageFile").addEventListener("change", (event) => {
     const [file] = event.target.files;

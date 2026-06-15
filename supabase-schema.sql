@@ -26,6 +26,8 @@ create table if not exists public.products (
   id text primary key,
   name text not null,
   image text not null,
+  image_fit text not null default 'cover',
+  image_position text not null default 'center',
   category text not null,
   price numeric not null default 0,
   short_description text not null default '',
@@ -72,6 +74,10 @@ alter table public.products enable row level security;
 alter table public.campaigns enable row level security;
 alter table public.store_settings enable row level security;
 alter table public.orders enable row level security;
+
+alter table public.products
+  add column if not exists image_fit text not null default 'cover',
+  add column if not exists image_position text not null default 'center';
 
 drop policy if exists "Public can read products" on public.products;
 create policy "Public can read products"
