@@ -1945,8 +1945,68 @@ textarea {
     padding: 12px;
   }
 
-  .fine-sweet-card .menu-card-media {
+  .fine-sweet-card.menu-card {
+    grid-template-columns: 1fr;
+    gap: 10px;
     min-height: 0;
+    padding: 16px 14px 14px;
+    border: 1px solid rgba(184, 138, 53, 0.26);
+    border-radius: var(--radius);
+  }
+
+  .fine-sweet-number {
+    top: 12px;
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
+  }
+
+  .fine-sweet-card .menu-card-media {
+    aspect-ratio: 3 / 4;
+    min-height: 0;
+    margin-top: 18px;
+  }
+
+  .fine-sweet-card .menu-card-title {
+    padding-inline: 42px;
+  }
+
+  .fine-sweet-card .menu-card-title h3 {
+    font-size: clamp(1.38rem, 7vw, 1.74rem);
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+  }
+
+  .fine-sweet-card .heart {
+    top: 18px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .fine-sweet-subtitle {
+    margin-top: -4px;
+    font-size: 1rem;
+  }
+
+  .fine-sweet-card p {
+    max-width: 25ch;
+  }
+
+  .fine-sweet-card .product-footer {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 10px;
+  }
+
+  .fine-sweet-card .product-footer > div {
+    justify-content: center;
+  }
+
+  .fine-sweet-card .add-button {
+    width: 100%;
+    max-width: 220px;
   }
 
   .add-button {
