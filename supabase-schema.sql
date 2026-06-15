@@ -22,6 +22,21 @@ as $$
   );
 $$;
 
+create or replace function public.is_cacaue_owner()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.admin_profiles
+    where email = auth.jwt() ->> 'email'
+      and role = 'owner'
+  );
+$$;
+
 create table if not exists public.products (
   id text primary key,
   name text not null,
@@ -83,22 +98,8 @@ using (public.is_cacaue_admin());
 drop policy if exists "Owners can manage admin profiles" on public.admin_profiles;
 create policy "Owners can manage admin profiles"
 on public.admin_profiles for all
-using (
-  exists (
-    select 1
-    from public.admin_profiles
-    where email = auth.jwt() ->> 'email'
-      and role = 'owner'
-  )
-)
-with check (
-  exists (
-    select 1
-    from public.admin_profiles
-    where email = auth.jwt() ->> 'email'
-      and role = 'owner'
-  )
-);
+using (public.is_cacaue_owner())
+with check (public.is_cacaue_owner());
 
 alter table public.products
   add column if not exists image_fit text not null default 'cover',
@@ -167,6 +168,7 @@ on conflict (id) do nothing;
 
 grant usage on schema public to anon, authenticated;
 grant execute on function public.is_cacaue_admin() to anon, authenticated;
+grant execute on function public.is_cacaue_owner() to authenticated;
 grant select on public.admin_profiles to authenticated;
 grant select on public.products, public.campaigns, public.store_settings to anon, authenticated;
 grant insert on public.orders to anon, authenticated;

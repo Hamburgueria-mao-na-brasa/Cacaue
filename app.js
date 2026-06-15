@@ -785,6 +785,7 @@ let selectedCategory = "Todos";
 let adminSelectedCategory = "Todos";
 let adminActiveTab = "summary";
 let deferredInstallPrompt = null;
+const INSTALL_PROMPT_VERSION = "pwa-v4";
 const menuCategories = ["Todos", "Vitrine", "Doces Finos", "Despedida de Solteiro", "Bolos", "Bolos Simples", "Kits"];
 
 const $ = (selector) => document.querySelector(selector);
@@ -1975,7 +1976,7 @@ function isStandaloneApp() {
   return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
 }
 
-function showInstallPrompt(isIosFallback = false) {
+function legacyShowInstallPrompt(isIosFallback = false) {
   if (isStandaloneApp() || localStorage.getItem("cacaue:installDismissed") === "true") return;
   const prompt = $("#installAppPrompt");
   if (!prompt) return;
@@ -1986,9 +1987,59 @@ function showInstallPrompt(isIosFallback = false) {
   prompt.classList.remove("hidden");
 }
 
-function hideInstallPrompt(remember = false) {
+function legacyHideInstallPrompt(remember = false) {
   $("#installAppPrompt")?.classList.add("hidden");
   if (remember) localStorage.setItem("cacaue:installDismissed", "true");
+}
+
+function legacySetupInstallApp() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js").catch((error) => {
+      console.warn("Service worker nao registrado.", error);
+    });
+  }
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    showInstallPrompt();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    hideInstallPrompt(true);
+  });
+
+  $("#installAppButton")?.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    hideInstallPrompt(true);
+  });
+
+  $("#dismissInstallApp")?.addEventListener("click", () => hideInstallPrompt(true));
+
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  setTimeout(() => {
+    if (!deferredInstallPrompt && isIos) showInstallPrompt(true);
+  }, 2500);
+}
+
+function showInstallPrompt(isManualFallback = false) {
+  if (isStandaloneApp() || localStorage.getItem("cacaue:installDismissed") === INSTALL_PROMPT_VERSION) return;
+  const prompt = $("#installAppPrompt");
+  if (!prompt) return;
+  $("#installAppText").textContent = isManualFallback
+    ? "Toque no menu do navegador e escolha Instalar app ou Adicionar a tela inicial."
+    : "Acesse a vitrine mais rapido pela tela inicial.";
+  $("#installAppButton").classList.toggle("hidden", isManualFallback || !deferredInstallPrompt);
+  prompt.classList.remove("hidden");
+}
+
+function hideInstallPrompt(remember = false) {
+  $("#installAppPrompt")?.classList.add("hidden");
+  if (remember) localStorage.setItem("cacaue:installDismissed", INSTALL_PROMPT_VERSION);
 }
 
 function setupInstallApp() {
@@ -2020,8 +2071,9 @@ function setupInstallApp() {
   $("#dismissInstallApp")?.addEventListener("click", () => hideInstallPrompt(true));
 
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isAndroid = /android/i.test(navigator.userAgent);
   setTimeout(() => {
-    if (!deferredInstallPrompt && isIos) showInstallPrompt(true);
+    if (!deferredInstallPrompt && (isIos || isAndroid)) showInstallPrompt(true);
   }, 2500);
 }
 
