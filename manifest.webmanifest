@@ -1,19 +1,38 @@
 {
-  "name": "Cacauê Vitrine Digital",
-  "short_name": "Cacauê",
-  "description": "Vitrine digital premium da Cacauê.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "name": "Cacaue Vitrine Digital",
+  "short_name": "Cacaue",
+  "description": "Vitrine digital premium da Cacaue.",
+  "id": "/Cacaue/",
+  "start_url": "/Cacaue/",
+  "scope": "/Cacaue/",
   "display": "standalone",
   "background_color": "#fffaf0",
   "theme_color": "#fffaf0",
   "orientation": "portrait",
   "icons": [
     {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "assets/app-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }

@@ -710,7 +710,6 @@ products = products.map((product) => ({
     .replace(/Preço não apareceu com segurança no Canva\./g, "Preco sob consulta."),
   tags: (product.tags || []).filter((tag) => tag.toLowerCase() !== "canva"),
 }));
-persistProducts();
 
 const careItems = [
   ["Q", "Qualidade", "Ingredientes selecionados, preparo cuidadoso e acabamento pensado para encantar antes da primeira colherada."],
@@ -840,6 +839,21 @@ async function supabaseJson(path, options = {}) {
   return response.json();
 }
 
+async function verifyAdminSession() {
+  if (!adminSession?.access_token) return false;
+  try {
+    const result = await supabaseJson("/rpc/is_cacaue_admin", {
+      method: "POST",
+      useSession: true,
+      body: JSON.stringify({}),
+    });
+    return result === true;
+  } catch (error) {
+    console.warn("Nao foi possivel confirmar admin no Supabase.", error);
+    return false;
+  }
+}
+
 function productToDb(product, index = 0) {
   return {
     id: product.id,
@@ -955,7 +969,7 @@ async function saveProductsToSupabase() {
     return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar produtos no Supabase.", error);
-    setAdminSyncMessage("Nao consegui salvar produtos no servidor. Confira login, SQL e permissoes do Supabase.", "error");
+    setAdminSyncMessage(`Nao consegui salvar produtos no servidor: ${error.message}`, "error");
     return false;
   }
 }
@@ -984,7 +998,7 @@ async function saveCampaignsToSupabase() {
     return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar campanhas no Supabase.", error);
-    setAdminSyncMessage("Nao consegui salvar campanhas no servidor. Confira login, SQL e permissoes do Supabase.", "error");
+    setAdminSyncMessage(`Nao consegui salvar campanhas no servidor: ${error.message}`, "error");
     return false;
   }
 }
@@ -1009,7 +1023,7 @@ async function saveStoreSettingsToSupabase() {
     return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar dados da loja no Supabase.", error);
-    setAdminSyncMessage("Nao consegui salvar dados da loja no servidor. Confira login, SQL e permissoes do Supabase.", "error");
+    setAdminSyncMessage(`Nao consegui salvar dados da loja no servidor: ${error.message}`, "error");
     return false;
   }
 }
@@ -1131,6 +1145,14 @@ async function loginAdminSupabase(email, password) {
     refresh_token: session.refresh_token,
     loggedAt: new Date().toISOString(),
   };
+  const isAdmin = await verifyAdminSession();
+  if (!isAdmin) {
+    adminSession = null;
+    localStorage.removeItem("cacaue:adminSession");
+    $("#adminLoginMessage").textContent = "Login existe no Supabase, mas este e-mail nao esta autorizado em admin_profiles.";
+    setAdminSyncMessage("Confira se o e-mail do Auth e igual ao e-mail em admin_profiles.", "error");
+    return;
+  }
   localStorage.setItem("cacaue:adminSession", JSON.stringify(adminSession));
   $("#adminLoginMessage").textContent = "Acesso liberado.";
   $("#adminPassword").value = "";

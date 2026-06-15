@@ -75,6 +75,31 @@ alter table public.campaigns enable row level security;
 alter table public.store_settings enable row level security;
 alter table public.orders enable row level security;
 
+drop policy if exists "Admins can read admin profiles" on public.admin_profiles;
+create policy "Admins can read admin profiles"
+on public.admin_profiles for select
+using (public.is_cacaue_admin());
+
+drop policy if exists "Owners can manage admin profiles" on public.admin_profiles;
+create policy "Owners can manage admin profiles"
+on public.admin_profiles for all
+using (
+  exists (
+    select 1
+    from public.admin_profiles
+    where email = auth.jwt() ->> 'email'
+      and role = 'owner'
+  )
+)
+with check (
+  exists (
+    select 1
+    from public.admin_profiles
+    where email = auth.jwt() ->> 'email'
+      and role = 'owner'
+  )
+);
+
 alter table public.products
   add column if not exists image_fit text not null default 'cover',
   add column if not exists image_position text not null default 'center';
@@ -141,6 +166,8 @@ values (
 on conflict (id) do nothing;
 
 grant usage on schema public to anon, authenticated;
+grant execute on function public.is_cacaue_admin() to anon, authenticated;
+grant select on public.admin_profiles to authenticated;
 grant select on public.products, public.campaigns, public.store_settings to anon, authenticated;
 grant insert on public.orders to anon, authenticated;
 grant select, insert, update, delete on public.products, public.campaigns, public.store_settings to authenticated;
@@ -165,3 +192,8 @@ create policy "Admins can update Cacaue images"
 on storage.objects for update
 using (bucket_id = 'cacaue-images' and public.is_cacaue_admin())
 with check (bucket_id = 'cacaue-images' and public.is_cacaue_admin());
+
+drop policy if exists "Admins can delete Cacaue images" on storage.objects;
+create policy "Admins can delete Cacaue images"
+on storage.objects for delete
+using (bucket_id = 'cacaue-images' and public.is_cacaue_admin());

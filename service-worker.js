@@ -1,4 +1,4 @@
-const CACHE_NAME = "cacaue-vitrine-v2";
+const CACHE_NAME = "cacaue-vitrine-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,8 +6,15 @@ const APP_SHELL = [
   "./app.js",
   "./manifest.webmanifest",
   "./assets/app-icon.svg",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png",
+  "./assets/maskable-512.png",
   "./assets/hero-cacaue.png"
 ];
+
+function isSameOrigin(request) {
+  return new URL(request.url).origin === self.location.origin;
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -24,12 +31,15 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  if (event.request.method !== "GET" || !isSameOrigin(event.request)) return;
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
         return response;
       })
       .catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
