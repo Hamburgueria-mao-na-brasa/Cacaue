@@ -174,6 +174,8 @@ grant select on public.products, public.campaigns, public.store_settings to anon
 grant insert on public.orders to anon, authenticated;
 grant select, insert, update, delete on public.products, public.campaigns, public.store_settings to authenticated;
 grant select on public.orders to authenticated;
+grant select on storage.objects to anon, authenticated;
+grant insert, update, delete on storage.objects to authenticated;
 
 insert into storage.buckets (id, name, public)
 values ('cacaue-images', 'cacaue-images', true)

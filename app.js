@@ -967,6 +967,8 @@ async function saveProductsToSupabase() {
     });
     persistProducts();
     setAdminSyncMessage("Produtos salvos no servidor. Outros telefones vao carregar essa alteracao.", "success");
+    renderProducts();
+    renderAdmin();
     return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar produtos no Supabase.", error);
@@ -996,6 +998,8 @@ async function saveCampaignsToSupabase() {
     });
     persistCampaigns();
     setAdminSyncMessage("Campanhas salvas no servidor.", "success");
+    renderCampaigns();
+    renderAdmin();
     return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar campanhas no Supabase.", error);
@@ -1021,6 +1025,7 @@ async function saveStoreSettingsToSupabase() {
     });
     persistStoreSettings();
     setAdminSyncMessage("Dados da loja e capa salvos no servidor.", "success");
+    renderStoreSettings();
     return true;
   } catch (error) {
     console.warn("Nao foi possivel salvar dados da loja no Supabase.", error);
@@ -1032,8 +1037,14 @@ async function saveStoreSettingsToSupabase() {
 async function uploadDataUrlToSupabase(dataUrl, folder, filename) {
   if (!dataUrl?.startsWith("data:") || !adminSession?.access_token) return dataUrl;
   const blob = await fetch(dataUrl).then((response) => response.blob());
-  const extension = blob.type.split("/")[1] || "png";
-  const path = `${folder}/${filename}.${extension}`;
+  const extension = blob.type.includes("png") ? "png" : "jpg";
+  const safeName = String(filename || "imagem")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9_-]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .toLowerCase() || "imagem";
+  const path = `${folder}/${safeName}-${Date.now()}.${extension}`;
   const response = await fetch(`${SUPABASE_URL}/storage/v1/object/${SUPABASE_STORAGE_BUCKET}/${path}`, {
     method: "PUT",
     headers: {
@@ -1046,6 +1057,51 @@ async function uploadDataUrlToSupabase(dataUrl, folder, filename) {
   });
   if (!response.ok) throw new Error(await response.text());
   return `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_STORAGE_BUCKET}/${path}`;
+}
+
+function fileToOptimizedDataUrl(file, options = {}) {
+  const maxWidth = options.maxWidth || 1200;
+  const maxHeight = options.maxHeight || 1600;
+  const quality = options.quality || 0.86;
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("error", () => reject(new Error("Nao consegui ler a foto escolhida.")));
+    reader.addEventListener("load", () => {
+      const image = new Image();
+      image.addEventListener("error", () => reject(new Error("Nao consegui abrir essa foto. Tente outra imagem.")));
+      image.addEventListener("load", () => {
+        const scale = Math.min(1, maxWidth / image.width, maxHeight / image.height);
+        const width = Math.max(1, Math.round(image.width * scale));
+        const height = Math.max(1, Math.round(image.height * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      });
+      image.src = reader.result;
+    });
+    reader.readAsDataURL(file);
+  });
+}
+
+async function applyImageFileToInput(file, inputSelector, previewUpdater, options = {}) {
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    setAdminSyncMessage("Escolha um arquivo de imagem valido.", "error");
+    return;
+  }
+  setAdminSyncMessage("Preparando foto para salvar...", "info");
+  try {
+    const dataUrl = await fileToOptimizedDataUrl(file, options);
+    $(inputSelector).value = dataUrl;
+    previewUpdater(dataUrl);
+    setAdminSyncMessage("Foto pronta. Agora toque em salvar para enviar ao servidor.", "success");
+  } catch (error) {
+    setAdminSyncMessage(error.message, "error");
+  }
 }
 
 function findAdminAccount(email) {
@@ -1837,15 +1893,9 @@ function bindEvents() {
   $("#productImagePosition").addEventListener("change", () => {
     updateProductImagePreview($("#productImage").value);
   });
-  $("#productImageFile").addEventListener("change", (event) => {
+  $("#productImageFile").addEventListener("change", async (event) => {
     const [file] = event.target.files;
-    if (!file) return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      $("#productImage").value = reader.result;
-      updateProductImagePreview(reader.result);
-    });
-    reader.readAsDataURL(file);
+    await applyImageFileToInput(file, "#productImage", updateProductImagePreview, { maxWidth: 1200, maxHeight: 1600 });
   });
   $("#favoriteButton").addEventListener("click", () => {
     document.querySelector("#cardapio").scrollIntoView();
@@ -1921,28 +1971,16 @@ function bindEvents() {
   $("#campaignImage").addEventListener("input", (event) => {
     updateCampaignImagePreview(event.target.value);
   });
-  $("#campaignImageFile").addEventListener("change", (event) => {
+  $("#campaignImageFile").addEventListener("change", async (event) => {
     const [file] = event.target.files;
-    if (!file) return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      $("#campaignImage").value = reader.result;
-      updateCampaignImagePreview(reader.result);
-    });
-    reader.readAsDataURL(file);
+    await applyImageFileToInput(file, "#campaignImage", updateCampaignImagePreview, { maxWidth: 1400, maxHeight: 1400 });
   });
   $("#storeHeroImage").addEventListener("input", (event) => {
     updateStoreHeroPreview(event.target.value);
   });
-  $("#storeHeroImageFile").addEventListener("change", (event) => {
+  $("#storeHeroImageFile").addEventListener("change", async (event) => {
     const [file] = event.target.files;
-    if (!file) return;
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      $("#storeHeroImage").value = reader.result;
-      updateStoreHeroPreview(reader.result);
-    });
-    reader.readAsDataURL(file);
+    await applyImageFileToInput(file, "#storeHeroImage", updateStoreHeroPreview, { maxWidth: 1600, maxHeight: 1100 });
   });
   $("#storeSettingsForm").addEventListener("submit", async (event) => {
     event.preventDefault();
