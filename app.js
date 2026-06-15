@@ -500,12 +500,10 @@ let products = [
 const adminAccounts = [
   {
     email: "edifevi2404@gmail.com",
-    password: "cacaue123",
     role: "Owner",
   },
   {
     email: "cacaue@admin.com",
-    password: "admin123",
     role: "Admin",
   },
 ];
@@ -589,6 +587,11 @@ const clients = [
   ["Renata F.", "2 pedidos", "Última compra: 29/05", "R$ 264,00"],
 ];
 
+const SUPABASE_URL = "https://zanqzdkfmhqmhgarzvct.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_z03cxeVF-6pUwiul8lPwZA_eT1ow2n5";
+const SUPABASE_REST_URL = `${SUPABASE_URL}/rest/v1`;
+const SUPABASE_STORAGE_BUCKET = "cacaue-images";
+
 let favorites = JSON.parse(localStorage.getItem("cacaue:favorites") || "[]");
 let bag = JSON.parse(localStorage.getItem("cacaue:bag") || "[]");
 let customer = JSON.parse(localStorage.getItem("cacaue:customer") || "{}");
@@ -619,12 +622,196 @@ function persistStoreSettings() {
   localStorage.setItem("cacaue:storeSettings", JSON.stringify(storeSettings));
 }
 
+function supabaseHeaders(useSession = false) {
+  return {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${useSession && adminSession?.access_token ? adminSession.access_token : SUPABASE_ANON_KEY}`,
+    "Content-Type": "application/json",
+  };
+}
+
+async function supabaseJson(path, options = {}) {
+  const response = await fetch(`${SUPABASE_REST_URL}${path}`, {
+    ...options,
+    headers: {
+      ...supabaseHeaders(options.useSession),
+      ...(options.headers || {}),
+    },
+  });
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `Supabase error ${response.status}`);
+  }
+  if (response.status === 204) return null;
+  return response.json();
+}
+
+function productToDb(product, index = 0) {
+  return {
+    id: product.id,
+    name: product.name,
+    image: product.image,
+    category: product.category,
+    price: product.price,
+    short_description: product.short,
+    description: product.description,
+    minimum: product.minimum,
+    available: product.available,
+    made_to_order: product.madeToOrder,
+    tags: product.tags || [],
+    sort_order: index,
+  };
+}
+
+function productFromDb(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    image: row.image,
+    category: row.category,
+    price: Number(row.price || 0),
+    short: row.short_description || "",
+    description: row.description || "",
+    minimum: row.minimum || 1,
+    available: row.available,
+    madeToOrder: row.made_to_order,
+    tags: row.tags || [],
+  };
+}
+
+function campaignToDb(campaign, index = 0) {
+  return {
+    id: campaign.id || `campanha-${Date.now()}-${index}`,
+    title: campaign.title,
+    image: campaign.image,
+    description: campaign.description,
+    starts: campaign.starts,
+    ends: campaign.ends,
+    sort_order: index,
+  };
+}
+
+function campaignFromDb(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    image: row.image,
+    description: row.description,
+    starts: row.starts,
+    ends: row.ends,
+  };
+}
+
+async function loadRemoteData() {
+  try {
+    const [remoteProducts, remoteCampaigns, remoteSettings] = await Promise.all([
+      supabaseJson("/products?select=*&order=sort_order.asc"),
+      supabaseJson("/campaigns?select=*&order=sort_order.asc"),
+      supabaseJson("/store_settings?select=*&id=eq.main&limit=1"),
+    ]);
+
+    if (Array.isArray(remoteProducts) && remoteProducts.length) {
+      products = remoteProducts.map(productFromDb);
+      localStorage.setItem("cacaue:products", JSON.stringify(products));
+    }
+    if (Array.isArray(remoteCampaigns)) {
+      campaigns = remoteCampaigns.map(campaignFromDb);
+      localStorage.setItem("cacaue:campaigns", JSON.stringify(campaigns));
+    }
+    if (remoteSettings?.[0]) {
+      storeSettings = remoteSettings[0].settings;
+      localStorage.setItem("cacaue:storeSettings", JSON.stringify(storeSettings));
+    }
+
+    renderStoreSettings();
+    renderCampaigns();
+    renderProducts();
+    renderAdminAccess();
+  } catch (error) {
+    console.warn("Supabase ainda nao carregou dados remotos.", error);
+  }
+}
+
+async function saveProductsToSupabase() {
+  if (!adminSession?.access_token) return;
+  try {
+    const rows = [];
+    for (const [index, product] of products.entries()) {
+      const image = await uploadDataUrlToSupabase(product.image, "products", product.id);
+      product.image = image;
+      rows.push(productToDb(product, index));
+    }
+    await supabaseJson("/products?on_conflict=id", {
+      method: "POST",
+      useSession: true,
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify(rows),
+    });
+  } catch (error) {
+    console.warn("Nao foi possivel salvar produtos no Supabase.", error);
+  }
+}
+
+async function saveCampaignsToSupabase() {
+  if (!adminSession?.access_token) return;
+  try {
+    const rows = [];
+    for (const [index, campaign] of campaigns.entries()) {
+      campaign.id = campaign.id || `campanha-${Date.now()}-${index}`;
+      const image = await uploadDataUrlToSupabase(campaign.image, "campaigns", campaign.id);
+      campaign.image = image;
+      rows.push(campaignToDb(campaign, index));
+    }
+    await supabaseJson("/campaigns?on_conflict=id", {
+      method: "POST",
+      useSession: true,
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify(rows),
+    });
+  } catch (error) {
+    console.warn("Nao foi possivel salvar campanhas no Supabase.", error);
+  }
+}
+
+async function saveStoreSettingsToSupabase() {
+  if (!adminSession?.access_token) return;
+  try {
+    await supabaseJson("/store_settings?on_conflict=id", {
+      method: "POST",
+      useSession: true,
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify([{ id: "main", settings: storeSettings }]),
+    });
+  } catch (error) {
+    console.warn("Nao foi possivel salvar dados da loja no Supabase.", error);
+  }
+}
+
+async function uploadDataUrlToSupabase(dataUrl, folder, filename) {
+  if (!dataUrl?.startsWith("data:") || !adminSession?.access_token) return dataUrl;
+  const blob = await fetch(dataUrl).then((response) => response.blob());
+  const extension = blob.type.split("/")[1] || "png";
+  const path = `${folder}/${filename}.${extension}`;
+  const response = await fetch(`${SUPABASE_URL}/storage/v1/object/${SUPABASE_STORAGE_BUCKET}/${path}`, {
+    method: "PUT",
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${adminSession.access_token}`,
+      "Content-Type": blob.type,
+      "x-upsert": "true",
+    },
+    body: blob,
+  });
+  if (!response.ok) throw new Error(await response.text());
+  return `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_STORAGE_BUCKET}/${path}`;
+}
+
 function findAdminAccount(email) {
   return adminAccounts.find((account) => account.email === email);
 }
 
 function isAdminAuthorized() {
-  return !!adminSession && !!findAdminAccount(adminSession.email);
+  return !!adminSession?.access_token;
 }
 
 function renderAdminAccess() {
@@ -632,8 +819,7 @@ function renderAdminAccess() {
   $("#adminContent").classList.toggle("hidden", !authorized);
   $("#adminLoginForm").classList.toggle("hidden", authorized);
   $("#adminLogoutButton").classList.toggle("hidden", !authorized);
-  const account = authorized ? findAdminAccount(adminSession.email) : null;
-  $("#adminRole").textContent = account ? `${account.role}: ${account.email}` : "Acesso restrito";
+  $("#adminRole").textContent = authorized ? `Admin: ${adminSession.email}` : "Acesso restrito";
   if (authorized) {
     renderAdmin();
   }
@@ -642,13 +828,23 @@ function renderAdminAccess() {
 function openAdminPanel() {
   $("#admin").classList.remove("hidden");
   $("#admin").setAttribute("aria-hidden", "false");
+  document.body.classList.add("admin-panel-open");
   renderAdminAccess();
-  document.querySelector("#admin").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("#admin").scrollTop = 0;
+  setTimeout(() => {
+    const target = isAdminAuthorized() ? "#admin-summary" : "#adminEmail";
+    document.querySelector(target)?.focus?.();
+  }, 80);
 }
 
 function closeAdminPanel() {
   $("#admin").classList.add("hidden");
   $("#admin").setAttribute("aria-hidden", "true");
+  document.body.classList.remove("admin-panel-open");
+  if (!isAdminAuthorized()) {
+    $("#adminEmail").value = "";
+    $("#adminPassword").value = "";
+  }
 }
 
 function loginAdmin(email, password) {
@@ -665,9 +861,38 @@ function loginAdmin(email, password) {
   renderAdminAccess();
 }
 
+async function loginAdminSupabase(email, password) {
+  const normalizedEmail = email.trim().toLowerCase();
+  $("#adminLoginMessage").textContent = "Entrando...";
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+    method: "POST",
+    headers: supabaseHeaders(),
+    body: JSON.stringify({ email: normalizedEmail, password }),
+  });
+  if (!response.ok) {
+    $("#adminLoginMessage").textContent = "E-mail ou senha incorretos, ou usuario ainda nao criado no Supabase.";
+    return;
+  }
+  const session = await response.json();
+  adminSession = {
+    email: session.user?.email || normalizedEmail,
+    role: "Admin",
+    access_token: session.access_token,
+    refresh_token: session.refresh_token,
+    loggedAt: new Date().toISOString(),
+  };
+  localStorage.setItem("cacaue:adminSession", JSON.stringify(adminSession));
+  $("#adminLoginMessage").textContent = "Acesso liberado.";
+  $("#adminPassword").value = "";
+  await loadRemoteData();
+  renderAdminAccess();
+}
+
 function logoutAdmin() {
   adminSession = null;
   localStorage.removeItem("cacaue:adminSession");
+  $("#adminEmail").value = "";
+  $("#adminPassword").value = "";
   renderAdminAccess();
 }
 
@@ -1145,7 +1370,7 @@ function openCheckout() {
   setTimeout(() => $("#customerName").focus(), 150);
 }
 
-function checkout() {
+async function checkout() {
   customer = {
     name: $("#customerName").value.trim(),
     whatsapp: $("#customerWhatsapp").value.trim(),
@@ -1165,6 +1390,35 @@ function checkout() {
       return `${item.quantity}x ${product.name}`;
     })
     .join(", ");
+  const subtotal = bagSubtotal();
+
+  try {
+    await supabaseJson("/orders", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify([
+        {
+          protocol,
+          customer,
+          items: bag.map((item) => {
+            const product = products.find((entry) => entry.id === item.id);
+            return {
+              product_id: item.id,
+              name: product?.name || item.id,
+              quantity: item.quantity,
+              price: product?.price || 0,
+            };
+          }),
+          subtotal,
+          delivery_fee: 0,
+          total: subtotal,
+          status: "novo",
+        },
+      ]),
+    });
+  } catch (error) {
+    console.warn("Pedido ficou local porque o Supabase ainda nao aceitou o envio.", error);
+  }
 
   bag = [];
   persist();
@@ -1214,9 +1468,14 @@ function bindEvents() {
     button.addEventListener("click", openAdminPanel);
   });
   $("#closeAdminButton").addEventListener("click", closeAdminPanel);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !$("#admin").classList.contains("hidden")) {
+      closeAdminPanel();
+    }
+  });
   $("#adminLoginForm").addEventListener("submit", (event) => {
     event.preventDefault();
-    loginAdmin($("#adminEmail").value, $("#adminPassword").value);
+    loginAdminSupabase($("#adminEmail").value, $("#adminPassword").value);
   });
   $("#adminLogoutButton").addEventListener("click", logoutAdmin);
   $("#productForm").addEventListener("submit", (event) => {
@@ -1355,6 +1614,7 @@ function init() {
   bindEvents();
   resetProductForm();
   renderAdminAccess();
+  loadRemoteData();
 }
 
 init();

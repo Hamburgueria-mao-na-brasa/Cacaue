@@ -127,17 +127,17 @@
         </div>
       </section>
 
-      <section class="admin-shell hidden" id="admin" aria-hidden="true">
+      <section class="admin-shell hidden" id="admin" aria-hidden="true" role="dialog" aria-modal="true">
         <aside class="admin-sidebar">
           <span class="eyebrow">Painel administrativo</span>
           <h2>Gestão simples da Cacauê.</h2>
           <button class="close-admin-button" id="closeAdminButton" type="button">Fechar admin</button>
           <div class="role-pill" id="adminRole">Acesso restrito</div>
-          <form class="admin-login" id="adminLoginForm">
+          <form class="admin-login" id="adminLoginForm" autocomplete="off">
             <label for="adminEmail">E-mail autorizado</label>
-            <input id="adminEmail" type="email" placeholder="edifevi2404@gmail.com" required />
+            <input id="adminEmail" type="email" placeholder="seu@email.com" autocomplete="off" value="" required />
             <label for="adminPassword">Senha</label>
-            <input id="adminPassword" type="password" placeholder="Digite sua senha" required />
+            <input id="adminPassword" type="password" placeholder="Digite sua senha" autocomplete="new-password" value="" required />
             <button class="primary-button full" type="submit">Entrar no admin</button>
             <p id="adminLoginMessage">Use um e-mail autorizado para liberar a gestão.</p>
           </form>

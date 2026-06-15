@@ -921,24 +921,41 @@ p {
 }
 
 .admin-shell {
-  position: relative;
+  position: fixed;
+  inset: 0;
+  z-index: 80;
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: minmax(260px, 320px) 1fr;
   gap: 24px;
-  padding: clamp(28px, 5vw, 70px) clamp(20px, 6vw, 86px);
-  background: rgba(248, 242, 232, 0.9);
-  border-top: 1px solid var(--line);
+  height: 100dvh;
+  padding: clamp(18px, 4vw, 38px);
+  overflow: auto;
+  background:
+    linear-gradient(120deg, rgba(255, 250, 240, 0.98), rgba(248, 242, 232, 0.96)),
+    radial-gradient(circle at 88% 12%, rgba(184, 138, 53, 0.16), transparent 28%);
+  border-top: 0;
 }
 
 .admin-sidebar {
   position: sticky;
-  top: 98px;
+  top: 18px;
   align-self: start;
+  max-height: calc(100dvh - 36px);
+  overflow: auto;
   padding: 20px;
   background: rgba(255, 254, 251, 0.82);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: 0 16px 45px rgba(50, 31, 24, 0.06);
+}
+
+.admin-content {
+  min-width: 0;
+  padding-bottom: 36px;
+}
+
+body.admin-panel-open {
+  overflow: hidden;
 }
 
 .admin-sidebar h2 {
@@ -1538,14 +1555,31 @@ textarea {
   .metric-grid,
   .admin-panels,
   .contact-section,
-  .admin-shell,
   .product-detail,
   .menu-layout {
     grid-template-columns: 1fr;
   }
 
+  .admin-shell {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 12px;
+  }
+
   .admin-sidebar {
     position: static;
+    max-height: none;
+    padding: 14px;
+  }
+
+  .admin-sidebar h2 {
+    font-size: 1.45rem;
+    margin-bottom: 10px;
+  }
+
+  .close-admin-button {
+    min-height: 46px;
+    margin: 10px 0;
   }
 
   .admin-welcome {
@@ -1561,6 +1595,28 @@ textarea {
 
   .admin-menu a {
     flex: 0 0 auto;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  .admin-content {
+    padding-bottom: 18px;
+  }
+
+  .admin-product-form,
+  .admin-panels article,
+  .admin-welcome {
+    padding: 14px;
+  }
+
+  .admin-product-row,
+  .admin-campaign-row {
+    grid-template-columns: 58px 1fr;
+  }
+
+  .admin-product-row .text-button {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 
   .menu-sidebar {
