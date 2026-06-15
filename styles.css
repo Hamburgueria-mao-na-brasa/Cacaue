@@ -1891,7 +1891,7 @@ textarea {
   }
 
   .section {
-    padding-inline: 18px;
+    padding-inline: 14px;
   }
 
   #cardapio {
@@ -1959,8 +1959,10 @@ textarea {
     flex-direction: row;
   }
 
+  .menu-grid,
   .menu-grid:has(.fine-sweet-card) {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .fine-sweet-card {
@@ -1969,66 +1971,98 @@ textarea {
 
   .fine-sweet-card.menu-card {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 7px;
     min-height: 0;
-    padding: 16px 14px 14px;
+    padding: 12px 9px 10px;
     border: 1px solid rgba(184, 138, 53, 0.26);
     border-radius: var(--radius);
   }
 
   .fine-sweet-number {
-    top: 12px;
-    width: 42px;
-    height: 42px;
-    font-size: 1rem;
+    top: 8px;
+    width: 34px;
+    height: 34px;
+    font-size: 0.88rem;
   }
 
   .fine-sweet-card .menu-card-media {
     aspect-ratio: 3 / 4;
     min-height: 0;
-    margin-top: 18px;
+    margin-top: 14px;
+    border-radius: 14px;
   }
 
   .fine-sweet-card .menu-card-title {
-    padding-inline: 42px;
+    padding-inline: 26px;
   }
 
   .fine-sweet-card .menu-card-title h3 {
-    font-size: clamp(1.38rem, 7vw, 1.74rem);
-    line-height: 1.08;
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: clamp(1rem, 4.8vw, 1.2rem);
+    line-height: 1.05;
     overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .fine-sweet-card .heart {
-    top: 18px;
-    right: 16px;
-    width: 44px;
-    height: 44px;
+    top: 10px;
+    right: 9px;
+    width: 34px;
+    height: 34px;
   }
 
   .fine-sweet-subtitle {
-    margin-top: -4px;
-    font-size: 1rem;
+    margin-top: -2px;
+    font-size: 0.86rem;
+    line-height: 1.05;
   }
 
   .fine-sweet-card p {
-    max-width: 25ch;
+    display: -webkit-box;
+    overflow: hidden;
+    max-width: 18ch;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .fine-sweet-card .menu-meta {
+    font-size: 0.72rem;
+    line-height: 1.25;
   }
 
   .fine-sweet-card .product-footer {
     display: grid;
     grid-template-columns: 1fr;
     justify-items: center;
-    gap: 10px;
+    gap: 7px;
   }
 
   .fine-sweet-card .product-footer > div {
+    display: grid;
     justify-content: center;
+    justify-items: center;
+    gap: 5px;
   }
 
   .fine-sweet-card .add-button {
     width: 100%;
-    max-width: 220px;
+    max-width: none;
+    min-height: 34px;
+    padding-inline: 8px;
+    font-size: 0.78rem;
+  }
+
+  .fine-sweet-card .price {
+    font-size: 0.88rem;
+  }
+
+  .fine-sweet-card .status {
+    padding: 5px 9px;
+    font-size: 0.72rem;
   }
 
   .add-button {
@@ -2104,5 +2138,32 @@ textarea {
 
   .detail-media img {
     height: 100%;
+  }
+}
+
+@media (min-width: 540px) and (max-width: 760px) {
+  .menu-grid,
+  .menu-grid:has(.fine-sweet-card) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .fine-sweet-card .menu-card-title h3 {
+    font-size: 1.08rem;
+  }
+}
+
+@media (max-width: 370px) {
+  .menu-grid,
+  .menu-grid:has(.fine-sweet-card) {
+    gap: 8px;
+  }
+
+  .fine-sweet-card.menu-card {
+    padding-inline: 8px;
+  }
+
+  .fine-sweet-card .add-button {
+    min-height: 32px;
+    font-size: 0.72rem;
   }
 }
