@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fffaf0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Cacauê" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/app-icon.svg" />
     <title>Cacauê | Vitrine Digital Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -351,6 +358,17 @@
           <textarea name="message" placeholder="Conte como foi sua experiência" required></textarea>
           <button class="primary-button full" type="submit">Enviar para aprovação</button>
         </form>
+      </div>
+    </div>
+
+    <div class="install-app hidden" id="installAppPrompt" role="dialog" aria-live="polite" aria-label="Salvar app Cacauê">
+      <div>
+        <strong>Salvar Cacauê no celular</strong>
+        <span id="installAppText">Acesse a vitrine mais rápido pela tela inicial.</span>
+      </div>
+      <div class="install-app-actions">
+        <button class="secondary-button compact" id="dismissInstallApp" type="button">Agora não</button>
+        <button class="primary-button compact" id="installAppButton" type="button">Salvar app</button>
       </div>
     </div>
 
