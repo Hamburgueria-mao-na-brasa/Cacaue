@@ -1,7 +1,7 @@
-{
-  "name": "Cacaue Vitrine Digital",
-  "short_name": "Cacaue",
-  "description": "Vitrine digital premium da Cacaue.",
+﻿{
+  "name": "Cacauê Vitrine Digital",
+  "short_name": "Cacauê",
+  "description": "Vitrine digital premium da Cacauê.",
   "id": "/Cacaue/",
   "start_url": "/Cacaue/",
   "scope": "/Cacaue/",
@@ -36,3 +36,5 @@
     }
   ]
 }
+
+

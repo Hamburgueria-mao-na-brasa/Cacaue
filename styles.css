@@ -1089,6 +1089,13 @@ p {
   border-top: 0;
 }
 
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea,
+.admin-shell button {
+  font-size: 16px;
+}
+
 .admin-sidebar {
   position: sticky;
   top: 18px;
@@ -1105,6 +1112,10 @@ p {
 .admin-content {
   min-width: 0;
   padding-bottom: 36px;
+}
+
+.admin-content > .admin-section-label {
+  margin-bottom: 10px;
 }
 
 body.admin-panel-open {
@@ -1177,10 +1188,36 @@ body.admin-panel-open {
   border-color: var(--brown);
 }
 
+.admin-panels article {
+  background: rgba(255, 254, 251, 0.92);
+}
+
 .admin-login {
   display: grid;
   gap: 10px;
   margin-top: 18px;
+}
+
+.password-field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.password-field input {
+  min-width: 0;
+}
+
+.password-field button {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--brown);
+  cursor: pointer;
+  font-weight: 800;
 }
 
 .admin-login label,
@@ -1269,15 +1306,17 @@ body.admin-panel-open {
 }
 
 .admin-product-form {
-  margin-bottom: 16px;
-  padding: 14px;
-  background: rgba(232, 211, 163, 0.16);
+  margin-bottom: 18px;
+  padding: 18px;
+  background: rgba(255, 254, 251, 0.92);
   border: 1px solid rgba(184, 138, 53, 0.22);
   border-radius: var(--radius);
+  box-shadow: 0 12px 28px rgba(50, 31, 24, 0.04);
 }
 
 .admin-product-form label:not(.admin-check) {
-  margin-bottom: -4px;
+  margin-top: 4px;
+  margin-bottom: -2px;
 }
 
 .admin-product-form small,
@@ -1339,6 +1378,11 @@ body.admin-panel-open {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(184, 138, 53, 0.18);
+  border-radius: 14px;
+  background: rgba(255, 250, 240, 0.7);
 }
 
 .admin-check input {
@@ -1350,6 +1394,12 @@ body.admin-panel-open {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.admin-form-actions .primary-button,
+.admin-form-actions .secondary-button {
+  flex: 1 1 180px;
+  justify-content: center;
 }
 
 .admin-filter-row {
@@ -1794,14 +1844,14 @@ textarea {
 
   .admin-shell {
     display: block;
-    padding: 10px;
+    padding: 12px;
     align-content: start;
   }
 
   .admin-sidebar {
     position: static;
     max-height: none;
-    padding: 12px;
+    padding: 14px;
     overflow: visible;
   }
 
@@ -1847,7 +1897,7 @@ textarea {
   .admin-content {
     display: block;
     margin-top: 12px;
-    padding-bottom: 18px;
+    padding-bottom: 28px;
   }
 
   .metric-grid {
@@ -1868,7 +1918,8 @@ textarea {
   .admin-product-form,
   .admin-panels article,
   .admin-welcome {
-    padding: 14px;
+    padding: 18px;
+    border-radius: 16px;
   }
 
   .admin-welcome .primary-button {
@@ -1882,11 +1933,16 @@ textarea {
   .admin-product-row,
   .admin-campaign-row {
     grid-template-columns: 58px 1fr;
+    align-items: start;
   }
 
   .admin-product-row .text-button {
     grid-column: 1 / -1;
     width: 100%;
+  }
+
+  .password-field {
+    grid-template-columns: 1fr auto;
   }
 
   .menu-sidebar {
@@ -2027,11 +2083,61 @@ textarea {
   }
 
   .admin-panels {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 
   .admin-product-form {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+  }
+
+  .admin-shell {
+    padding: 8px;
+  }
+
+  .admin-sidebar,
+  .admin-product-form,
+  .admin-panels article,
+  .admin-welcome {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .admin-menu {
+    margin-inline: -14px;
+    padding-inline: 14px;
+  }
+
+  .admin-menu a {
+    min-height: 42px;
+    padding-inline: 14px;
+    font-size: 0.9rem;
+  }
+
+  .admin-filter-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-filter-row select {
+    max-width: none;
+  }
+
+  .admin-form-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form-actions .primary-button,
+  .admin-form-actions .secondary-button {
+    width: 100%;
+  }
+
+  .admin-image-preview {
+    grid-template-columns: 72px 1fr;
+  }
+
+  .admin-image-preview img {
+    width: 72px;
   }
 }
 
