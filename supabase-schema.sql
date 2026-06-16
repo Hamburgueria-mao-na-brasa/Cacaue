@@ -44,11 +44,13 @@ create table if not exists public.products (
   image_fit text not null default 'cover',
   image_position text not null default 'center',
   category text not null,
+  subcategory text not null default '',
   price numeric not null default 0,
   short_description text not null default '',
   description text not null default '',
   minimum integer not null default 1,
   available boolean not null default true,
+  showcase boolean not null default false,
   made_to_order boolean not null default true,
   tags text[] not null default '{}',
   sort_order integer not null default 0,
@@ -103,7 +105,9 @@ with check (public.is_cacaue_owner());
 
 alter table public.products
   add column if not exists image_fit text not null default 'cover',
-  add column if not exists image_position text not null default 'center';
+  add column if not exists image_position text not null default 'center',
+  add column if not exists subcategory text not null default '',
+  add column if not exists showcase boolean not null default false;
 
 drop policy if exists "Public can read products" on public.products;
 create policy "Public can read products"

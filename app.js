@@ -1,4 +1,16 @@
-const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+﻿const money = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+const categoryConfig = {
+  Vitrine: [],
+  Bolos: ["Bolos caseiros", "Bolos quadrados", "Bolos de festa", "Bolos gourmet"],
+  Doces: ["Doces finos", "Doces tradicionais", "Doces gourmet"],
+  Sobremesas: ["Sobremesas"],
+  Despedidas: ["Despedida de solteiro"],
+  "Kit Festa": ["Kit pequeno", "Kit mÃ©dio", "Kit completo"],
+  "PresenteÃ¡vel": [],
+};
+const menuCategories = Object.keys(categoryConfig);
+const adminCategoryFilterOptions = ["Todos", ...menuCategories];
 
 let products = [
   {
@@ -7,8 +19,8 @@ let products = [
     image: "assets/products/bolo-red.png",
     category: "Bolos",
     price: 80,
-    short: "Bolinho individual com aproximadamente 10cm de diâmetro.",
-    description: "Pequeno no tamanho e gigante no carinho. Escolha massa, recheio e decoração simples. Pedido com antecedência.",
+    short: "Bolinho individual com aproximadamente 10cm de diÃ¢metro.",
+    description: "Pequeno no tamanho e gigante no carinho. Escolha massa, recheio e decoraÃ§Ã£o simples. Pedido com antecedÃªncia.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -20,7 +32,7 @@ let products = [
     image: "assets/products/bolo-red.png",
     category: "Bolos",
     price: 110,
-    short: "Peso aproximado de 1,7kg. Ideal para comemorações pequenas.",
+    short: "Peso aproximado de 1,7kg. Ideal para comemoraÃ§Ãµes pequenas.",
     description: "Massa: chocolate ou baunilha. Recheios: brigadeiros, doce de leite, coco, belga, mousse e 4 leites. Inclui 1 adicional gratuito entre morango, crocante, bombom, abacaxi ou ameixa.",
     minimum: 1,
     available: true,
@@ -34,7 +46,7 @@ let products = [
     category: "Bolos",
     price: 145,
     short: "Peso aproximado de 2,2kg.",
-    description: "Bolo de festa personalizável. Cobertura em chantilly ou chantininho. Topper, glitter, flores naturais e itens decorativos são cobrados à parte.",
+    description: "Bolo de festa personalizÃ¡vel. Cobertura em chantilly ou chantininho. Topper, glitter, flores naturais e itens decorativos sÃ£o cobrados Ã  parte.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -47,7 +59,7 @@ let products = [
     category: "Bolos",
     price: 185,
     short: "Peso aproximado de 2,7kg.",
-    description: "Pedido com pelo menos 2 dias de antecedência. Fechamento com 50% do valor pago e restante na retirada.",
+    description: "Pedido com pelo menos 2 dias de antecedÃªncia. Fechamento com 50% do valor pago e restante na retirada.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -60,7 +72,7 @@ let products = [
     category: "Bolos",
     price: 240,
     short: "Peso aproximado de 3,2kg.",
-    description: "Bolo maior para festas. Bolos de andar possuem cobrança de suporte. Enviar inspirações pelo WhatsApp.",
+    description: "Bolo maior para festas. Bolos de andar possuem cobranÃ§a de suporte. Enviar inspiraÃ§Ãµes pelo WhatsApp.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -72,8 +84,8 @@ let products = [
     image: "assets/products/bolo-red.png",
     category: "Bolos Simples",
     price: 35,
-    short: "Massa de chocolate bem úmida e intensa.",
-    description: "Sabor marcante e irresistível para amantes de chocolate.",
+    short: "Massa de chocolate bem Ãºmida e intensa.",
+    description: "Sabor marcante e irresistÃ­vel para amantes de chocolate.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -85,8 +97,8 @@ let products = [
     image: "assets/products/torta-pistache.png",
     category: "Bolos Simples",
     price: 35,
-    short: "Massa macia e aromática com suco natural de laranja.",
-    description: "Sabor caseiro e aconchegante para café da tarde.",
+    short: "Massa macia e aromÃ¡tica com suco natural de laranja.",
+    description: "Sabor caseiro e aconchegante para cafÃ© da tarde.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -94,11 +106,11 @@ let products = [
   },
   {
     id: "bolo-limao-caseiro",
-    name: "Bolo de Limão",
+    name: "Bolo de LimÃ£o",
     image: "assets/products/torta-pistache.png",
     category: "Bolos Simples",
     price: 35,
-    short: "Massa fofinha com toque cítrico de limão.",
+    short: "Massa fofinha com toque cÃ­trico de limÃ£o.",
     description: "Leve, refrescante e equilibrado na medida certa.",
     minimum: 1,
     available: true,
@@ -112,7 +124,7 @@ let products = [
     category: "Bolos Simples",
     price: 45,
     short: "Massa aveludada e delicada.",
-    description: "Leve sabor amanteigado, perfeita para combinações com recheios suaves.",
+    description: "Leve sabor amanteigado, perfeita para combinaÃ§Ãµes com recheios suaves.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -150,12 +162,12 @@ let products = [
     image: "assets/products/doces-finos.png",
     category: "Kits",
     price: 159.9,
-    short: "Cesta de café da manhã para 1 pessoa.",
-    description: "Inclui suco de laranja 300ml, fruta fresca, pão doce artesanal, iogurte, biscoito ou bolacha amanteigada, barrinha de cereal, café ou achocolatado e bombons sortidos.",
+    short: "Cesta de cafÃ© da manhÃ£ para 1 pessoa.",
+    description: "Inclui suco de laranja 300ml, fruta fresca, pÃ£o doce artesanal, iogurte, biscoito ou bolacha amanteigada, barrinha de cereal, cafÃ© ou achocolatado e bombons sortidos.",
     minimum: 1,
     available: true,
     madeToOrder: true,
-    tags: ["Canva", "Presenteável"],
+    tags: ["Canva", "PresenteÃ¡vel"],
   },
   {
     id: "torta-chocolate",
@@ -164,7 +176,7 @@ let products = [
     category: "Bolos",
     price: 85,
     short: "Base crocante de biscoito com chocolate meio amargo.",
-    description: "Tamanho P serve até 8 pessoas por R$ 85,00. Tamanho M serve até 12 pessoas por R$ 120,00.",
+    description: "Tamanho P serve atÃ© 8 pessoas por R$ 85,00. Tamanho M serve atÃ© 12 pessoas por R$ 120,00.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -177,7 +189,7 @@ let products = [
     category: "Bolos",
     price: 95,
     short: "Massa leve, creme branco e morangos frescos.",
-    description: "Tamanho P serve até 8 pessoas por R$ 95,00. Tamanho M serve até 12 pessoas por R$ 140,00.",
+    description: "Tamanho P serve atÃ© 8 pessoas por R$ 95,00. Tamanho M serve atÃ© 12 pessoas por R$ 140,00.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -185,12 +197,12 @@ let products = [
   },
   {
     id: "torta-limao",
-    name: "Torta de Limão",
+    name: "Torta de LimÃ£o",
     image: "assets/products/torta-pistache.png",
     category: "Bolos",
     price: 95,
-    short: "Base crocante, creme de limão e cobertura delicada.",
-    description: "Tamanho P serve até 8 pessoas por R$ 95,00. Tamanho M serve até 12 pessoas por R$ 140,00.",
+    short: "Base crocante, creme de limÃ£o e cobertura delicada.",
+    description: "Tamanho P serve atÃ© 8 pessoas por R$ 95,00. Tamanho M serve atÃ© 12 pessoas por R$ 140,00.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -203,7 +215,7 @@ let products = [
     category: "Bolos",
     price: 95,
     short: "Camadas de bolo macio com recheio cremoso de coco.",
-    description: "Tamanho P serve até 8 pessoas por R$ 95,00. Tamanho M serve até 12 pessoas por R$ 140,00.",
+    description: "Tamanho P serve atÃ© 8 pessoas por R$ 95,00. Tamanho M serve atÃ© 12 pessoas por R$ 140,00.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -216,7 +228,7 @@ let products = [
     category: "Kits",
     price: 80,
     short: "Coxinha, empada, rabo de tatu, enroladinho, pastelzinho, kibe e bolinha de queijo.",
-    description: "Valor por cento. Opções extraídas do Canva: coxinha de frango, coxinha de carne, empada, rabo de tatu, enroladinho de salsicha, delícia de goiaba, pastelzinho, kibe e bolinha de queijo.",
+    description: "Valor por cento. OpÃ§Ãµes extraÃ­das do Canva: coxinha de frango, coxinha de carne, empada, rabo de tatu, enroladinho de salsicha, delÃ­cia de goiaba, pastelzinho, kibe e bolinha de queijo.",
     minimum: 100,
     available: true,
     madeToOrder: true,
@@ -230,7 +242,7 @@ let products = [
     imagePosition: "center",
     category: "Doces Finos",
     price: 0,
-    short: "A combinação perfeita do leite ninho com o recheio de Nutella.",
+    short: "A combinaÃ§Ã£o perfeita do leite ninho com o recheio de Nutella.",
     description: "Brigadeiro delicado com acabamento premium, leite ninho e recheio cremoso de Nutella. Ideal para eventos e mesas especiais.",
     minimum: 20,
     available: true,
@@ -245,8 +257,8 @@ let products = [
     imagePosition: "center",
     category: "Doces Finos",
     price: 0,
-    short: "Doce, delicado e irresistível. Um clássico que encanta sempre.",
-    description: "Copinho fino com creme delicado e finalização com cereja. Sofisticado para casamentos, aniversários e eventos.",
+    short: "Doce, delicado e irresistÃ­vel. Um clÃ¡ssico que encanta sempre.",
+    description: "Copinho fino com creme delicado e finalizaÃ§Ã£o com cereja. Sofisticado para casamentos, aniversÃ¡rios e eventos.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -261,7 +273,7 @@ let products = [
     category: "Doces Finos",
     price: 0,
     short: "Casquinha delicada com recheio suculento de uva.",
-    description: "Doce leve, refrescante e cheio de sabor, com apresentação elegante para compor mesas de doces finos.",
+    description: "Doce leve, refrescante e cheio de sabor, com apresentaÃ§Ã£o elegante para compor mesas de doces finos.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -275,8 +287,8 @@ let products = [
     imagePosition: "center",
     category: "Doces Finos",
     price: 0,
-    short: "Equilíbrio perfeito entre chocolate e o azedinho do physalis.",
-    description: "Copinho sofisticado e marcante, finalizado com physalis para uma apresentação premium.",
+    short: "EquilÃ­brio perfeito entre chocolate e o azedinho do physalis.",
+    description: "Copinho sofisticado e marcante, finalizado com physalis para uma apresentaÃ§Ã£o premium.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -284,14 +296,14 @@ let products = [
   },
   {
     id: "coracao-dourado",
-    name: "Coração Dourado",
+    name: "CoraÃ§Ã£o Dourado",
     image: "assets/products/doces-finos.png",
     imageFit: "cover",
     imagePosition: "center",
     category: "Doces Finos",
     price: 0,
-    short: "Coração meio amargo com gel intenso e ganache de Jack Daniels.",
-    description: "Doce fino em formato de coração, com chocolate meio amargo, gel intenso e ganache de Jack Daniels. Sofisticado para eventos premium.",
+    short: "CoraÃ§Ã£o meio amargo com gel intenso e ganache de Jack Daniels.",
+    description: "Doce fino em formato de coraÃ§Ã£o, com chocolate meio amargo, gel intenso e ganache de Jack Daniels. Sofisticado para eventos premium.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -299,29 +311,29 @@ let products = [
   },
   {
     id: "chanfrado-cafe",
-    name: "Chanfrado de Café",
+    name: "Chanfrado de CafÃ©",
     image: "assets/products/doces-finos.png",
     imageFit: "cover",
     imagePosition: "center",
     category: "Doces Finos",
     price: 0,
-    short: "Bombom meio amargo recheado com ganache de café.",
-    description: "Bombom de chocolate meio amargo com formato chanfrado e recheio de ganache de café.",
+    short: "Bombom meio amargo recheado com ganache de cafÃ©.",
+    description: "Bombom de chocolate meio amargo com formato chanfrado e recheio de ganache de cafÃ©.",
     minimum: 20,
     available: true,
     madeToOrder: true,
-    tags: ["Destaque", "Café"],
+    tags: ["Destaque", "CafÃ©"],
   },
   {
     id: "amendoas",
-    name: "Amêndoas",
+    name: "AmÃªndoas",
     image: "assets/products/doces-finos.png",
     imageFit: "cover",
     imagePosition: "center",
     category: "Doces Finos",
     price: 0,
-    short: "Brigadeiro de doce de leite envolto em amêndoas laminadas douradas.",
-    description: "Brigadeiro de doce de leite com cobertura de amêndoas laminadas douradas, delicado e elegante para mesa de doces.",
+    short: "Brigadeiro de doce de leite envolto em amÃªndoas laminadas douradas.",
+    description: "Brigadeiro de doce de leite com cobertura de amÃªndoas laminadas douradas, delicado e elegante para mesa de doces.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -329,14 +341,14 @@ let products = [
   },
   {
     id: "gota-maracuja",
-    name: "Gota de Maracujá",
+    name: "Gota de MaracujÃ¡",
     image: "assets/products/doces-finos.png",
     imageFit: "cover",
     imagePosition: "center",
     category: "Doces Finos",
     price: 0,
-    short: "Gota de chocolate meio amargo com gel cítrico e ganache de maracujá.",
-    description: "Gota de chocolate meio amargo recheada com gel cítrico e ganache de maracujá. Leve, marcante e refrescante.",
+    short: "Gota de chocolate meio amargo com gel cÃ­trico e ganache de maracujÃ¡.",
+    description: "Gota de chocolate meio amargo recheada com gel cÃ­trico e ganache de maracujÃ¡. Leve, marcante e refrescante.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -370,7 +382,7 @@ let products = [
     minimum: 20,
     available: true,
     madeToOrder: true,
-    tags: ["Clássico", "Premium"],
+    tags: ["ClÃ¡ssico", "Premium"],
   },
   {
     id: "flor-sakura",
@@ -409,7 +421,7 @@ let products = [
     category: "Doces Finos",
     price: 0,
     short: "Brigadeiro feito com chocolate belga 50%.",
-    description: "Pedido mínimo: 20 unidades. Vendido em caixas com 25 ou 50 unidades. Preço não apareceu com segurança no Canva.",
+    description: "Pedido mÃ­nimo: 20 unidades. Vendido em caixas com 25 ou 50 unidades. PreÃ§o nÃ£o apareceu com seguranÃ§a no Canva.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -422,7 +434,7 @@ let products = [
     category: "Doces Finos",
     price: 0,
     short: "Camafeu tradicional com cobertura de fondant.",
-    description: "Pedido mínimo: 20 unidades. Vendido em caixas com 25 ou 50 unidades. Preço não apareceu com segurança no Canva.",
+    description: "Pedido mÃ­nimo: 20 unidades. Vendido em caixas com 25 ou 50 unidades. PreÃ§o nÃ£o apareceu com seguranÃ§a no Canva.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -435,7 +447,7 @@ let products = [
     category: "Doces Finos",
     price: 0,
     short: "Trufa recheada com ganache tradicional.",
-    description: "Pedido mínimo: 20 unidades. Vendido em caixas com 25 ou 50 unidades. Preço não apareceu com segurança no Canva.",
+    description: "Pedido mÃ­nimo: 20 unidades. Vendido em caixas com 25 ou 50 unidades. PreÃ§o nÃ£o apareceu com seguranÃ§a no Canva.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -448,7 +460,7 @@ let products = [
     category: "Doces Finos",
     price: 0,
     short: "Bombom com pistache.",
-    description: "Pedido mínimo: 20 unidades. Vendido em caixas com 25 ou 50 unidades. Preço não apareceu com segurança no Canva.",
+    description: "Pedido mÃ­nimo: 20 unidades. Vendido em caixas com 25 ou 50 unidades. PreÃ§o nÃ£o apareceu com seguranÃ§a no Canva.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -461,7 +473,7 @@ let products = [
     category: "Doces Finos",
     price: 2.5,
     short: "Sabores tradicionais por unidade.",
-    description: "Sabores extraídos do Canva: leite Ninho, café, branco, meio amargo, chocolate branco e ao leite.",
+    description: "Sabores extraÃ­dos do Canva: leite Ninho, cafÃ©, branco, meio amargo, chocolate branco e ao leite.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -474,7 +486,7 @@ let products = [
     category: "Doces Finos",
     price: 0,
     short: "Chocolate com brigadeiro, baunilha com morango, Ninho com Nutella e Red Velvet.",
-    description: "Sabores extraídos do Canva. Preço não apareceu com segurança no texto carregado.",
+    description: "Sabores extraÃ­dos do Canva. PreÃ§o nÃ£o apareceu com seguranÃ§a no texto carregado.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -487,7 +499,7 @@ let products = [
     category: "Kits",
     price: 99,
     short: "Bolo com rendimento de 5 fatias. Disponibilidade em 1 hora, consultar sabores.",
-    description: "Kit extraído do Canva. Ideal para comemoração rápida.",
+    description: "Kit extraÃ­do do Canva. Ideal para comemoraÃ§Ã£o rÃ¡pida.",
     minimum: 1,
     available: true,
     madeToOrder: false,
@@ -499,7 +511,7 @@ let products = [
     image: "assets/products/doces-finos.png",
     category: "Kits",
     price: 164.9,
-    short: "Mini bolo 550g, 15 docinhos, 40 salgados, feliz aniversário e refrigerante.",
+    short: "Mini bolo 550g, 15 docinhos, 40 salgados, feliz aniversÃ¡rio e refrigerante.",
     description: "Disponibilidade em 1 hora, consultar sabores.",
     minimum: 1,
     available: true,
@@ -525,8 +537,8 @@ let products = [
     image: "assets/products/doces-finos.png",
     category: "Kits",
     price: 350,
-    short: "Versão maior do kit com bolo, docinhos, salgados, topo e refrigerante.",
-    description: "Sob encomenda. Confirmar composição pelo WhatsApp.",
+    short: "VersÃ£o maior do kit com bolo, docinhos, salgados, topo e refrigerante.",
+    description: "Sob encomenda. Confirmar composiÃ§Ã£o pelo WhatsApp.",
     minimum: 1,
     available: true,
     madeToOrder: true,
@@ -534,7 +546,7 @@ let products = [
   },
   {
     id: "pave-chocolate",
-    name: "Pavê de Chocolate",
+    name: "PavÃª de Chocolate",
     image: "assets/products/fatia-belga.png",
     category: "Vitrine",
     price: 35,
@@ -547,12 +559,12 @@ let products = [
   },
   {
     id: "mousse-maracuja",
-    name: "Mousse de Maracujá",
+    name: "Mousse de MaracujÃ¡",
     image: "assets/products/fatia-belga.png",
     category: "Vitrine",
     price: 35,
-    short: "Sobremesa leve e aerada com sabor marcante de maracujá.",
-    description: "Equilíbrio entre doce e azedinho.",
+    short: "Sobremesa leve e aerada com sabor marcante de maracujÃ¡.",
+    description: "EquilÃ­brio entre doce e azedinho.",
     minimum: 1,
     available: true,
     madeToOrder: false,
@@ -565,7 +577,7 @@ let products = [
     category: "Vitrine",
     price: 35,
     short: "Denso por dentro, levemente crocante por fora.",
-    description: "Sabor intenso de chocolate e textura úmida.",
+    description: "Sabor intenso de chocolate e textura Ãºmida.",
     minimum: 1,
     available: true,
     madeToOrder: false,
@@ -577,8 +589,8 @@ let products = [
     image: "assets/products/doces-finos.png",
     category: "Despedida de Solteiro",
     price: 4.5,
-    short: "Brigadeiro gourmet com decoração personalizada.",
-    description: "Decoração conforme o tema do evento. Pedido mínimo: 20 unidades.",
+    short: "Brigadeiro gourmet com decoraÃ§Ã£o personalizada.",
+    description: "DecoraÃ§Ã£o conforme o tema do evento. Pedido mÃ­nimo: 20 unidades.",
     minimum: 20,
     available: true,
     madeToOrder: true,
@@ -591,7 +603,7 @@ let products = [
     category: "Despedida de Solteiro",
     price: 8,
     short: "Doces modelados artesanalmente em pasta americana.",
-    description: "Desenvolvidos conforme o tema escolhido. Pedido mínimo: 15 unidades.",
+    description: "Desenvolvidos conforme o tema escolhido. Pedido mÃ­nimo: 15 unidades.",
     minimum: 15,
     available: true,
     madeToOrder: true,
@@ -604,7 +616,7 @@ let products = [
     category: "Despedida de Solteiro",
     price: 7,
     short: "Copinho de sobremesa com recheios variados.",
-    description: "Decoração personalizada no tema do evento. Pedido mínimo: 10 unidades.",
+    description: "DecoraÃ§Ã£o personalizada no tema do evento. Pedido mÃ­nimo: 10 unidades.",
     minimum: 10,
     available: true,
     madeToOrder: true,
@@ -617,7 +629,7 @@ let products = [
     category: "Despedida de Solteiro",
     price: 9,
     short: "Mini brownie ou mini bolo decorado individualmente.",
-    description: "Feito conforme o tema da comemoração. Pedido mínimo: 10 unidades.",
+    description: "Feito conforme o tema da comemoraÃ§Ã£o. Pedido mÃ­nimo: 10 unidades.",
     minimum: 10,
     available: true,
     madeToOrder: true,
@@ -630,11 +642,11 @@ let products = [
     category: "Kits",
     price: 35,
     short: "Brownies macios e chocolatados embalados para presente.",
-    description: "Ideal para presentear em qualquer ocasião.",
+    description: "Ideal para presentear em qualquer ocasiÃ£o.",
     minimum: 1,
     available: true,
     madeToOrder: true,
-    tags: ["Canva", "Presenteável"],
+    tags: ["Canva", "PresenteÃ¡vel"],
   },
   {
     id: "cx-doces-gourmet",
@@ -642,16 +654,16 @@ let products = [
     image: "assets/products/doces-finos.png",
     category: "Kits",
     price: 35,
-    short: "Seleção especial de doces artesanais variados.",
-    description: "Perfeita para surpreender com elegância.",
+    short: "SeleÃ§Ã£o especial de doces artesanais variados.",
+    description: "Perfeita para surpreender com elegÃ¢ncia.",
     minimum: 1,
     available: true,
     madeToOrder: true,
-    tags: ["Canva", "Presenteável"],
+    tags: ["Canva", "PresenteÃ¡vel"],
   },
   {
     id: "bolo-pote-presente",
-    name: "Bolo no Pote Presenteável",
+    name: "Bolo no Pote PresenteÃ¡vel",
     image: "assets/products/fatia-belga.png",
     category: "Kits",
     price: 35,
@@ -660,20 +672,20 @@ let products = [
     minimum: 1,
     available: true,
     madeToOrder: true,
-    tags: ["Canva", "Presenteável"],
+    tags: ["Canva", "PresenteÃ¡vel"],
   },
   {
     id: "kit-cafe-tarde",
-    name: "Kit Café da Tarde",
+    name: "Kit CafÃ© da Tarde",
     image: "assets/products/doces-finos.png",
     category: "Kits",
     price: 35,
-    short: "Combinação de bolo caseiro, docinhos e acompanhamentos.",
+    short: "CombinaÃ§Ã£o de bolo caseiro, docinhos e acompanhamentos.",
     description: "Ideal para um momento especial.",
     minimum: 1,
     available: true,
     madeToOrder: true,
-    tags: ["Canva", "Presenteável"],
+    tags: ["Canva", "PresenteÃ¡vel"],
   },
 ];
 
@@ -696,39 +708,39 @@ if (Array.isArray(savedProducts) && savedProducts.length) {
 }
 
 products = products.map((product) => ({
-  ...product,
+  ...normalizeProductCategory(product),
   description: product.description
+    .replace(/OpÃƒÂ§ÃƒÂµes extraÃƒÂ­das do Canva: /g, "Opcoes disponiveis: ")
     .replace(/OpÃ§Ãµes extraÃ­das do Canva: /g, "Opcoes disponiveis: ")
-    .replace(/Opções extraídas do Canva: /g, "Opcoes disponiveis: ")
+    .replace(/Sabores extraÃƒÂ­dos do Canva: /g, "Sabores disponiveis: ")
     .replace(/Sabores extraÃ­dos do Canva: /g, "Sabores disponiveis: ")
-    .replace(/Sabores extraídos do Canva: /g, "Sabores disponiveis: ")
+    .replace(/Sabores extraÃƒÂ­dos do Canva\. /g, "")
     .replace(/Sabores extraÃ­dos do Canva\. /g, "")
-    .replace(/Sabores extraídos do Canva\. /g, "")
+    .replace(/Kit extraÃƒÂ­do do Canva\. /g, "")
     .replace(/Kit extraÃ­do do Canva\. /g, "")
-    .replace(/Kit extraído do Canva\. /g, "")
-    .replace(/PreÃ§o nÃ£o apareceu com seguranÃ§a no Canva\./g, "Preco sob consulta.")
-    .replace(/Preço não apareceu com segurança no Canva\./g, "Preco sob consulta."),
+    .replace(/PreÃƒÂ§o nÃƒÂ£o apareceu com seguranÃƒÂ§a no Canva\./g, "Preco sob consulta.")
+    .replace(/PreÃ§o nÃ£o apareceu com seguranÃ§a no Canva\./g, "Preco sob consulta."),
   tags: (product.tags || []).filter((tag) => tag.toLowerCase() !== "canva"),
 }));
 
 const careItems = [
   ["Q", "Qualidade", "Ingredientes selecionados, preparo cuidadoso e acabamento pensado para encantar antes da primeira colherada."],
-  ["C", "Carinho", "Cada pedido é tratado como parte de uma celebração, do atendimento à embalagem."],
-  ["E", "Experiência", "A vitrine digital organiza escolhas, encomendas e contato sem tirar a delicadeza da marca."],
+  ["C", "Carinho", "Cada pedido Ã© tratado como parte de uma celebraÃ§Ã£o, do atendimento Ã  embalagem."],
+  ["E", "ExperiÃªncia", "A vitrine digital organiza escolhas, encomendas e contato sem tirar a delicadeza da marca."],
 ];
 
 let campaigns = [
   {
     title: "Festival de Fatias",
     image: "assets/hero-cacaue.png",
-    description: "Sabores especiais em porções individuais para provar, presentear e voltar.",
+    description: "Sabores especiais em porÃ§Ãµes individuais para provar, presentear e voltar.",
     starts: "2026-06-01",
     ends: "2026-06-30",
   },
   {
-    title: "Coleção Namorados",
+    title: "ColeÃ§Ã£o Namorados",
     image: "assets/products/doces-finos.png",
-    description: "Kits delicados com doces finos e apresentação exclusiva para datas afetivas.",
+    description: "Kits delicados com doces finos e apresentaÃ§Ã£o exclusiva para datas afetivas.",
     starts: "2026-06-01",
     ends: "2026-06-15",
   },
@@ -754,22 +766,22 @@ let storeSettings = JSON.parse(localStorage.getItem("cacaue:storeSettings") || "
 };
 
 const orderCategories = [
-  ["Tortas", "Prazo mínimo: 48h", "Pedido mínimo: 1 unidade"],
-  ["Bolos", "Prazo mínimo: 72h", "Pedido mínimo: 1 unidade"],
-  ["Doces Finos", "Prazo mínimo: 5 dias", "Pedido mínimo: 24 unidades"],
-  ["Kits", "Prazo mínimo: 48h", "Pedido mínimo: 1 kit"],
+  ["Tortas", "Prazo mÃ­nimo: 48h", "Pedido mÃ­nimo: 1 unidade"],
+  ["Bolos", "Prazo mÃ­nimo: 72h", "Pedido mÃ­nimo: 1 unidade"],
+  ["Doces Finos", "Prazo mÃ­nimo: 5 dias", "Pedido mÃ­nimo: 24 unidades"],
+  ["Kits", "Prazo mÃ­nimo: 48h", "Pedido mÃ­nimo: 1 kit"],
 ];
 
 const approvedReviews = [
-  ["Marina A.", "Tudo chegou impecável. A torta era linda e o sabor ainda mais especial."],
-  ["Clara M.", "Atendimento cuidadoso e doces finos com apresentação de evento premium."],
-  ["Renata F.", "A vitrine ajudou a escolher rápido sem perder a sensação de exclusividade."],
+  ["Marina A.", "Tudo chegou impecÃ¡vel. A torta era linda e o sabor ainda mais especial."],
+  ["Clara M.", "Atendimento cuidadoso e doces finos com apresentaÃ§Ã£o de evento premium."],
+  ["Renata F.", "A vitrine ajudou a escolher rÃ¡pido sem perder a sensaÃ§Ã£o de exclusividade."],
 ];
 
 const clients = [
-  ["Marina A.", "3 pedidos", "Última compra: 08/06", "R$ 486,00"],
-  ["Clara M.", "5 pedidos", "Última compra: 04/06", "R$ 1.120,00"],
-  ["Renata F.", "2 pedidos", "Última compra: 29/05", "R$ 264,00"],
+  ["Marina A.", "3 pedidos", "Ãšltima compra: 08/06", "R$ 486,00"],
+  ["Clara M.", "5 pedidos", "Ãšltima compra: 04/06", "R$ 1.120,00"],
+  ["Renata F.", "2 pedidos", "Ãšltima compra: 29/05", "R$ 264,00"],
 ];
 
 const SUPABASE_URL = "https://zanqzdkfmhqmhgarzvct.supabase.co";
@@ -782,12 +794,11 @@ let bag = JSON.parse(localStorage.getItem("cacaue:bag") || "[]");
 let customer = JSON.parse(localStorage.getItem("cacaue:customer") || "{}");
 let pendingReviews = JSON.parse(localStorage.getItem("cacaue:pendingReviews") || "[]");
 let fulfillmentMode = "retirada";
-let selectedCategory = "Todos";
+let selectedCategory = "Vitrine";
 let adminSelectedCategory = "Todos";
 let adminActiveTab = "summary";
 let deferredInstallPrompt = null;
 const INSTALL_PROMPT_VERSION = "pwa-v4";
-const menuCategories = ["Todos", "Vitrine", "Doces Finos", "Despedida de Solteiro", "Bolos", "Bolos Simples", "Kits"];
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -815,6 +826,40 @@ function setAdminSyncMessage(message, type = "info") {
   if (!target) return;
   target.textContent = message;
   target.dataset.type = type;
+}
+
+function normalizeProductCategory(product = {}) {
+  const originalCategory = product.category || "Vitrine";
+  const tags = product.tags || [];
+  let category = originalCategory;
+  let subcategory = product.subcategory || "";
+
+  if (originalCategory === "Doces Finos") {
+    category = "Doces";
+    subcategory = subcategory || "Doces finos";
+  } else if (originalCategory === "Despedida de Solteiro") {
+    category = "Despedidas";
+    subcategory = subcategory || "Despedida de solteiro";
+  } else if (originalCategory === "Bolos Simples") {
+    category = "Bolos";
+    subcategory = subcategory || "Bolos caseiros";
+  } else if (originalCategory === "Kits") {
+    category = tags.some((tag) => tag.toLowerCase().includes("presente")) ? "PresenteÃ¡vel" : "Kit Festa";
+    subcategory = subcategory || (category === "Kit Festa" ? "Kit pequeno" : "");
+  } else if (originalCategory === "Bolos") {
+    category = "Bolos";
+    subcategory = subcategory || (tags.some((tag) => tag.toLowerCase().includes("caseiro")) ? "Bolos caseiros" : "Bolos de festa");
+  } else if (!categoryConfig[originalCategory]) {
+    category = "Vitrine";
+  }
+
+  const showcase = product.showcase ?? product.availableInShowcase ?? originalCategory === "Vitrine";
+  return {
+    ...product,
+    category,
+    subcategory: category === "Vitrine" ? "" : subcategory,
+    showcase,
+  };
 }
 
 function supabaseHeaders(useSession = false) {
@@ -862,6 +907,7 @@ function productToDb(product, index = 0) {
     name: product.name,
     image: product.image,
     category: product.category,
+    subcategory: product.subcategory || "",
     price: product.price,
     image_fit: product.imageFit || "cover",
     image_position: product.imagePosition || "center",
@@ -869,6 +915,7 @@ function productToDb(product, index = 0) {
     description: product.description,
     minimum: product.minimum,
     available: product.available,
+    showcase: product.showcase || false,
     made_to_order: product.madeToOrder,
     tags: product.tags || [],
     sort_order: index,
@@ -876,11 +923,12 @@ function productToDb(product, index = 0) {
 }
 
 function productFromDb(row) {
-  return {
+  return normalizeProductCategory({
     id: row.id,
     name: row.name,
     image: row.image,
     category: row.category,
+    subcategory: row.subcategory || "",
     price: Number(row.price || 0),
     imageFit: row.image_fit || "cover",
     imagePosition: row.image_position || "center",
@@ -888,9 +936,10 @@ function productFromDb(row) {
     description: row.description || "",
     minimum: row.minimum || 1,
     available: row.available,
+    showcase: row.showcase || row.category === "Vitrine",
     madeToOrder: row.made_to_order,
     tags: row.tags || [],
-  };
+  });
 }
 
 function campaignToDb(campaign, index = 0) {
@@ -1176,7 +1225,7 @@ function loginAdmin(email, password) {
   const normalizedEmail = email.trim().toLowerCase();
   const account = findAdminAccount(normalizedEmail);
   if (!account || account.password !== password) {
-    $("#adminLoginMessage").textContent = "E-mail não autorizado para acessar o painel.";
+    $("#adminLoginMessage").textContent = "E-mail nÃ£o autorizado para acessar o painel.";
     return;
   }
   adminSession = { email: normalizedEmail, role: account.role, loggedAt: new Date().toISOString() };
@@ -1233,6 +1282,7 @@ function resetProductForm() {
   $("#productId").value = "";
   $("#productName").value = "";
   $("#productCategory").value = "Vitrine";
+  $("#productSubcategory").value = "";
   $("#productPrice").value = "";
   $("#productMinimum").value = "1";
   $("#productImage").value = "assets/products/doces-finos.png";
@@ -1244,13 +1294,16 @@ function resetProductForm() {
   $("#productDescription").value = "";
   $("#productTags").value = "";
   $("#productAvailable").checked = true;
+  $("#productShowcase").checked = true;
   $("#productMadeToOrder").checked = true;
+  updateSubcategoryField();
 }
 
 function fillProductForm(product) {
   $("#productId").value = product.id;
   $("#productName").value = product.name;
   $("#productCategory").value = product.category;
+  $("#productSubcategory").value = product.subcategory || "";
   $("#productPrice").value = product.price;
   $("#productMinimum").value = product.minimum;
   $("#productImage").value = product.image;
@@ -1262,7 +1315,9 @@ function fillProductForm(product) {
   $("#productDescription").value = product.description;
   $("#productTags").value = (product.tags || []).join(", ");
   $("#productAvailable").checked = product.available;
+  $("#productShowcase").checked = product.showcase || product.category === "Vitrine";
   $("#productMadeToOrder").checked = product.madeToOrder;
+  updateSubcategoryField();
   showAdminTab("product-add");
   document.querySelector("#admin-product-add").scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -1297,6 +1352,28 @@ function updateStoreLogoPreview(src = "") {
   image.src = src || "assets/logo-cacaue.svg";
 }
 
+function subcategoriesForCategory(category) {
+  const defaults = categoryConfig[category] || [];
+  const custom = products
+    .filter((product) => product.category === category && product.subcategory)
+    .map((product) => product.subcategory);
+  return [...new Set([...defaults, ...custom])];
+}
+
+function updateSubcategoryField() {
+  const category = $("#productCategory")?.value || "Vitrine";
+  const subcategoryInput = $("#productSubcategory");
+  const datalist = $("#productSubcategoryOptions");
+  if (!subcategoryInput || !datalist) return;
+  const disabled = category === "Vitrine";
+  subcategoryInput.disabled = disabled;
+  subcategoryInput.required = !disabled && subcategoriesForCategory(category).length > 0;
+  if (disabled) subcategoryInput.value = "";
+  datalist.innerHTML = subcategoriesForCategory(category)
+    .map((subcategory) => `<option value="${subcategory}"></option>`)
+    .join("");
+}
+
 function productFromForm() {
   const name = $("#productName").value.trim();
   const existingId = $("#productId").value.trim();
@@ -1312,11 +1389,13 @@ function productFromForm() {
     imageFit: $("#productImageFit").value || "cover",
     imagePosition: $("#productImagePosition").value || "center",
     category: $("#productCategory").value,
+    subcategory: $("#productCategory").value === "Vitrine" ? "" : $("#productSubcategory").value.trim(),
     price: Number($("#productPrice").value || 0),
     short: $("#productShort").value.trim(),
     description: $("#productDescription").value.trim(),
     minimum: Math.max(1, Number($("#productMinimum").value || 1)),
     available: $("#productAvailable").checked,
+    showcase: $("#productCategory").value === "Vitrine" ? true : $("#productShowcase").checked,
     madeToOrder: $("#productMadeToOrder").checked,
     tags: tags.length ? tags : existingId ? ["Editado"] : ["Novo"],
   };
@@ -1350,10 +1429,10 @@ function fineSweetSubtitle(name) {
     "Copinho de Cereja": "de cereja",
     "Surpresa de Uva": "de uva",
     "Copinho Physales": "physales",
-    "Coração Dourado": "meio amargo",
-    "Chanfrado de Café": "ganache de café",
-    "Amêndoas": "doce de leite",
-    "Gota de Maracujá": "gel cítrico",
+    "CoraÃ§Ã£o Dourado": "meio amargo",
+    "Chanfrado de CafÃ©": "ganache de cafÃ©",
+    "AmÃªndoas": "doce de leite",
+    "Gota de MaracujÃ¡": "gel cÃ­trico",
     "Quadradinho de Coco": "coco cremoso",
     "Camafeu de Nozes": "noz dourada",
     "Flor de Sakura": "nutella crocante",
@@ -1365,12 +1444,12 @@ function fineSweetSubtitle(name) {
 function productCard(product, index = 0) {
   const favorited = favorites.includes(product.id);
   const statusClass = product.available ? "status" : "status soldout";
-  const statusText = product.available ? "Disponível" : "Esgotado";
-  const orderText = product.madeToOrder ? `Sob encomenda · mínimo ${product.minimum}` : `Pronta entrega · mínimo ${product.minimum}`;
+  const statusText = product.available ? "DisponÃ­vel" : "Esgotado";
+  const orderText = product.madeToOrder ? `Sob encomenda Â· mÃ­nimo ${product.minimum}` : `Pronta entrega Â· mÃ­nimo ${product.minimum}`;
   const hasPrice = product.price > 0;
   const actionDisabled = !product.available || !hasPrice;
   const usePremiumCard = true;
-  const subtitle = fineSweetSubtitle(product.name) || product.category;
+  const subtitle = selectedCategory === "Vitrine" ? "" : fineSweetSubtitle(product.name) || product.subcategory || "";
 
   return `
     <article class="menu-card ${usePremiumCard ? "fine-sweet-card" : ""}" data-product="${product.id}">
@@ -1382,7 +1461,7 @@ function productCard(product, index = 0) {
         <div class="badge-row">${(product.tags || []).filter((tag) => tag.toLowerCase() !== "canva").map((tag) => `<span class="badge">${tag}</span>`).join("")}</div>
         <div class="menu-card-title">
           <h3>${product.name}</h3>
-          <button class="heart ${favorited ? "active" : ""}" type="button" data-favorite="${product.id}" aria-label="Favoritar ${product.name}">♡</button>
+          <button class="heart ${favorited ? "active" : ""}" type="button" data-favorite="${product.id}" aria-label="Favoritar ${product.name}">â™¡</button>
         </div>
         ${subtitle ? `<span class="fine-sweet-subtitle">${subtitle}</span>` : ""}
         <p>${product.short}</p>
@@ -1413,7 +1492,7 @@ function renderCampaigns() {
         <article class="campaign-card">
           <img src="${campaign.image}" alt="${campaign.title}" />
           <div class="campaign-copy">
-            <span class="campaign-date">Até ${new Date(campaign.ends).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</span>
+            <span class="campaign-date">AtÃ© ${new Date(campaign.ends).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</span>
             <h3>${campaign.title}</h3>
             <p>${campaign.description}</p>
           </div>
@@ -1428,7 +1507,7 @@ function getCategories() {
 }
 
 function productsForMenu(list = products) {
-  if (selectedCategory === "Todos") return list;
+  if (selectedCategory === "Vitrine") return list.filter((product) => product.showcase || product.category === "Vitrine");
   return list.filter((product) => product.category === selectedCategory);
 }
 
@@ -1440,10 +1519,36 @@ function renderCategoryTabs() {
 
 function renderProducts(list = products) {
   const menuProducts = productsForMenu(list);
-  $("#menuTitle").textContent = selectedCategory === "Todos" ? "Cardápio completo" : selectedCategory;
+  $("#menuTitle").textContent = selectedCategory === "Vitrine" ? "Vitrine do dia" : selectedCategory;
   $("#menuCount").textContent = `${menuProducts.length} ${menuProducts.length === 1 ? "item" : "itens"}`;
-  $("#menuProducts").innerHTML = menuProducts.length ? menuProducts.map(productCard).join("") : `<p>Nenhum produto nesta seleção.</p>`;
+  $("#menuProducts").innerHTML = renderProductGroups(menuProducts);
   renderCategoryTabs();
+}
+
+function renderProductGroups(menuProducts) {
+  if (!menuProducts.length) return `<p>Nenhum produto nesta selecao.</p>`;
+  const shouldGroup = selectedCategory !== "Vitrine" && menuProducts.some((product) => product.subcategory);
+  if (!shouldGroup) return menuProducts.map(productCard).join("");
+
+  const groups = new Map();
+  menuProducts.forEach((product) => {
+    const key = product.subcategory || "Outros";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(product);
+  });
+
+  let count = 0;
+  return [...groups.entries()]
+    .map(([subcategory, groupProducts]) => {
+      const cards = groupProducts.map((product) => productCard(product, count++)).join("");
+      return `
+        <section class="menu-subgroup">
+          <h3 class="menu-subtitle">${subcategory}</h3>
+          <div class="menu-subgrid">${cards}</div>
+        </section>
+      `;
+    })
+    .join("");
 }
 
 function renderOrderCategories() {
@@ -1538,12 +1643,12 @@ function renderAdmin() {
   const pricedProducts = products.filter((product) => product.price > 0);
   const consultProducts = products.filter((product) => product.price <= 0);
   const madeToOrderProducts = products.filter((product) => product.madeToOrder);
-  const categoriesCount = menuCategories.length - 1;
+  const categoriesCount = menuCategories.length;
 
   $("#metricGrid").innerHTML = [
     ["Itens no cardapio", String(products.length)],
     ["Categorias", String(categoriesCount)],
-    ["Consultar preço", String(consultProducts.length)],
+    ["Consultar preÃ§o", String(consultProducts.length)],
     ["Valor na sacola", money.format(subtotal)],
   ]
     .map(([label, value]) => `<article class="metric-card"><span>${label}</span><strong>${value}</strong></article>`)
@@ -1576,10 +1681,10 @@ function renderAdmin() {
 
   $("#pendingReviews").innerHTML = pendingReviews.length
     ? pendingReviews.map((review) => `<div class="admin-row"><strong>${review.name}</strong><span>Pendente</span></div>`).join("")
-    : `<p>Nenhuma avaliação pendente.</p>`;
+    : `<p>Nenhuma avaliaÃ§Ã£o pendente.</p>`;
 
   $("#clientList").innerHTML = clients
-    .map(([name, orders, last, total]) => `<div class="client-row"><div><strong>${name}</strong><p>${orders} · ${last}</p></div><b>${total}</b></div>`)
+    .map(([name, orders, last, total]) => `<div class="client-row"><div><strong>${name}</strong><p>${orders} Â· ${last}</p></div><b>${total}</b></div>`)
     .join("");
 
   renderAdminProducts();
@@ -1591,13 +1696,13 @@ function renderAdminProducts() {
   const list = $("#adminProductList");
   if (!filter || !list) return;
 
-  filter.innerHTML = menuCategories.map((category) => `<option value="${category}">${category}</option>`).join("");
+  filter.innerHTML = adminCategoryFilterOptions.map((category) => `<option value="${category}">${category}</option>`).join("");
   filter.value = adminSelectedCategory;
   $("#productCategory").innerHTML = menuCategories
-    .filter((category) => category !== "Todos")
     .map((category) => `<option value="${category}">${category}</option>`)
     .join("");
   if (!$("#productCategory").value) $("#productCategory").value = "Vitrine";
+  updateSubcategoryField();
 
   const visibleProducts = adminSelectedCategory === "Todos" ? products : products.filter((product) => product.category === adminSelectedCategory);
   $("#adminProductCount").textContent = `${visibleProducts.length} ${visibleProducts.length === 1 ? "item" : "itens"}`;
@@ -1608,8 +1713,8 @@ function renderAdminProducts() {
           <img src="${product.image}" alt="${product.name}" style="object-fit: ${product.imageFit || "cover"}; object-position: ${product.imagePosition || "center"};" />
           <div>
             <strong>${product.name}</strong>
-            <p>Status: ${product.available ? "Disponivel" : "Esgotado"}</p>
-            <p>${product.category} · ${product.madeToOrder ? "Sob encomenda" : "Pronta entrega"} · mínimo ${product.minimum}</p>
+            <p>Status: ${product.available ? "Disponivel" : "Esgotado"} Â· ${product.showcase ? "Na Vitrine" : "Fora da Vitrine"}</p>
+            <p>${product.category}${product.subcategory ? ` / ${product.subcategory}` : ""} Â· ${product.madeToOrder ? "Sob encomenda" : "Pronta entrega"} Â· mÃ­nimo ${product.minimum}</p>
           </div>
           <span>${product.price > 0 ? money.format(product.price) : "Consultar"}</span>
           <button class="text-button compact" type="button" data-edit-product="${product.id}">Editar produto</button>
@@ -1639,7 +1744,7 @@ function updateBagSummary(lastProductName = "") {
   const count = bag.reduce((sum, item) => sum + item.quantity, 0);
   if (!$("#bagSummary")) return;
   $("#bagSummaryTitle").textContent = lastProductName ? `${lastProductName} adicionado` : `${count} ${count === 1 ? "item" : "itens"} na sacola`;
-  $("#bagSummaryMeta").textContent = count > 0 ? `${money.format(bagSubtotal())} até agora` : "Sua sacola está vazia.";
+  $("#bagSummaryMeta").textContent = count > 0 ? `${money.format(bagSubtotal())} atÃ© agora` : "Sua sacola estÃ¡ vazia.";
 }
 
 function showBagSummary(productName = "") {
@@ -1658,17 +1763,17 @@ function openProduct(id) {
     <div>
       <div class="badge-row">${(product.tags || []).filter((tag) => tag.toLowerCase() !== "canva").map((tag) => `<span class="badge">${tag}</span>`).join("")}</div>
       <h2 id="modalTitle">${product.name}</h2>
-      <p class="price">${product.price > 0 ? money.format(product.price) : "Consultar preço"}</p>
+      <p class="price">${product.price > 0 ? money.format(product.price) : "Consultar preÃ§o"}</p>
       <p>${product.description}</p>
-      <p><strong>Pedido mínimo:</strong> ${product.minimum} ${product.minimum > 1 ? "unidades" : "unidade"}</p>
+      <p><strong>Pedido mÃ­nimo:</strong> ${product.minimum} ${product.minimum > 1 ? "unidades" : "unidade"}</p>
       <div class="quantity">
-        <button type="button" data-qty="-1">−</button>
+        <button type="button" data-qty="-1">âˆ’</button>
         <span id="detailQty">${quantity}</span>
         <button type="button" data-qty="1">+</button>
       </div>
       <div class="hero-actions">
         <button class="secondary-button" type="button" data-favorite="${product.id}">${favorited ? "Favorito" : "Favoritar"}</button>
-        <button class="primary-button" type="button" data-add-bag="${product.id}" ${product.price > 0 && product.available ? "" : "disabled"}>${product.price > 0 && product.available ? "Adicionar à Sacola" : "Consultar no WhatsApp"}</button>
+        <button class="primary-button" type="button" data-add-bag="${product.id}" ${product.price > 0 && product.available ? "" : "disabled"}>${product.price > 0 && product.available ? "Adicionar Ã  Sacola" : "Consultar no WhatsApp"}</button>
       </div>
     </div>
   `;
@@ -1736,7 +1841,7 @@ function renderBag() {
               <img src="${product.image}" alt="${product.name}" />
               <div><strong>${product.name}</strong><p>${money.format(product.price)}</p></div>
               <div class="bag-controls">
-                <button type="button" data-bag="${product.id}" data-delta="-1">−</button>
+                <button type="button" data-bag="${product.id}" data-delta="-1">âˆ’</button>
                 <span>${item.quantity}</span>
                 <button type="button" data-bag="${product.id}" data-delta="1">+</button>
               </div>
@@ -1744,7 +1849,7 @@ function renderBag() {
           `;
         })
         .join("")
-    : `<p>Sua sacola está vazia.</p>`;
+    : `<p>Sua sacola estÃ¡ vazia.</p>`;
 
   const subtotal = bag.reduce((sum, item) => {
     const product = products.find((entry) => entry.id === item.id);
@@ -1941,6 +2046,7 @@ function bindEvents() {
     await saveProductFromForm();
   });
   $("#cancelProductEdit").addEventListener("click", resetProductForm);
+  $("#productCategory").addEventListener("change", updateSubcategoryField);
   $("#productImage").addEventListener("input", (event) => {
     updateProductImagePreview(event.target.value);
   });
@@ -1956,15 +2062,15 @@ function bindEvents() {
   });
   $("#favoriteButton").addEventListener("click", () => {
     document.querySelector("#cardapio").scrollIntoView();
-    selectedCategory = "Todos";
+    selectedCategory = "Vitrine";
     renderProducts(products.filter((product) => favorites.includes(product.id)));
   });
   $("#showFavoritesOnly").addEventListener("click", () => {
-    selectedCategory = "Todos";
+    selectedCategory = "Vitrine";
     renderProducts(products.filter((product) => favorites.includes(product.id)));
   });
   $("#showAllProducts").addEventListener("click", () => {
-    selectedCategory = "Todos";
+    selectedCategory = "Vitrine";
     renderProducts();
   });
 
@@ -2084,8 +2190,8 @@ function legacyShowInstallPrompt(isIosFallback = false) {
   const prompt = $("#installAppPrompt");
   if (!prompt) return;
   $("#installAppText").textContent = isIosFallback
-    ? "No iPhone, toque em compartilhar e escolha Adicionar à Tela de Início."
-    : "Acesse a vitrine mais rápido pela tela inicial.";
+    ? "No iPhone, toque em compartilhar e escolha Adicionar Ã  Tela de InÃ­cio."
+    : "Acesse a vitrine mais rÃ¡pido pela tela inicial.";
   $("#installAppButton").classList.toggle("hidden", isIosFallback);
   prompt.classList.remove("hidden");
 }
@@ -2198,3 +2304,4 @@ function init() {
 }
 
 init();
+
