@@ -599,6 +599,7 @@ p {
 }
 
 .category-tabs button,
+.subcategory-tabs button,
 .add-button {
   min-height: 42px;
   border: 1px solid var(--line);
@@ -616,7 +617,30 @@ p {
   white-space: nowrap;
 }
 
+.subcategory-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 14px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  scrollbar-width: none;
+}
+
+.subcategory-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.subcategory-tabs button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 13px;
+  color: var(--muted);
+  background: rgba(255, 254, 251, 0.84);
+  white-space: nowrap;
+}
+
 .category-tabs button.active,
+.subcategory-tabs button.active,
 .add-button {
   color: var(--cream);
   background: var(--brown);
@@ -1873,6 +1897,12 @@ textarea {
     display: flex;
     overflow-x: auto;
     padding-bottom: 4px;
+  }
+
+  .subcategory-tabs {
+    margin-top: -2px;
+    margin-bottom: 12px;
+    overflow-x: auto;
   }
 
   .category-tabs button {

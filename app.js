@@ -795,6 +795,7 @@ let customer = JSON.parse(localStorage.getItem("cacaue:customer") || "{}");
 let pendingReviews = JSON.parse(localStorage.getItem("cacaue:pendingReviews") || "[]");
 let fulfillmentMode = "retirada";
 let selectedCategory = "Vitrine";
+let selectedSubcategory = "Todos";
 let adminSelectedCategory = "Todos";
 let adminActiveTab = "summary";
 let deferredInstallPrompt = null;
@@ -1506,9 +1507,22 @@ function getCategories() {
   return menuCategories;
 }
 
+function getVisibleSubcategories(category, list = products) {
+  if (category === "Vitrine") return [];
+  const defaults = categoryConfig[category] || [];
+  const existing = list
+    .filter((product) => product.category === category && product.subcategory)
+    .map((product) => product.subcategory);
+  return [...new Set([...defaults, ...existing])];
+}
+
 function productsForMenu(list = products) {
   if (selectedCategory === "Vitrine") return list.filter((product) => product.showcase || product.category === "Vitrine");
-  return list.filter((product) => product.category === selectedCategory);
+  return list.filter((product) => {
+    const sameCategory = product.category === selectedCategory;
+    const sameSubcategory = selectedSubcategory === "Todos" || product.subcategory === selectedSubcategory;
+    return sameCategory && sameSubcategory;
+  });
 }
 
 function renderCategoryTabs() {
@@ -1517,7 +1531,26 @@ function renderCategoryTabs() {
     .join("");
 }
 
+function renderSubcategoryTabs(list = products) {
+  const target = $("#subcategoryTabs");
+  if (!target) return;
+  const subcategories = getVisibleSubcategories(selectedCategory, list);
+  target.classList.toggle("hidden", selectedCategory === "Vitrine" || !subcategories.length);
+  if (selectedCategory === "Vitrine" || !subcategories.length) {
+    target.innerHTML = "";
+    selectedSubcategory = "Todos";
+    return;
+  }
+  if (selectedSubcategory !== "Todos" && !subcategories.includes(selectedSubcategory)) {
+    selectedSubcategory = "Todos";
+  }
+  target.innerHTML = ["Todos", ...subcategories]
+    .map((subcategory) => `<button class="${subcategory === selectedSubcategory ? "active" : ""}" type="button" data-subcategory="${subcategory}">${subcategory}</button>`)
+    .join("");
+}
+
 function renderProducts(list = products) {
+  renderSubcategoryTabs(list);
   const menuProducts = productsForMenu(list);
   $("#menuTitle").textContent = selectedCategory === "Vitrine" ? "Vitrine do dia" : selectedCategory;
   $("#menuCount").textContent = `${menuProducts.length} ${menuProducts.length === 1 ? "item" : "itens"}`;
@@ -1527,7 +1560,7 @@ function renderProducts(list = products) {
 
 function renderProductGroups(menuProducts) {
   if (!menuProducts.length) return `<p>Nenhum produto nesta selecao.</p>`;
-  const shouldGroup = selectedCategory !== "Vitrine" && menuProducts.some((product) => product.subcategory);
+  const shouldGroup = selectedCategory !== "Vitrine" && selectedSubcategory === "Todos" && menuProducts.some((product) => product.subcategory);
   if (!shouldGroup) return menuProducts.map(productCard).join("");
 
   const groups = new Map();
@@ -2063,14 +2096,17 @@ function bindEvents() {
   $("#favoriteButton").addEventListener("click", () => {
     document.querySelector("#cardapio").scrollIntoView();
     selectedCategory = "Vitrine";
+    selectedSubcategory = "Todos";
     renderProducts(products.filter((product) => favorites.includes(product.id)));
   });
   $("#showFavoritesOnly").addEventListener("click", () => {
     selectedCategory = "Vitrine";
+    selectedSubcategory = "Todos";
     renderProducts(products.filter((product) => favorites.includes(product.id)));
   });
   $("#showAllProducts").addEventListener("click", () => {
     selectedCategory = "Vitrine";
+    selectedSubcategory = "Todos";
     renderProducts();
   });
 
@@ -2078,6 +2114,14 @@ function bindEvents() {
     const button = event.target.closest("[data-category]");
     if (!button) return;
     selectedCategory = button.dataset.category;
+    selectedSubcategory = "Todos";
+    renderProducts();
+  });
+
+  $("#subcategoryTabs").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-subcategory]");
+    if (!button) return;
+    selectedSubcategory = button.dataset.subcategory;
     renderProducts();
   });
 
