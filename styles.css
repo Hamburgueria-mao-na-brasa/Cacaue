@@ -598,7 +598,9 @@ p {
   display: flex;
   gap: 8px;
   overflow-x: auto;
+  overscroll-behavior-inline: contain;
   padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .category-tabs button,
@@ -625,8 +627,16 @@ p {
   gap: 8px;
   margin: 0 0 14px;
   overflow-x: auto;
+  overscroll-behavior-inline: contain;
   padding: 2px 2px 8px;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-tabs::after,
+.subcategory-tabs::after {
+  content: "";
+  flex: 0 0 10px;
 }
 
 .subcategory-tabs::-webkit-scrollbar {
@@ -1150,6 +1160,13 @@ body.admin-panel-open {
 .admin-welcome h3 {
   margin: 4px 0 6px;
   font-size: 1.35rem;
+}
+
+.admin-welcome-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 .admin-welcome p,
@@ -1917,6 +1934,11 @@ textarea {
     flex-direction: column;
     gap: 12px;
     margin-bottom: 14px;
+  }
+
+  .admin-welcome-actions {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .admin-menu {

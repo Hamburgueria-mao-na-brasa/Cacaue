@@ -780,13 +780,32 @@ let storeSettings = JSON.parse(localStorage.getItem("cacaue:storeSettings") || "
 
 function normalizeStoreSettings(settings) {
   const normalized = { ...settings };
-  if (normalized.logoImage === "assets/logo-cacaue-app.png" || normalized.logoImage === "assets/logo-cacaue.svg") {
+  if (
+    !normalized.logoImage ||
+    normalized.logoImage === "assets/logo-cacaue-app.png" ||
+    normalized.logoImage === "assets/logo-cacaue.svg" ||
+    normalized.logoImage === "assets/hero-cacaue.png" ||
+    normalized.logoImage.includes?.("hero-cacaue")
+  ) {
     normalized.logoImage = "assets/logo-cacaue-app.jpg";
+  }
+  if (!normalized.heroTitle || normalized.heroTitle.toLowerCase() === "cacaue") {
+    normalized.heroTitle = "Cacauê";
+  }
+  if (normalized.heroText) {
+    normalized.heroText = normalized.heroText
+      .replace(/Cacaue/g, "Cacauê")
+      .replace(/presentaveis/g, "presenteáveis")
+      .replace(/Mineiros - GO\./g, "Mineiros - GO.");
+  }
+  if (normalized.weekHours) {
+    normalized.weekHours = normalized.weekHours.replace("Seg a sab", "Seg a sáb");
   }
   return normalized;
 }
 
 storeSettings = normalizeStoreSettings(storeSettings);
+localStorage.setItem("cacaue:storeSettings", JSON.stringify(storeSettings));
 
 const orderCategories = [
   ["Tortas", "Prazo mínimo: 48h", "Pedido mínimo: 1 unidade"],
@@ -795,17 +814,13 @@ const orderCategories = [
   ["Kits", "Prazo mínimo: 48h", "Pedido mínimo: 1 kit"],
 ];
 
-const approvedReviews = [
+let approvedReviews = JSON.parse(localStorage.getItem("cacaue:approvedReviews") || "null") || [
   ["Marina A.", "Tudo chegou impecável. A torta era linda e o sabor ainda mais especial."],
   ["Clara M.", "Atendimento cuidadoso e doces finos com apresentação de evento premium."],
   ["Renata F.", "A vitrine ajudou a escolher rápido sem perder a sensação de exclusividade."],
 ];
 
-const clients = [
-  ["Marina A.", "3 pedidos", "Última compra: 08/06", "R$ 486,00"],
-  ["Clara M.", "5 pedidos", "Última compra: 04/06", "R$ 1.120,00"],
-  ["Renata F.", "2 pedidos", "Última compra: 29/05", "R$ 264,00"],
-];
+let orders = JSON.parse(localStorage.getItem("cacaue:orders") || "[]");
 
 const SUPABASE_URL = "https://zanqzdkfmhqmhgarzvct.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_z03cxeVF-6pUwiul8lPwZA_eT1ow2n5";
@@ -822,6 +837,7 @@ let selectedSubcategory = "Todos";
 let adminSelectedCategory = "Todos";
 let adminActiveTab = "summary";
 let deferredInstallPrompt = null;
+let bagSummaryTimer = null;
 const INSTALL_PROMPT_VERSION = "pwa-v4";
 
 const $ = (selector) => document.querySelector(selector);
@@ -831,6 +847,8 @@ function persist() {
   localStorage.setItem("cacaue:bag", JSON.stringify(bag));
   localStorage.setItem("cacaue:customer", JSON.stringify(customer));
   localStorage.setItem("cacaue:pendingReviews", JSON.stringify(pendingReviews));
+  localStorage.setItem("cacaue:approvedReviews", JSON.stringify(approvedReviews));
+  localStorage.setItem("cacaue:orders", JSON.stringify(orders));
 }
 
 function persistProducts() {
@@ -1035,6 +1053,20 @@ function campaignFromDb(row) {
   };
 }
 
+function orderFromDb(row) {
+  return {
+    id: row.id,
+    protocol: row.protocol,
+    customer: row.customer || {},
+    items: row.items || [],
+    subtotal: Number(row.subtotal || 0),
+    delivery_fee: Number(row.delivery_fee || 0),
+    total: Number(row.total || 0),
+    status: row.status || "novo",
+    created_at: row.created_at || new Date().toISOString(),
+  };
+}
+
 async function loadRemoteData() {
   try {
     const [remoteProducts, remoteCampaigns, remoteSettings] = await Promise.all([
@@ -1067,6 +1099,23 @@ async function loadRemoteData() {
   }
 }
 
+async function loadAdminOrders() {
+  if (!adminSession?.access_token) return;
+  try {
+    const remoteOrders = await supabaseJson("/orders?select=*&order=created_at.desc&limit=60", {
+      useSession: true,
+    });
+    if (Array.isArray(remoteOrders)) {
+      orders = remoteOrders.map(orderFromDb);
+      localStorage.setItem("cacaue:orders", JSON.stringify(orders));
+      renderAdmin();
+    }
+  } catch (error) {
+    console.warn("Não foi possível carregar pedidos do Supabase.", error);
+    setAdminSyncMessage("Não consegui carregar pedidos do servidor agora.", "warning");
+  }
+}
+
 async function saveProductsToSupabase() {
   if (!(await ensureAdminSession())) {
     setAdminSyncMessage("Sessão expirada. Entre novamente no admin para salvar no servidor.", "error");
@@ -1093,6 +1142,26 @@ async function saveProductsToSupabase() {
   } catch (error) {
     console.warn("Não foi possível salvar produtos no Supabase.", error);
     setAdminSyncMessage(`Não foi possível salvar. Verifique sua conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
+    return false;
+  }
+}
+
+async function deleteProductFromSupabase(id) {
+  if (!(await ensureAdminSession())) {
+    setAdminSyncMessage("Sessão expirada. Entre novamente no admin para excluir no servidor.", "error");
+    return false;
+  }
+  try {
+    await supabaseJson(`/products?id=eq.${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      useSession: true,
+      headers: { Prefer: "return=minimal" },
+    });
+    setAdminSyncMessage("Produto excluído do servidor.", "success");
+    return true;
+  } catch (error) {
+    console.warn("Não foi possível excluir produto no Supabase.", error);
+    setAdminSyncMessage(`Não foi possível excluir o produto. Detalhe: ${error.message}`, "error");
     return false;
   }
 }
@@ -1294,6 +1363,7 @@ function openAdminPanel() {
   $("#admin").setAttribute("aria-hidden", "false");
   document.body.classList.add("admin-panel-open");
   renderAdminAccess();
+  if (isAdminAuthorized()) loadAdminOrders();
   showAdminTab("summary");
   $("#admin").scrollTop = 0;
   setTimeout(() => {
@@ -1359,6 +1429,7 @@ async function loginAdminSupabase(email, password) {
   $("#adminLoginMessage").textContent = "Login realizado com sucesso.";
   $("#adminPassword").value = "";
   await loadRemoteData();
+  await loadAdminOrders();
   if (!localStorage.getItem("cacaue:adminTutorialSeen")) {
     adminActiveTab = "tutorial";
     localStorage.setItem("cacaue:adminTutorialSeen", "true");
@@ -1732,6 +1803,38 @@ function renderReviews() {
     .join("");
 }
 
+function orderItemLabel(order) {
+  const items = Array.isArray(order.items) ? order.items : [];
+  if (!items.length) return "Pedido sem itens";
+  const first = items[0];
+  const suffix = items.length > 1 ? ` +${items.length - 1}` : "";
+  return `${first.quantity || 1}x ${first.name || first.product_id || "Item"}${suffix}`;
+}
+
+function orderDateLabel(value) {
+  if (!value) return "sem data";
+  return new Date(value).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+}
+
+function clientsFromOrders() {
+  const grouped = new Map();
+  orders.forEach((order) => {
+    const name = order.customer?.name || "Cliente sem nome";
+    const current = grouped.get(name) || {
+      name,
+      whatsapp: order.customer?.whatsapp || "",
+      count: 0,
+      total: 0,
+      last: order.created_at,
+    };
+    current.count += 1;
+    current.total += Number(order.total || 0);
+    if (new Date(order.created_at) > new Date(current.last || 0)) current.last = order.created_at;
+    grouped.set(name, current);
+  });
+  return [...grouped.values()].sort((a, b) => new Date(b.last || 0) - new Date(a.last || 0));
+}
+
 function whatsappLinkFromText(value) {
   const digits = value.replace(/\D/g, "");
   return digits ? `https://wa.me/55${digits.replace(/^55/, "")}` : "https://wa.me/";
@@ -1805,31 +1908,36 @@ function renderStoreSettings() {
 }
 
 function renderAdmin() {
-  const subtotal = bag.reduce((sum, item) => {
-    const product = products.find((entry) => entry.id === item.id);
-    return sum + (product ? product.price * item.quantity : 0);
-  }, 0);
-  const pricedProducts = products.filter((product) => product.price > 0);
-  const consultProducts = products.filter((product) => product.price <= 0);
-  const madeToOrderProducts = products.filter((product) => product.madeToOrder);
-  const categoriesCount = menuCategories.length;
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const todayOrders = orders.filter((order) => String(order.created_at || "").slice(0, 10) === todayKey);
+  const todayRevenue = todayOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+  const showcaseProducts = products.filter((product) => product.showcase || product.category === "Vitrine");
+  const unavailableProducts = products.filter((product) => !product.available);
 
   $("#metricGrid").innerHTML = [
-    ["Itens no cardápio", String(products.length)],
-    ["Categorias", String(categoriesCount)],
-    ["Consultar preço", String(consultProducts.length)],
-    ["Valor na sacola", money.format(subtotal)],
+    ["Pedidos hoje", String(todayOrders.length)],
+    ["Faturamento hoje", money.format(todayRevenue)],
+    ["Na Vitrine", String(showcaseProducts.length)],
+    ["Esgotados", String(unavailableProducts.length)],
   ]
     .map(([label, value]) => `<article class="metric-card"><span>${label}</span><strong>${value}</strong></article>`)
     .join("");
 
-  $("#orderList").innerHTML = [
-    ["#CAC-1027", "Retirada 16:00", "Kit Festa Mini", "R$ 99,00"],
-    ["#CAC-1028", "Entrega", "Bolo de Festa 17cm", "R$ 145,00"],
-    ["#CAC-1029", "Encomenda", "Doces personalizados", "Consultar"],
-  ]
-    .map(([id, type, item, value]) => `<div class="admin-row"><strong>${id}</strong><span>${type}</span><span>${item}</span><b>${value}</b></div>`)
-    .join("");
+  $("#orderList").innerHTML = orders.length
+    ? orders
+        .slice(0, 20)
+        .map(
+          (order) => `
+            <div class="admin-row">
+              <strong>${order.protocol}</strong>
+              <span>${order.customer?.name || "Cliente"} · ${orderDateLabel(order.created_at)}</span>
+              <span>${orderItemLabel(order)}</span>
+              <b>${money.format(order.total || 0)}</b>
+            </div>
+          `,
+        )
+        .join("")
+    : `<p>Nenhum pedido recebido ainda.</p>`;
 
   $("#adminCampaigns").innerHTML = campaigns.length
     ? campaigns
@@ -1856,9 +1964,12 @@ function renderAdmin() {
     ? pendingReviews.map((review, index) => `<div class="admin-row"><strong>${review.name}</strong><span>${review.message || "Avaliação sem texto"}</span><div class="admin-row-actions"><button class="text-button compact" type="button" data-approve-review="${index}">Aprovar</button><button class="text-button compact" type="button" data-delete-review="${index}">Excluir</button></div></div>`).join("")
     : `<p>Nenhuma avaliação pendente.</p>`;
 
-  $("#clientList").innerHTML = clients
-    .map(([name, orders, last, total]) => `<div class="client-row"><div><strong>${name}</strong><p>${orders} · ${last}</p></div><b>${total}</b></div>`)
-    .join("");
+  const clients = clientsFromOrders();
+  $("#clientList").innerHTML = clients.length
+    ? clients
+        .map((client) => `<div class="client-row"><div><strong>${client.name}</strong><p>${client.count} ${client.count === 1 ? "pedido" : "pedidos"} · Última compra: ${orderDateLabel(client.last)}${client.whatsapp ? ` · ${client.whatsapp}` : ""}</p></div><b>${money.format(client.total)}</b></div>`)
+        .join("")
+    : `<p>Os clientes aparecem aqui depois dos primeiros pedidos.</p>`;
 
   renderAdminProducts();
   renderStoreSettings();
@@ -1890,7 +2001,10 @@ function renderAdminProducts() {
             <p>${product.category}${product.subcategory ? ` / ${product.subcategory}` : ""} · ${product.madeToOrder ? "Sob encomenda" : "Pronta entrega"} · mínimo ${product.minimum}</p>
           </div>
           <span>${product.price > 0 ? money.format(product.price) : "Consultar"}</span>
-          <button class="text-button compact" type="button" data-edit-product="${product.id}">Editar produto</button>
+          <div class="admin-row-actions">
+            <button class="text-button compact" type="button" data-edit-product="${product.id}">Editar</button>
+            <button class="text-button compact" type="button" data-delete-product="${product.id}">Excluir</button>
+          </div>
         </div>
       `,
     )
@@ -1902,7 +2016,9 @@ function renderCounts() {
   $("#favoriteCount").textContent = favorites.length;
   $("#bagCount").textContent = count;
   $("#bagButton").classList.toggle("has-items", count > 0);
-  $("#bagSummary").classList.toggle("hidden", count === 0);
+  if (count === 0) {
+    $("#bagSummary").classList.add("hidden");
+  }
   updateBagSummary();
 }
 
@@ -1923,6 +2039,10 @@ function updateBagSummary(lastProductName = "") {
 function showBagSummary(productName = "") {
   $("#bagSummary").classList.remove("hidden");
   updateBagSummary(productName);
+  window.clearTimeout(bagSummaryTimer);
+  bagSummaryTimer = window.setTimeout(() => {
+    $("#bagSummary")?.classList.add("hidden");
+  }, 3600);
 }
 
 function openProduct(id) {
@@ -2108,6 +2228,26 @@ async function checkout() {
     .filter((line) => line !== "")
     .join("\n");
   const whatsappUrl = whatsappOrderLink(whatsappMessage);
+  const orderItems = bag.map((item) => {
+    const product = products.find((entry) => entry.id === item.id);
+    return {
+      product_id: item.id,
+      name: product?.name || item.id,
+      quantity: item.quantity,
+      price: product?.price || 0,
+    };
+  });
+  const localOrder = {
+    id: `local-${Date.now()}`,
+    protocol,
+    customer,
+    items: orderItems,
+    subtotal,
+    delivery_fee: delivery,
+    total,
+    status: "novo",
+    created_at: new Date().toISOString(),
+  };
 
   try {
     await supabaseJson("/orders", {
@@ -2117,15 +2257,7 @@ async function checkout() {
         {
           protocol,
           customer,
-          items: bag.map((item) => {
-            const product = products.find((entry) => entry.id === item.id);
-            return {
-              product_id: item.id,
-              name: product?.name || item.id,
-              quantity: item.quantity,
-              price: product?.price || 0,
-            };
-          }),
+          items: orderItems,
           subtotal,
           delivery_fee: delivery,
           total,
@@ -2137,6 +2269,7 @@ async function checkout() {
     console.warn("Pedido ficou local porque o Supabase ainda não aceitou o envio.", error);
   }
 
+  orders = [localOrder, ...orders.filter((order) => order.protocol !== protocol)];
   bag = [];
   persist();
   renderBag();
@@ -2153,6 +2286,7 @@ function bindEvents() {
     const favoriteButton = event.target.closest("[data-favorite]");
     const quickAddButton = event.target.closest("[data-quick-add]");
     const editProductButton = event.target.closest("[data-edit-product]");
+    const deleteProductButton = event.target.closest("[data-delete-product]");
     const editCampaignButton = event.target.closest("[data-edit-campaign]");
     const deleteCampaignButton = event.target.closest("[data-delete-campaign]");
     const approveReviewButton = event.target.closest("[data-approve-review]");
@@ -2176,6 +2310,25 @@ function bindEvents() {
       if (product) {
         fillProductForm(product);
       }
+      return;
+    }
+
+    if (deleteProductButton) {
+      event.stopPropagation();
+      const previousProducts = products.map((product) => ({ ...product, tags: [...(product.tags || [])] }));
+      products = products.filter((entry) => entry.id !== deleteProductButton.dataset.deleteProduct);
+      setAdminSyncMessage("Excluindo produto no servidor...", "info");
+      deleteProductFromSupabase(deleteProductButton.dataset.deleteProduct).then((saved) => {
+        if (saved) {
+          persistProducts();
+          renderProducts();
+          renderAdmin();
+          return;
+        }
+        products = previousProducts;
+        renderProducts();
+        renderAdmin();
+      });
       return;
     }
 
@@ -2211,6 +2364,7 @@ function bindEvents() {
       const [review] = pendingReviews.splice(index, 1);
       if (review) approvedReviews.unshift([review.name, review.message || "Experiência aprovada pela Cacauê."]);
       persist();
+      localStorage.setItem("cacaue:approvedReviews", JSON.stringify(approvedReviews));
       renderReviews();
       renderAdmin();
       setAdminSyncMessage("Avaliação aprovada no painel.", "success");
@@ -2267,6 +2421,11 @@ function bindEvents() {
     loginAdminSupabase($("#adminEmail").value, $("#adminPassword").value);
   });
   $("#adminLogoutButton").addEventListener("click", logoutAdmin);
+  $("#refreshAdminData").addEventListener("click", async () => {
+    setAdminSyncMessage("Atualizando dados do servidor...", "info");
+    await loadRemoteData();
+    await loadAdminOrders();
+  });
   $("#toggleAdminPassword").addEventListener("click", () => {
     const input = $("#adminPassword");
     const showing = input.type === "text";
