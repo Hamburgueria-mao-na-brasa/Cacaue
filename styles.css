@@ -2225,22 +2225,7 @@ textarea {
 @media (min-width: 761px) and (max-width: 980px) {
   .menu-grid.premium-layout,
   .menu-subgrid.premium-subgrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .menu-card {
-    grid-template-columns: 104px 1fr;
-    gap: 14px;
-    min-height: 136px;
-    padding: 12px;
-    border: 1px solid rgba(184, 138, 53, 0.18);
-    border-radius: 16px;
-    background: rgba(255, 254, 251, 0.82);
-  }
-
-  .menu-card-media {
-    aspect-ratio: 3 / 4;
-    min-height: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .menu-card-title h3 {
@@ -2305,6 +2290,49 @@ textarea {
     font-size: 0.86rem;
   }
 
+  .drawer {
+    width: min(100vw, 430px);
+  }
+
+  .drawer-header {
+    padding: 18px 16px;
+  }
+
+  .drawer-body {
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .customer-form,
+  .fulfillment,
+  .totals {
+    width: 100%;
+  }
+
+  .segmented {
+    border-radius: 18px;
+  }
+
+  .segmented button {
+    min-height: 44px;
+    border-radius: 14px;
+    font-weight: 800;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #checkoutButton {
+    width: 100%;
+    min-height: 48px;
+    border: 0;
+    border-radius: 999px;
+    color: var(--cream);
+    background: var(--brown);
+    font-weight: 800;
+  }
+
   .hero {
     min-height: 260px;
     padding-inline: 18px;
@@ -2329,7 +2357,7 @@ textarea {
   }
 
   .menu-cover .hero-overlay {
-    background: linear-gradient(0deg, rgba(50, 31, 24, 0.76), rgba(50, 31, 24, 0.16));
+    background: linear-gradient(0deg, rgba(50, 31, 24, 0.66), rgba(50, 31, 24, 0.1));
   }
 
   .menu-cover h1 {
@@ -2378,6 +2406,28 @@ textarea {
   .menu-toolbar {
     align-items: center;
     flex-direction: row;
+  }
+
+  .category-tabs {
+    margin-inline: -14px;
+    padding-inline: 14px;
+  }
+
+  .category-tabs button {
+    min-height: 40px;
+    padding-inline: 13px;
+    font-size: 0.86rem;
+  }
+
+  .subcategory-tabs {
+    margin-inline: -14px;
+    padding-inline: 14px;
+  }
+
+  .subcategory-tabs button {
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: 0.82rem;
   }
 
   .menu-grid.premium-layout,
@@ -2582,21 +2632,36 @@ textarea {
 
   .bag-summary {
     align-items: stretch;
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
     flex-direction: column;
-    gap: 10px;
-    padding: 12px;
-    border-radius: 18px;
+    gap: 8px;
+    width: auto;
+    padding: 10px;
+    border-radius: 16px;
+    transform: none;
+  }
+
+  .bag-summary strong {
+    font-size: 0.92rem;
+  }
+
+  .bag-summary span {
+    font-size: 0.76rem;
   }
 
   .bag-summary-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 
   .bag-summary-actions .primary-button,
   .bag-summary-actions .secondary-button {
-    min-height: 42px;
-    padding-inline: 12px;
+    min-height: 38px;
+    padding-inline: 10px;
+    font-size: 0.82rem;
   }
 
   .install-app {

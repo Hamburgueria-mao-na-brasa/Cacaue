@@ -40,6 +40,12 @@ alter table public.campaigns enable row level security;
 alter table public.store_settings enable row level security;
 alter table public.orders enable row level security;
 
+alter table public.products
+  add column if not exists image_fit text not null default 'cover',
+  add column if not exists image_position text not null default 'center',
+  add column if not exists subcategory text not null default '',
+  add column if not exists showcase boolean not null default false;
+
 grant usage on schema public to anon, authenticated;
 grant execute on function public.is_cacaue_admin() to anon, authenticated;
 grant execute on function public.is_cacaue_owner() to authenticated;
@@ -55,11 +61,32 @@ insert into storage.buckets (id, name, public)
 values ('cacaue-images', 'cacaue-images', true)
 on conflict (id) do update set public = true;
 
+drop policy if exists "Admins can read admin profiles" on public.admin_profiles;
+create policy "Admins can read admin profiles"
+on public.admin_profiles for select
+using (public.is_cacaue_admin());
+
+drop policy if exists "Owners can manage admin profiles" on public.admin_profiles;
+create policy "Owners can manage admin profiles"
+on public.admin_profiles for all
+using (public.is_cacaue_owner())
+with check (public.is_cacaue_owner());
+
+drop policy if exists "Public can read products" on public.products;
+create policy "Public can read products"
+on public.products for select
+using (true);
+
 drop policy if exists "Admins can manage products" on public.products;
 create policy "Admins can manage products"
 on public.products for all
 using (public.is_cacaue_admin())
 with check (public.is_cacaue_admin());
+
+drop policy if exists "Public can read campaigns" on public.campaigns;
+create policy "Public can read campaigns"
+on public.campaigns for select
+using (true);
 
 drop policy if exists "Admins can manage campaigns" on public.campaigns;
 create policy "Admins can manage campaigns"
@@ -67,11 +94,31 @@ on public.campaigns for all
 using (public.is_cacaue_admin())
 with check (public.is_cacaue_admin());
 
+drop policy if exists "Public can read store settings" on public.store_settings;
+create policy "Public can read store settings"
+on public.store_settings for select
+using (true);
+
 drop policy if exists "Admins can manage store settings" on public.store_settings;
 create policy "Admins can manage store settings"
 on public.store_settings for all
 using (public.is_cacaue_admin())
 with check (public.is_cacaue_admin());
+
+drop policy if exists "Public can create orders" on public.orders;
+create policy "Public can create orders"
+on public.orders for insert
+with check (true);
+
+drop policy if exists "Admins can read orders" on public.orders;
+create policy "Admins can read orders"
+on public.orders for select
+using (public.is_cacaue_admin());
+
+drop policy if exists "Public can read Cacaue images" on storage.objects;
+create policy "Public can read Cacaue images"
+on storage.objects for select
+using (bucket_id = 'cacaue-images');
 
 drop policy if exists "Admins can upload Cacaue images" on storage.objects;
 create policy "Admins can upload Cacaue images"

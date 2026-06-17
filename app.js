@@ -768,7 +768,7 @@ let storeSettings = JSON.parse(localStorage.getItem("cacaue:storeSettings") || "
   whatsapp: "(64) 99253-8620",
   instagram: "https://instagram.com/",
   city: "Mineiros - GO",
-  weekHours: "Seg a sab 08h às 18h",
+  weekHours: "Seg a sáb 08h às 18h",
   sundayHours: "Domingo 09h às 15h",
   orderRule: "50% na confirmação e restante na retirada",
   heroEyebrow: "Cardápio online",
@@ -785,7 +785,7 @@ function normalizeStoreSettings(settings) {
     normalized.logoImage === "assets/logo-cacaue-app.png" ||
     normalized.logoImage === "assets/logo-cacaue.svg" ||
     normalized.logoImage === "assets/hero-cacaue.png" ||
-    normalized.logoImage.includes?.("hero-cacaue")
+    (typeof normalized.logoImage === "string" && normalized.logoImage.includes("hero-cacaue"))
   ) {
     normalized.logoImage = "assets/logo-cacaue-app.jpg";
   }
@@ -931,12 +931,12 @@ async function supabaseJson(path, options = {}) {
       ...(options.headers || {}),
     },
   });
+  const text = await response.text();
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `Supabase error ${response.status}`);
+    throw new Error(text || `Supabase error ${response.status}`);
   }
-  if (response.status === 204) return null;
-  return response.json();
+  if (response.status === 204 || !text.trim()) return null;
+  return JSON.parse(text);
 }
 
 async function refreshAdminSession() {
@@ -1075,7 +1075,7 @@ async function loadRemoteData() {
       supabaseJson("/store_settings?select=*&id=eq.main&limit=1"),
     ]);
 
-    if (Array.isArray(remoteProducts) && remoteProducts.length) {
+    if (Array.isArray(remoteProducts)) {
       products = remoteProducts.map(productFromDb);
       localStorage.setItem("cacaue:products", JSON.stringify(products));
     }
@@ -1118,7 +1118,7 @@ async function loadAdminOrders() {
 
 async function saveProductsToSupabase() {
   if (!(await ensureAdminSession())) {
-    setAdminSyncMessage("Sessão expirada. Entre novamente no admin para salvar no servidor.", "error");
+    setAdminSyncMessage("Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase.", "error");
     return false;
   }
   try {
@@ -1135,13 +1135,13 @@ async function saveProductsToSupabase() {
       body: JSON.stringify(rows),
     });
     persistProducts();
-    setAdminSyncMessage("Produto salvo com sucesso no servidor.", "success");
+    setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     renderProducts();
     renderAdmin();
     return true;
   } catch (error) {
     console.warn("Não foi possível salvar produtos no Supabase.", error);
-    setAdminSyncMessage(`Não foi possível salvar. Verifique sua conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
+    setAdminSyncMessage(`Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
     return false;
   }
 }
@@ -1157,7 +1157,7 @@ async function deleteProductFromSupabase(id) {
       useSession: true,
       headers: { Prefer: "return=minimal" },
     });
-    setAdminSyncMessage("Produto excluído do servidor.", "success");
+    setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     return true;
   } catch (error) {
     console.warn("Não foi possível excluir produto no Supabase.", error);
@@ -1168,7 +1168,7 @@ async function deleteProductFromSupabase(id) {
 
 async function saveCampaignsToSupabase() {
   if (!(await ensureAdminSession())) {
-    setAdminSyncMessage("Sessão expirada. Entre novamente no admin para salvar no servidor.", "error");
+    setAdminSyncMessage("Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase.", "error");
     return false;
   }
   try {
@@ -1186,13 +1186,13 @@ async function saveCampaignsToSupabase() {
       body: JSON.stringify(rows),
     });
     persistCampaigns();
-    setAdminSyncMessage("Campanha salva com sucesso no servidor.", "success");
+    setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     renderCampaigns();
     renderAdmin();
     return true;
   } catch (error) {
     console.warn("Não foi possível salvar campanhas no Supabase.", error);
-    setAdminSyncMessage(`Não foi possível salvar. Verifique sua conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
+    setAdminSyncMessage(`Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
     return false;
   }
 }
@@ -1208,7 +1208,7 @@ async function deleteCampaignFromSupabase(id) {
       useSession: true,
       headers: { Prefer: "return=minimal" },
     });
-    setAdminSyncMessage("Campanha excluída do servidor.", "success");
+    setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     return true;
   } catch (error) {
     console.warn("Não foi possível excluir campanha no Supabase.", error);
@@ -1219,7 +1219,7 @@ async function deleteCampaignFromSupabase(id) {
 
 async function saveStoreSettingsToSupabase() {
   if (!(await ensureAdminSession())) {
-    setAdminSyncMessage("Sessão expirada. Entre novamente no admin para salvar no servidor.", "error");
+    setAdminSyncMessage("Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase.", "error");
     return false;
   }
   try {
@@ -1236,12 +1236,12 @@ async function saveStoreSettingsToSupabase() {
       body: JSON.stringify([{ id: "main", settings: storeSettings }]),
     });
     persistStoreSettings();
-    setAdminSyncMessage("Configurações da loja salvas com sucesso no servidor.", "success");
+    setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     renderStoreSettings();
     return true;
   } catch (error) {
     console.warn("Não foi possível salvar dados da loja no Supabase.", error);
-    setAdminSyncMessage(`Não foi possível salvar. Verifique sua conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
+    setAdminSyncMessage(`Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
     return false;
   }
 }
@@ -1780,11 +1780,10 @@ function renderProductGroups(menuProducts) {
   return [...groups.entries()]
     .map(([subcategory, groupProducts]) => {
       const cards = groupProducts.map((product) => productCard(product, count++)).join("");
-      const premiumGroup = selectedCategory === "Doces" && subcategory === "Doces finos";
       return `
         <section class="menu-subgroup">
           <h3 class="menu-subtitle">${subcategory}</h3>
-          <div class="menu-subgrid ${premiumGroup ? "premium-subgrid" : ""}">${cards}</div>
+          <div class="menu-subgrid ${selectedCategory === "Doces" && subcategory === "Doces finos" ? "premium-subgrid" : ""}">${cards}</div>
         </section>
       `;
     })
