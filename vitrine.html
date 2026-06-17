@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cacauê | Vitrine Digital Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="vitrine.html#inicio" aria-label="Cacauê">
+        <span class="brand-symbol">C</span>
+        <span>CACAUÊ</span>
+      </a>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="#historia">História</a>
+        <a href="#eventos">Eventos</a>
+        <a href="#vitrine">Cardápio</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <button class="order-link" id="openOrder" type="button">
+        <span>Meu Pedido</span>
+        <strong id="orderCount">0</strong>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio">
+        <img src="assets/hero-cacaue.png" alt="Doces finos em mesa elegante" />
+        <div class="hero-shade"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Confeitaria artesanal premium</p>
+          <h1>CACAUÊ</h1>
+          <p>Uma vitrine feita para descobrir sabores, celebrar detalhes e escolher com calma.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#vitrine">Ver cardápio</a>
+            <a class="btn btn-quiet" href="#historia">Nossa história</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section story" id="historia">
+        <div class="story-media"></div>
+        <div class="story-text">
+          <p class="eyebrow">Nossa História</p>
+          <h2>Uma confeitaria criada para transformar afeto em experiência.</h2>
+          <p>A Cacauê nasceu do cuidado com os detalhes: receitas autorais, ingredientes selecionados e uma apresentação que respeita o momento de quem presenteia ou celebra.</p>
+          <p>Cada produto é preparado para unir beleza, textura e sabor em uma experiência delicada, organizada e memorável.</p>
+          <div class="pill-row">
+            <span>Artesanal</span>
+            <span>Elegante</span>
+            <span>Feito sob cuidado</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section events" id="eventos">
+        <div class="section-title">
+          <p class="eyebrow">Campanhas e eventos</p>
+          <h2>Momentos especiais da Cacauê.</h2>
+        </div>
+        <div class="event-grid" id="campaignList"></div>
+      </section>
+
+      <section class="section showcase" id="vitrine">
+        <div class="section-title">
+          <p class="eyebrow">Cardápio</p>
+          <h2>Escolha seus sabores favoritos.</h2>
+        </div>
+        <div class="filters" id="filters"></div>
+        <div class="product-gallery" id="productList"></div>
+      </section>
+
+      <section class="section encomendas" id="encomendas">
+        <div class="section-title">
+          <p class="eyebrow">Sob encomenda</p>
+          <h2>Produções para ocasiões especiais.</h2>
+        </div>
+        <div class="occasion-grid">
+          <article><h3>Tortas</h3><p>Receitas autorais com acabamento premium.</p></article>
+          <article><h3>Bolos</h3><p>Produções delicadas para celebrar.</p></article>
+          <article><h3>Doces finos</h3><p>Seleções elegantes para eventos e presentes.</p></article>
+          <article><h3>Kits</h3><p>Combinações prontas para surpreender.</p></article>
+        </div>
+      </section>
+
+      <section class="section reviews">
+        <div class="section-title">
+          <p class="eyebrow">Avaliações</p>
+          <h2>Quem prova, lembra.</h2>
+        </div>
+        <div class="review-grid" id="reviewList"></div>
+      </section>
+
+      <section class="contact" id="contato">
+        <div>
+          <p class="eyebrow">Contato</p>
+          <h2>Quando bater vontade, seu pedido começa aqui.</h2>
+        </div>
+        <div class="contact-links">
+          <a href="https://wa.me/5500000000000" target="_blank" rel="noreferrer">WhatsApp</a>
+          <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+          <span>Rua das Flores, 128 - Centro</span>
+          <span>Terça a sábado, 10h às 19h</span>
+        </div>
+        <a class="admin-access" href="admin.html">Área Administrativa</a>
+      </section>
+    </main>
+
+    <dialog class="product-dialog" id="productDialog">
+      <button class="dialog-close" type="button" data-close-dialog>×</button>
+      <div id="productDetail"></div>
+    </dialog>
+
+    <aside class="order-drawer" id="orderDrawer" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <p class="eyebrow">Meu Pedido</p>
+          <h2>Escolhas da vitrine</h2>
+        </div>
+        <button class="dialog-close" id="closeOrder" type="button">×</button>
+      </div>
+      <div class="order-items" id="orderItems"></div>
+      <form class="checkout" id="checkoutForm">
+        <div class="choice">
+          <label><input type="radio" name="mode" value="retirada" checked /> Retirada</label>
+          <label><input type="radio" name="mode" value="entrega" /> Entrega</label>
+        </div>
+        <input name="name" placeholder="Nome completo" required />
+        <input name="phone" placeholder="WhatsApp" required />
+        <input name="email" type="email" placeholder="E-mail opcional" />
+        <div class="field-pair" id="pickupFields">
+          <input name="date" type="date" required />
+          <input name="time" type="time" required />
+        </div>
+        <div class="field-pair hidden" id="deliveryFields">
+          <input name="address" placeholder="Endereço" />
+          <input name="number" placeholder="Número" />
+          <input name="district" placeholder="Bairro" />
+          <input name="reference" placeholder="Referência" />
+        </div>
+        <div class="totals" id="totals"></div>
+        <button class="btn btn-primary full" type="submit">Finalizar pedido</button>
+      </form>
+    </aside>
+
+    <dialog class="thanks-dialog" id="thanksDialog">
+      <button class="dialog-close" type="button" data-close-dialog>×</button>
+      <p class="eyebrow">Pedido criado</p>
+      <h2>Obrigada por escolher a Cacauê.</h2>
+      <p id="protocolText"></p>
+      <a class="btn btn-primary" id="whatsappLink" href="#" target="_blank" rel="noreferrer">Enviar no WhatsApp</a>
+    </dialog>
+
+    <div class="toast" id="toast"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

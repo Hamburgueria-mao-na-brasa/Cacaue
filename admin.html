@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cacauê | Administração</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="admin-body">
+    <header class="admin-bar">
+      <a class="brand" href="vitrine.html">
+        <span class="brand-symbol">C</span>
+        <span>CACAUÊ</span>
+      </a>
+      <a class="btn btn-light" href="vitrine.html">Ver vitrine</a>
+    </header>
+
+    <main>
+      <section class="login-screen" id="loginScreen">
+        <div>
+          <p class="eyebrow">Administração</p>
+          <h1>Operação simples, bonita e rápida.</h1>
+          <p>Um painel pensado para administrar tudo pelo celular, com poucos campos e ações claras.</p>
+        </div>
+        <form class="login-card" id="loginForm">
+          <h2>Acessar</h2>
+          <input type="email" value="owner@cacaue.com" required />
+          <input type="password" value="cacaue" required />
+          <button class="btn btn-primary full" type="submit">Entrar</button>
+          <small>Protótipo funcional: use o botão Entrar.</small>
+        </form>
+      </section>
+
+      <section class="admin-app hidden" id="adminApp">
+        <div class="admin-title">
+          <div>
+            <p class="eyebrow">Painel</p>
+            <h1>Hoje na Cacauê</h1>
+          </div>
+          <span>Owner</span>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-primary" data-quick="Novo pedido">Novo pedido</button>
+          <button class="btn btn-light" data-quick="Novo produto">Novo produto</button>
+          <button class="btn btn-light" data-quick="Nova campanha">Nova campanha</button>
+        </div>
+        <nav class="admin-tabs" id="adminTabs"></nav>
+        <section id="adminContent"></section>
+      </section>
+    </main>
+
+    <div class="toast" id="toast"></div>
+    <script src="admin.js"></script>
+  </body>
+</html>
