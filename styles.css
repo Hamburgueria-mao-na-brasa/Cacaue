@@ -2201,21 +2201,19 @@ textarea {
 }
 
 @media (min-width: 761px) and (max-width: 980px) {
-  .menu-grid,
-  .menu-subgrid,
   .menu-grid.premium-layout,
   .menu-subgrid.premium-subgrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .menu-card {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    min-height: 0;
-    padding: 14px 12px 12px;
-    border: 1px solid rgba(184, 138, 53, 0.24);
-    border-radius: var(--radius);
-    background: rgba(255, 254, 251, 0.88);
+    grid-template-columns: 104px 1fr;
+    gap: 14px;
+    min-height: 136px;
+    padding: 12px;
+    border: 1px solid rgba(184, 138, 53, 0.18);
+    border-radius: 16px;
+    background: rgba(255, 254, 251, 0.82);
   }
 
   .menu-card-media {
@@ -2360,8 +2358,6 @@ textarea {
     flex-direction: row;
   }
 
-  .menu-grid,
-  .menu-subgrid,
   .menu-grid.premium-layout,
   .menu-subgrid.premium-subgrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2369,19 +2365,20 @@ textarea {
   }
 
   .menu-card {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    min-height: 0;
-    padding: 11px 9px 10px;
-    border: 1px solid rgba(184, 138, 53, 0.24);
-    border-radius: var(--radius);
-    background: rgba(255, 254, 251, 0.9);
+    grid-template-columns: 92px 1fr;
+    gap: 12px;
+    min-height: 124px;
+    padding: 10px;
+    border: 1px solid rgba(184, 138, 53, 0.18);
+    border-radius: 16px;
+    background: rgba(255, 254, 251, 0.88);
+    box-shadow: 0 10px 26px rgba(50, 31, 24, 0.045);
   }
 
   .menu-card-media {
     aspect-ratio: 3 / 4;
     min-height: 0;
-    border-radius: 14px;
+    border-radius: 12px;
   }
 
   .menu-card-media img {
@@ -2390,16 +2387,15 @@ textarea {
 
   .menu-card p,
   .menu-meta {
-    font-size: 0.76rem;
-    line-height: 1.32;
+    font-size: 0.78rem;
+    line-height: 1.4;
   }
 
   .menu-card p {
     display: -webkit-box;
     overflow: hidden;
-    min-height: 2.6em;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
   }
 
   .menu-card-title {
@@ -2410,8 +2406,8 @@ textarea {
   .menu-card-title h3 {
     display: -webkit-box;
     overflow: hidden;
-    font-size: clamp(0.98rem, 4.4vw, 1.12rem);
-    line-height: 1.08;
+    font-size: clamp(1.02rem, 4.8vw, 1.18rem);
+    line-height: 1.12;
     overflow-wrap: anywhere;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -2422,15 +2418,17 @@ textarea {
   }
 
   .menu-card .product-footer {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 7px;
     margin-top: 2px;
   }
 
   .menu-card .product-footer > div {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-items: start;
     gap: 5px;
   }
@@ -2442,9 +2440,9 @@ textarea {
   }
 
   .menu-card .add-button {
-    width: 100%;
+    width: auto;
     min-height: 34px;
-    padding-inline: 8px;
+    padding-inline: 11px;
     font-size: 0.78rem;
   }
 
@@ -2554,7 +2552,7 @@ textarea {
     padding-inline: 12px;
   }
 
-  .menu-card .add-button {
+  .fine-sweet-card .add-button {
     width: 100%;
     min-height: 34px;
     padding-inline: 8px;
@@ -2631,15 +2629,19 @@ textarea {
 }
 
 @media (max-width: 370px) {
-  .menu-grid,
-  .menu-subgrid,
   .menu-grid.premium-layout,
   .menu-subgrid.premium-subgrid {
     gap: 8px;
   }
 
-  .menu-card,
+  .menu-card {
+    grid-template-columns: 84px 1fr;
+    gap: 10px;
+    padding-inline: 8px;
+  }
+
   .fine-sweet-card.menu-card {
+    grid-template-columns: 1fr;
     padding-inline: 8px;
   }
 
@@ -2647,12 +2649,11 @@ textarea {
     font-size: 0.94rem;
   }
 
-  .menu-card p,
-  .menu-meta {
+  .fine-sweet-card p,
+  .fine-sweet-card .menu-meta {
     font-size: 0.7rem;
   }
 
-  .menu-card .add-button,
   .fine-sweet-card .add-button {
     min-height: 32px;
     font-size: 0.72rem;
