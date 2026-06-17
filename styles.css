@@ -2573,7 +2573,7 @@ textarea {
     grid-template-columns: 1fr;
     gap: 7px;
     min-height: 0;
-    padding: 12px 9px 10px;
+    padding: 10px;
     border: 1px solid rgba(184, 138, 53, 0.26);
     border-radius: var(--radius);
   }
@@ -2586,14 +2586,20 @@ textarea {
   }
 
   .fine-sweet-card .menu-card-media {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 3;
     min-height: 0;
-    margin-top: 14px;
+    max-height: 280px;
+    margin-top: 10px;
     border-radius: 14px;
   }
 
+  .fine-sweet-card .menu-card-media img {
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
   .fine-sweet-card .menu-card-title {
-    padding-inline: 26px;
+    padding-inline: 16px;
   }
 
   .fine-sweet-card .menu-card-title h3 {
@@ -2622,7 +2628,7 @@ textarea {
   .fine-sweet-card p {
     display: -webkit-box;
     overflow: hidden;
-    max-width: 18ch;
+    max-width: none;
     font-size: 0.78rem;
     line-height: 1.35;
     -webkit-box-orient: vertical;
