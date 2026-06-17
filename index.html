@@ -1,29 +1,463 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cacauê | Entrada</title>
+    <meta name="theme-color" content="#fffaf0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Cacauê" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/icon-192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/icon-192.png" />
+    <title>Cacauê | Vitrine Digital Premium</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="entry-body">
-    <main class="entry-screen">
-      <img src="assets/hero-cacaue.png" alt="Doces finos da Cacauê" />
-      <div class="entry-shade"></div>
-      <section class="entry-card">
-        <div class="brand entry-brand">
-          <span class="brand-symbol">C</span>
-          <span>CACAUÊ</span>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Cacauê">
+        <img class="brand-logo-img" src="assets/logo-cacaue-app.jpg" alt="Cacauê" />
+      </a>
+      <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="#cardapio">Cardápio</a>
+        <a href="#contato">Contato</a>
+        <button class="admin-open-button" type="button" data-open-admin>Admin</button>
+      </nav>
+      <div class="top-actions">
+        <button class="admin-top-button" type="button" aria-label="Abrir admin" data-open-admin>Admin</button>
+        <button class="icon-button" id="favoriteButton" type="button" aria-label="Ver favoritos" title="Favoritos">♡ <span id="favoriteCount">0</span></button>
+        <button class="bag-button" id="bagButton" type="button" aria-label="Abrir sacola">Sacola <span id="bagCount">0</span></button>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero menu-cover">
+        <img class="hero-image" src="assets/hero-cacaue.png" alt="Vitrine premium da Cacauê com bolos e doces finos" />
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <img class="hero-logo-img" src="assets/logo-cacaue-app.jpg" alt="Cacauê" />
+          <span class="eyebrow">Cardápio online</span>
+          <h1>Cacauê</h1>
+          <p>Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.</p>
+          <div class="store-info">
+            <span>Seg a sáb: 08h às 18h</span>
+            <span>Domingo: 09h às 15h</span>
+            <span>Retirada ou entrega</span>
+          </div>
         </div>
-        <p class="eyebrow">Vitrine Digital Premium</p>
-        <h1>Antes de pedir, descubra.</h1>
-        <p>Entre no cardápio da Cacauê para conhecer sabores, campanhas e produções especiais.</p>
-        <a class="btn btn-primary full" href="vitrine.html">Entrar no Cardápio</a>
-        <a class="entry-admin" href="admin.html">Entrar como administrador</a>
+      </section>
+
+      <section class="section care-section page-extra">
+        <div class="section-heading">
+          <span class="eyebrow">Feito com carinho</span>
+          <h2>Detalhes que fazem a experiência ser lembrada.</h2>
+        </div>
+        <div class="value-grid" id="careGrid"></div>
+      </section>
+
+      <section class="section campaign-band page-extra" id="eventos">
+        <div class="section-heading">
+          <span class="eyebrow">Campanhas e eventos</span>
+          <h2>Novidades da vitrine Cacauê.</h2>
+        </div>
+        <div class="campaign-grid" id="campaignGrid"></div>
+      </section>
+
+      <section class="section" id="cardapio">
+        <div class="section-heading menu-heading">
+          <div>
+            <span class="eyebrow">Escolha e peça</span>
+            <h2>Cardápio</h2>
+          </div>
+          <button class="text-button" id="showFavoritesOnly" type="button">Ver favoritos</button>
+        </div>
+        <div class="menu-layout">
+          <aside class="menu-sidebar">
+            <div class="category-tabs" id="categoryTabs"></div>
+            <div class="menu-note page-extra">
+              <span>Retirada e entrega</span>
+              <p>Produtos esgotados continuam no cardápio para você conhecer tudo que a Cacauê prepara.</p>
+            </div>
+          </aside>
+          <div>
+            <div class="menu-toolbar">
+              <div>
+                <strong id="menuTitle">Todos os produtos</strong>
+                <span id="menuCount">0 itens</span>
+              </div>
+              <button class="secondary-button compact" id="showAllProducts" type="button">Ver vitrine</button>
+            </div>
+            <div class="subcategory-tabs hidden" id="subcategoryTabs"></div>
+            <div class="menu-grid" id="menuProducts"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section order-section page-extra" id="encomendas">
+        <div class="section-heading">
+          <span class="eyebrow">Sob encomenda</span>
+          <h2>Tortas, bolos, doces finos e kits para datas especiais.</h2>
+        </div>
+        <div class="order-grid" id="orderCategories"></div>
+      </section>
+
+      <section class="section reviews-section page-extra">
+        <div class="section-heading with-action">
+          <div>
+            <span class="eyebrow">Avaliações dos clientes</span>
+            <h2>Comentários aprovados pela Cacauê.</h2>
+          </div>
+          <button class="secondary-button compact" id="reviewButton" type="button">Enviar avaliação</button>
+        </div>
+        <div class="review-grid" id="reviewGrid"></div>
+      </section>
+
+      <section class="gallery-section page-extra" id="galeria" aria-label="Galeria Cacauê">
+        <img src="assets/products/fatia-belga.png" alt="Fatia belga Cacauê" />
+        <img src="assets/products/torta-pistache.png" alt="Torta de pistache Cacauê" />
+        <img src="assets/products/doces-finos.png" alt="Doces finos Cacauê" />
+        <img src="assets/products/bolo-red.png" alt="Bolo red velvet Cacauê" />
+      </section>
+
+      <section class="section contact-section" id="contato">
+        <div class="contact-copy">
+          <span class="eyebrow">Contato</span>
+          <h2>Pedidos, encomendas e carinho em uma conversa.</h2>
+        </div>
+        <div class="contact-grid">
+          <a href="https://wa.me/5564992538620" target="_blank" rel="noreferrer">(64) 99253-8620</a>
+          <a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
+          <span>Mineiros - GO</span>
+          <span>Seg a sáb 08h às 18h / Dom 09h às 15h</span>
+        </div>
+      </section>
+
+      <section class="admin-shell hidden" id="admin" aria-hidden="true" role="dialog" aria-modal="true">
+        <aside class="admin-sidebar">
+          <span class="eyebrow">Painel administrativo</span>
+          <h2>Gestão simples da Cacauê.</h2>
+          <button class="close-admin-button" id="closeAdminButton" type="button">Fechar admin</button>
+          <div class="role-pill" id="adminRole">Acesso restrito</div>
+          <form class="admin-login" id="adminLoginForm" autocomplete="off">
+            <label for="adminEmail">E-mail autorizado</label>
+            <input id="adminEmail" type="email" placeholder="seu@email.com" autocomplete="off" value="" required />
+            <label for="adminPassword">Senha</label>
+            <div class="password-field">
+              <input id="adminPassword" type="password" placeholder="Digite sua senha" autocomplete="new-password" value="" required />
+              <button id="toggleAdminPassword" type="button" aria-label="Mostrar senha" title="Mostrar senha">👁</button>
+            </div>
+            <button class="primary-button full" type="submit">Entrar no admin</button>
+            <p id="adminLoginMessage">Use um e-mail autorizado para liberar a gestão.</p>
+          </form>
+          <button class="secondary-button compact hidden" id="adminLogoutButton" type="button">Sair do admin</button>
+          <p class="admin-sync-message" id="adminSyncMessage">Entre no admin para salvar as alterações no servidor.</p>
+          <nav class="admin-menu" aria-label="Menu administrativo">
+            <a href="#admin-summary" data-admin-tab="summary">Resumo</a>
+            <a href="#admin-tutorial" data-admin-tab="tutorial">Primeiro acesso</a>
+            <a href="#admin-product-add" data-admin-tab="product-add">Adicionar produto</a>
+            <a href="#admin-products" data-admin-tab="products">Editar produtos</a>
+            <a href="#admin-orders" data-admin-tab="orders">Pedidos recebidos</a>
+            <a href="#admin-campaigns" data-admin-tab="campaigns">Campanhas</a>
+            <a href="#admin-reviews" data-admin-tab="reviews">Avaliações</a>
+            <a href="#admin-clients" data-admin-tab="clients">Clientes</a>
+            <a href="#admin-settings" data-admin-tab="settings">Configurações</a>
+          </nav>
+        </aside>
+        <div class="admin-content hidden" id="adminContent">
+          <div class="admin-welcome" id="admin-summary">
+            <div>
+              <span class="eyebrow">Comece por aqui</span>
+              <h3>Controle rápido da loja</h3>
+              <p>Veja os pedidos, cadastre produtos e confira o que aparece no cardápio.</p>
+            </div>
+            <button class="primary-button compact" type="button" data-admin-tab="product-add">Adicionar produto</button>
+          </div>
+          <div class="metric-grid" id="metricGrid"></div>
+          <div class="admin-panels">
+            <article id="admin-tutorial" data-admin-tab="tutorial">
+              <span class="admin-section-label">Primeiro acesso</span>
+              <h3>Como salvar para todos os clientes</h3>
+              <p class="admin-helper">Use este passo a passo quando entrar no painel pela primeira vez ou quando algo não aparecer em outro celular.</p>
+              <ol class="admin-tutorial-list">
+                <li><strong>Entre com e-mail e senha do Supabase.</strong><span>O painel só salva no servidor quando aparecer a mensagem de admin conectado.</span></li>
+                <li><strong>Cadastre ou edite o produto.</strong><span>Escolha categoria, subcategoria, preço, foto e disponibilidade.</span></li>
+                <li><strong>Toque em salvar e espere a confirmação.</strong><span>Procure a mensagem “salvo com sucesso no servidor”. Se aparecer erro, a alteração não foi enviada para outros celulares.</span></li>
+                <li><strong>Teste em outro aparelho.</strong><span>Abra o site novamente ou limpe o cache para confirmar que o servidor carregou a alteração.</span></li>
+              </ol>
+              <button class="primary-button compact" type="button" data-admin-tab="product-add">Cadastrar primeiro produto</button>
+            </article>
+            <article id="admin-orders" data-admin-tab="orders">
+              <span class="admin-section-label">Acompanhar</span>
+              <h3>Pedidos recebidos hoje</h3>
+              <div id="orderList"></div>
+            </article>
+            <article id="admin-product-add" data-admin-tab="product-add">
+              <span class="admin-section-label">Cardápio</span>
+              <h3>Adicionar produto</h3>
+              <p class="admin-helper">Cadastre um novo item no cardápio. Depois de salvar, ele aparecerá no site conforme a categoria, subcategoria e disponibilidade escolhidas.</p>
+              <form id="productForm" class="admin-product-form">
+                <input type="hidden" id="productId" />
+                <label for="productName">Nome do produto</label>
+                <small>Exemplo: Bolo de Ninho, Brigadeiro Belga, Kit Festa.</small>
+                <input id="productName" placeholder="Nome do produto" required />
+                <label for="productCategory">Categoria</label>
+                <small>Escolha a aba onde esse produto vai aparecer no site.</small>
+                <select id="productCategory" required></select>
+                <div class="admin-subcategory-field" id="productSubcategoryField">
+                  <label for="productSubcategory">Subtítulo / subcategoria</label>
+                  <small>Use um subtítulo existente ou digite um novo. Assim você cria novas subabas sem mexer no código.</small>
+                  <input id="productSubcategory" list="productSubcategoryOptions" placeholder="Exemplo: Bolos caseiros" />
+                  <datalist id="productSubcategoryOptions"></datalist>
+                </div>
+                <label for="productPrice">Preço</label>
+                <small>Use 0 quando o valor precisar aparecer como "Consultar".</small>
+                <input id="productPrice" type="number" min="0" step="0.01" placeholder="Preço (0 = consultar)" required />
+                <label for="productMinimum">Pedido mínimo</label>
+                <small>Informe a menor quantidade aceita para esse produto.</small>
+                <input id="productMinimum" type="number" min="1" step="1" placeholder="Pedido mínimo" required />
+                <label for="productImage">Foto do produto</label>
+                <small>Escolha uma foto do telefone ou cole o endereço da imagem.</small>
+                <input id="productImage" placeholder="Imagem" value="assets/products/doces-finos.png" />
+                <input id="productImageFile" type="file" accept="image/*" />
+                <div class="admin-image-preview" id="productImagePreview">
+                  <img src="assets/products/doces-finos.png" alt="Prévia da foto do produto" />
+                  <span>Prévia da foto</span>
+                </div>
+                <label for="productImageFit">Como a foto aparece</label>
+                <small>Use preencher para vitrine 3x4. Use foto inteira quando não quiser cortar nada.</small>
+                <select id="productImageFit">
+                  <option value="cover">Preencher 3x4</option>
+                  <option value="contain">Mostrar foto inteira</option>
+                </select>
+                <label for="productImagePosition">Enquadramento da foto</label>
+                <small>Escolha qual parte da foto deve ficar mais visível.</small>
+                <select id="productImagePosition">
+                  <option value="center">Centro</option>
+                  <option value="top">Topo</option>
+                  <option value="bottom">Baixo</option>
+                  <option value="left">Esquerda</option>
+                  <option value="right">Direita</option>
+                </select>
+                <label for="productShort">Descrição curta</label>
+                <small>Aparece no card do produto.</small>
+                <textarea id="productShort" placeholder="Descrição curta" required></textarea>
+                <label for="productDescription">Descrição completa</label>
+                <small>Aparece quando o cliente abre os detalhes do produto.</small>
+                <textarea id="productDescription" placeholder="Descrição completa" required></textarea>
+                <label class="admin-check"><input id="productAvailable" type="checkbox" checked /> Disponível para compra</label>
+                <label class="admin-check"><input id="productShowcase" type="checkbox" /> Aparece na Vitrine do dia</label>
+                <label class="admin-check"><input id="productMadeToOrder" type="checkbox" checked /> Sob encomenda</label>
+                <div class="admin-status-box">
+                  <strong>Status na vitrine</strong>
+                  <small>Disponível permite compra. Indisponível continua visível como esgotado quando estiver na Vitrine.</small>
+                </div>
+                <label for="productTags">Selos do produto</label>
+                <small>Separe por vírgula. Exemplo: Favorito, Mais vendido, Destaque, Novidade.</small>
+                <input id="productTags" placeholder="Favorito, Destaque, Novidade" />
+                <div class="admin-form-actions">
+                  <button class="primary-button compact" type="submit">Salvar produto</button>
+                  <button class="secondary-button compact" id="cancelProductEdit" type="button">Cancelar edição</button>
+                </div>
+              </form>
+            </article>
+            <article id="admin-products" data-admin-tab="products">
+              <span class="admin-section-label">Editar</span>
+              <h3>Editar produtos cadastrados</h3>
+              <p class="admin-helper">Escolha uma categoria, toque em editar e altere foto, preço, descrição, disponibilidade e selos.</p>
+              <div class="admin-filter-row">
+                <select id="adminCategoryFilter" aria-label="Filtrar produtos por categoria"></select>
+                <span id="adminProductCount"></span>
+              </div>
+              <h4 class="admin-list-title">Produtos já cadastrados</h4>
+              <div class="admin-product-list" id="adminProductList"></div>
+            </article>
+            <article id="admin-campaigns" data-admin-tab="campaigns">
+              <span class="admin-section-label">Divulgação</span>
+              <h3>Cadastrar campanha</h3>
+              <p class="admin-helper">Use para divulgar festival, promoção, data comemorativa ou lançamento. A campanha só aparece enquanto estiver dentro das datas.</p>
+              <form id="campaignForm" class="admin-product-form">
+                <input type="hidden" id="campaignId" name="id" />
+                <label for="campaignTitle">Nome da campanha</label>
+                <small>Exemplo: Festival de Fatias, Dia dos Namorados, Kit Especial.</small>
+                <input id="campaignTitle" name="title" placeholder="Título da campanha" required />
+                <label for="campaignDescription">Descrição da campanha</label>
+                <small>Explique o que o cliente vai encontrar nessa campanha.</small>
+                <textarea id="campaignDescription" name="description" placeholder="Descrição que aparece no site" required></textarea>
+                <label for="campaignImage">Foto da campanha</label>
+                <small>Escolha uma imagem do telefone ou cole o caminho da imagem.</small>
+                <input id="campaignImage" name="image" placeholder="assets/hero-cacaue.png" value="assets/hero-cacaue.png" />
+                <input id="campaignImageFile" type="file" accept="image/*" />
+                <div class="admin-image-preview" id="campaignImagePreview">
+                  <img src="assets/hero-cacaue.png" alt="Prévia da campanha" />
+                  <span>Prévia da campanha</span>
+                </div>
+                <label for="campaignStart">Período da campanha</label>
+                <small>Data inicial e data final. Depois da data final ela some automaticamente.</small>
+                <input id="campaignStart" name="starts" type="date" required />
+                <input id="campaignEnd" name="date" type="date" required />
+                <div class="admin-form-actions">
+                  <button class="primary-button compact" type="submit">Salvar campanha</button>
+                  <button class="secondary-button compact" id="cancelCampaignEdit" type="button">Cancelar edição</button>
+                </div>
+              </form>
+              <div id="adminCampaigns"></div>
+            </article>
+            <article id="admin-reviews" data-admin-tab="reviews">
+              <span class="admin-section-label">Relacionamento</span>
+              <h3>Avaliações pendentes</h3>
+              <p class="admin-helper">Aprove ou remova os comentários enviados pelos clientes antes de aparecerem no site.</p>
+              <div id="pendingReviews"></div>
+            </article>
+            <article id="admin-clients" data-admin-tab="clients">
+              <span class="admin-section-label">Histórico</span>
+              <h3>Clientes</h3>
+              <p class="admin-helper">Resumo dos clientes para acompanhar histórico, pedidos e relacionamento.</p>
+              <div id="clientList"></div>
+            </article>
+            <article id="admin-settings" data-admin-tab="settings">
+              <span class="admin-section-label">Loja</span>
+              <h3>Configurações da loja</h3>
+              <p class="admin-helper">Altere aqui os dados que aparecem na área de contato e no topo do site.</p>
+              <form id="storeSettingsForm" class="admin-product-form">
+                <label for="storeWhatsapp">WhatsApp</label>
+                <small>Digite com DDD. Exemplo: (64) 99253-8620.</small>
+                <input id="storeWhatsapp" name="whatsapp" placeholder="(64) 99253-8620" required />
+                <label for="storeInstagram">Instagram</label>
+                <small>Cole o link do perfil ou deixe apenas https://instagram.com/.</small>
+                <input id="storeInstagram" name="instagram" placeholder="https://instagram.com/" required />
+                <label for="storeCity">Cidade</label>
+                <input id="storeCity" name="city" placeholder="Mineiros - GO" required />
+                <label for="storeWeekHours">Horário durante a semana</label>
+                <input id="storeWeekHours" name="weekHours" placeholder="Seg a sáb 08h às 18h" required />
+                <label for="storeSundayHours">Horário de domingo</label>
+                <input id="storeSundayHours" name="sundayHours" placeholder="Domingo 09h às 15h" required />
+                <label for="storeOrderRule">Regra de pedidos</label>
+                <small>Exemplo: 50% na confirmação e restante na retirada.</small>
+                <textarea id="storeOrderRule" name="orderRule" placeholder="Regra de pagamento ou retirada" required></textarea>
+                <label for="storeHeroTitle">Capa do site</label>
+                <small>Edite a chamada principal, frase e foto que aparecem no topo da vitrine.</small>
+                <input id="storeHeroEyebrow" name="heroEyebrow" placeholder="Cardápio online" />
+                <input id="storeHeroTitle" name="heroTitle" placeholder="Cacauê" />
+                <textarea id="storeHeroText" name="heroText" placeholder="Frase da capa"></textarea>
+                <input id="storeHeroImage" name="heroImage" placeholder="assets/hero-cacaue.png" />
+                <input id="storeHeroImageFile" type="file" accept="image/*" />
+                <div class="admin-image-preview" id="storeHeroImagePreview">
+                  <img src="assets/hero-cacaue.png" alt="Prévia da capa" />
+                  <span>Prévia da capa</span>
+                </div>
+                <label for="storeLogoImage">Logo da marca</label>
+                <small>Escolha a logo que aparece no topo e na capa do site.</small>
+                <input id="storeLogoImage" name="logoImage" placeholder="assets/logo-cacaue-app.jpg" />
+                <input id="storeLogoImageFile" type="file" accept="image/*" />
+                <div class="admin-image-preview logo-preview" id="storeLogoImagePreview">
+                  <img src="assets/logo-cacaue-app.jpg" alt="Prévia da logo" />
+                  <span>Prévia da logo</span>
+                </div>
+                <button class="primary-button compact" type="submit">Salvar dados da loja</button>
+              </form>
+              <div class="admin-setting-list" id="storeSettingsPreview">
+                <div><span>WhatsApp</span><strong>(64) 99253-8620</strong></div>
+                <div><span>Cidade</span><strong>Mineiros - GO</strong></div>
+                <div><span>Funcionamento</span><strong>Seg a sáb 08h às 18h / Dom 09h às 15h</strong></div>
+                <div><span>Pedidos</span><strong>50% na confirmação e restante na retirada</strong></div>
+              </div>
+            </article>
+          </div>
+        </div>
       </section>
     </main>
+
+    <div class="modal" id="productModal" aria-hidden="true">
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="close-button" type="button" data-close-modal aria-label="Fechar">×</button>
+        <div class="product-detail" id="productDetail"></div>
+      </div>
+    </div>
+
+    <div class="bag-summary hidden" id="bagSummary" aria-live="polite">
+      <div>
+        <strong id="bagSummaryTitle">Item adicionado</strong>
+        <span id="bagSummaryMeta">Sua sacola foi atualizada.</span>
+      </div>
+      <div class="bag-summary-actions">
+        <button class="secondary-button compact" id="summaryOpenBag" type="button">Ver sacola</button>
+        <button class="primary-button compact" id="summaryCheckout" type="button">Finalizar pedido</button>
+      </div>
+    </div>
+
+    <aside class="drawer" id="bagDrawer" aria-hidden="true">
+      <div class="drawer-header">
+        <div>
+          <span class="eyebrow">Sacola</span>
+          <h2>Seu pedido</h2>
+        </div>
+        <button class="close-button" type="button" id="closeBag" aria-label="Fechar sacola">×</button>
+      </div>
+      <div class="drawer-body">
+        <div id="bagItems"></div>
+        <div class="customer-form">
+          <h3>Cadastro rápido</h3>
+          <input id="customerName" placeholder="Nome completo" />
+          <input id="customerWhatsapp" placeholder="WhatsApp" />
+          <input id="customerEmail" placeholder="E-mail opcional" />
+        </div>
+        <div class="fulfillment">
+          <div class="segmented">
+            <button type="button" class="active" data-mode="retirada">Retirada</button>
+            <button type="button" data-mode="entrega">Entrega</button>
+          </div>
+          <div id="pickupFields" class="field-grid">
+            <input id="pickupDate" type="date" />
+            <input id="pickupTime" type="time" />
+          </div>
+          <div id="deliveryFields" class="field-grid hidden">
+            <input placeholder="Endereço" />
+            <input placeholder="Número" />
+            <input placeholder="Complemento" />
+            <input placeholder="Bairro" />
+            <input placeholder="Referência" />
+          </div>
+        </div>
+        <div class="totals" id="totals"></div>
+        <button class="primary-button full" id="checkoutButton" type="button">Finalizar pedido</button>
+        <div class="thanks hidden" id="thanksBox"></div>
+      </div>
+    </aside>
+
+    <div class="modal" id="reviewModal" aria-hidden="true">
+      <div class="modal-panel small" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+        <button class="close-button" type="button" data-close-review aria-label="Fechar">×</button>
+        <h2 id="reviewTitle">Enviar avaliação</h2>
+        <form id="reviewForm" class="review-form">
+          <input name="name" placeholder="Seu nome" required />
+          <textarea name="message" placeholder="Conte como foi sua experiência" required></textarea>
+          <button class="primary-button full" type="submit">Enviar para aprovação</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="install-app hidden" id="installAppPrompt" role="dialog" aria-live="polite" aria-label="Salvar app Cacauê">
+      <div>
+        <strong>Salvar Cacauê no celular</strong>
+        <span id="installAppText">Acesse a vitrine mais rápido pela tela inicial.</span>
+      </div>
+      <div class="install-app-actions">
+        <button class="secondary-button compact" id="dismissInstallApp" type="button">Agora não</button>
+        <button class="primary-button compact" id="installAppButton" type="button">Salvar app</button>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
   </body>
 </html>
+
+
+
+
+
+
+

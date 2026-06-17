@@ -1,12 +1,14 @@
-const CACHE_NAME = "cacaue-vitrine-v9";
+const CACHE_NAME = "cacaue-vitrine-v18";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
-  "./assets/app-icon.svg",
   "./assets/logo-cacaue.svg",
+  "./assets/logo-cacaue-source.png",
+  "./assets/logo-cacaue-app.jpg",
+  "./assets/logo-cacaue-app.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./assets/maskable-512.png",

@@ -1,7 +1,7 @@
-﻿{
-  "name": "Cacauê Vitrine Digital",
-  "short_name": "Cacauê",
-  "description": "Vitrine digital premium da Cacauê.",
+{
+  "name": "Cacau\u00ea Vitrine Digital",
+  "short_name": "Cacau\u00ea",
+  "description": "Vitrine digital premium da Cacau\u00ea.",
   "id": "/Cacaue/",
   "start_url": "/Cacaue/",
   "scope": "/Cacaue/",
@@ -27,14 +27,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "assets/app-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
     }
   ]
 }
-
-
