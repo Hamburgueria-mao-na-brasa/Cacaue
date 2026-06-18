@@ -1,5 +1,5 @@
 -- Correção rápida para o Admin da Cacauê salvar no Supabase.
--- Rode este arquivo no SQL Editor do projeto Supabase Cacaue.
+-- Rode este arquivo no SQL Editor do projeto Supabase Cacauê.
 
 insert into public.admin_profiles (email, role)
 values ('edifevi2404@gmail.com', 'owner')

@@ -2609,56 +2609,6 @@ function isStandaloneApp() {
   return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
 }
 
-function legacyShowInstallPrompt(isIosFallback = false) {
-  if (isStandaloneApp() || localStorage.getItem("cacaue:installDismissed") === "true") return;
-  const prompt = $("#installAppPrompt");
-  if (!prompt) return;
-  $("#installAppText").textContent = isIosFallback
-    ? "No iPhone, toque em compartilhar e escolha Adicionar à Tela de Início."
-    : "Acesse a vitrine mais rápido pela tela inicial.";
-  $("#installAppButton").classList.toggle("hidden", isIosFallback);
-  prompt.classList.remove("hidden");
-}
-
-function legacyHideInstallPrompt(remember = false) {
-  $("#installAppPrompt")?.classList.add("hidden");
-  if (remember) localStorage.setItem("cacaue:installDismissed", "true");
-}
-
-function legacySetupInstallApp() {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js").catch((error) => {
-      console.warn("Service worker não registrado.", error);
-    });
-  }
-
-  window.addEventListener("beforeinstallprompt", (event) => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    showInstallPrompt();
-  });
-
-  window.addEventListener("appinstalled", () => {
-    deferredInstallPrompt = null;
-    hideInstallPrompt(true);
-  });
-
-  $("#installAppButton")?.addEventListener("click", async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    hideInstallPrompt(true);
-  });
-
-  $("#dismissInstallApp")?.addEventListener("click", () => hideInstallPrompt(true));
-
-  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  setTimeout(() => {
-    if (!deferredInstallPrompt && isIos) showInstallPrompt(true);
-  }, 2500);
-}
-
 function showInstallPrompt(isManualFallback = false) {
   if (isStandaloneApp() || localStorage.getItem("cacaue:installDismissed") === INSTALL_PROMPT_VERSION) return;
   const prompt = $("#installAppPrompt");
