@@ -772,8 +772,8 @@ let storeSettings = JSON.parse(localStorage.getItem("cacaue:storeSettings") || "
   sundayHours: "Domingo 09h às 15h",
   orderRule: "50% na confirmação e restante na retirada",
   heroEyebrow: "Cardápio online",
-  heroTitle: "Cacauê",
-  heroText: "Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.",
+  heroTitle: "Bem-vindo à Cacauê",
+  heroText: "Mais do que confeitaria, criamos momentos especiais através de sabores únicos, feitos com amor e dedicação.",
   heroImage: "assets/hero-cacaue.png",
   logoImage: "assets/logo-cacaue-app.jpg",
   storyEyebrow: "Nossa história",
@@ -793,8 +793,8 @@ function normalizeStoreSettings(settings) {
   ) {
     normalized.logoImage = "assets/logo-cacaue-app.jpg";
   }
-  if (!normalized.heroTitle || normalized.heroTitle.toLowerCase() === "cacaue") {
-    normalized.heroTitle = "Cacauê";
+  if (!normalized.heroTitle || ["cacaue", "cacauê"].includes(normalized.heroTitle.toLowerCase())) {
+    normalized.heroTitle = "Bem-vindo à Cacauê";
   }
   normalized.storyEyebrow = normalized.storyEyebrow || "Nossa história";
   normalized.storyTitle = normalized.storyTitle || "Uma confeitaria criada para transformar afeto em experiência.";
@@ -1939,8 +1939,8 @@ function renderStoreSettings() {
   if (brandLogo) brandLogo.src = storeSettings.logoImage || "assets/logo-cacaue-app.jpg";
   if (heroLogo) heroLogo.src = storeSettings.logoImage || "assets/logo-cacaue-app.jpg";
   if (heroEyebrow) heroEyebrow.textContent = storeSettings.heroEyebrow || "Cardápio online";
-  if (heroTitle) heroTitle.textContent = storeSettings.heroTitle || "Cacauê";
-  if (heroText) heroText.textContent = storeSettings.heroText || "Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.";
+  if (heroTitle) heroTitle.textContent = storeSettings.heroTitle || "Bem-vindo à Cacauê";
+  if (heroText) heroText.textContent = storeSettings.heroText || "Mais do que confeitaria, criamos momentos especiais através de sabores únicos, feitos com amor e dedicação.";
   const storyEyebrow = $("#storyEyebrow");
   const storyTitle = $("#storyTitle");
   const storyText = $("#storyText");
@@ -1978,7 +1978,7 @@ function renderStoreSettings() {
       ["Cidade", storeSettings.city],
       ["Funcionamento", `${storeSettings.weekHours} / ${storeSettings.sundayHours}`],
       ["Pedidos", storeSettings.orderRule],
-      ["Capa", storeSettings.heroTitle || "Cacauê"],
+      ["Capa", storeSettings.heroTitle || "Bem-vindo à Cacauê"],
       ["História", storeSettings.storyTitle || "Configurada"],
       ["Logo", storeSettings.logoImage ? "Configurada" : "Padrão"],
     ]
@@ -2673,8 +2673,8 @@ function bindEvents() {
       sundayHours: formData.get("sundayHours"),
       orderRule: formData.get("orderRule"),
       heroEyebrow: formData.get("heroEyebrow") || "Cardápio online",
-      heroTitle: formData.get("heroTitle") || "Cacauê",
-      heroText: formData.get("heroText") || "Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.",
+      heroTitle: formData.get("heroTitle") || "Bem-vindo à Cacauê",
+      heroText: formData.get("heroText") || "Mais do que confeitaria, criamos momentos especiais através de sabores únicos, feitos com amor e dedicação.",
       heroImage: formData.get("heroImage") || "assets/hero-cacaue.png",
       logoImage: formData.get("logoImage") || "assets/logo-cacaue-app.jpg",
       storyEyebrow: formData.get("storyEyebrow") || "Nossa história",
