@@ -2593,9 +2593,9 @@ textarea {
   }
 
   .story-section {
-    grid-template-columns: minmax(0, 1fr) minmax(118px, 38vw);
+    grid-template-columns: minmax(0, 1fr) minmax(96px, 32vw);
     align-items: start;
-    gap: 12px;
+    gap: 10px;
     padding-top: 24px;
     padding-bottom: 28px;
   }
@@ -2608,30 +2608,32 @@ textarea {
 
   .story-media img {
     aspect-ratio: 9 / 16;
-    max-height: 360px;
+    max-height: 300px;
   }
 
   .story-copy {
-    gap: 9px;
+    gap: 7px;
+    min-width: 0;
   }
 
   .story-copy .eyebrow {
-    font-size: 0.74rem;
+    font-size: 0.68rem;
   }
 
   .story-copy h2 {
-    max-width: 12ch;
-    font-size: 1.62rem;
-    line-height: 1.03;
+    max-width: 100%;
+    font-size: 1.34rem;
+    line-height: 1.05;
+    overflow-wrap: anywhere;
   }
 
   .story-copy p {
     display: -webkit-box;
     overflow: hidden;
-    font-size: 0.78rem;
-    line-height: 1.42;
+    font-size: 0.72rem;
+    line-height: 1.36;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 10;
+    -webkit-line-clamp: 9;
   }
 
   #cardapio {
@@ -3063,17 +3065,17 @@ textarea {
 
 @media (max-width: 370px) {
   .story-section {
-    grid-template-columns: minmax(0, 1fr) minmax(106px, 36vw);
-    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) minmax(86px, 30vw);
+    gap: 8px;
   }
 
   .story-copy h2 {
-    font-size: 1.42rem;
+    font-size: 1.14rem;
   }
 
   .story-copy p {
-    font-size: 0.72rem;
-    -webkit-line-clamp: 9;
+    font-size: 0.66rem;
+    -webkit-line-clamp: 8;
   }
 
   .contact-grid {
