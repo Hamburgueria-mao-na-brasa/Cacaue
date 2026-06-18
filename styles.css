@@ -2593,21 +2593,22 @@ textarea {
   }
 
   .story-section {
-    grid-template-columns: 1fr;
-    gap: 14px;
+    grid-template-columns: minmax(0, 1fr) minmax(118px, 38vw);
+    align-items: start;
+    gap: 12px;
     padding-top: 24px;
     padding-bottom: 28px;
   }
 
   .story-media {
-    order: -1;
+    order: 0;
     border-radius: 18px;
     box-shadow: 0 14px 34px rgba(50, 31, 24, 0.08);
   }
 
   .story-media img {
     aspect-ratio: 9 / 16;
-    max-height: 560px;
+    max-height: 360px;
   }
 
   .story-copy {
@@ -2619,18 +2620,18 @@ textarea {
   }
 
   .story-copy h2 {
-    max-width: 11ch;
-    font-size: 2rem;
+    max-width: 12ch;
+    font-size: 1.62rem;
     line-height: 1.03;
   }
 
   .story-copy p {
     display: -webkit-box;
     overflow: hidden;
-    font-size: 0.92rem;
-    line-height: 1.52;
+    font-size: 0.78rem;
+    line-height: 1.42;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 8;
+    -webkit-line-clamp: 10;
   }
 
   #cardapio {
@@ -3061,6 +3062,20 @@ textarea {
 }
 
 @media (max-width: 370px) {
+  .story-section {
+    grid-template-columns: minmax(0, 1fr) minmax(106px, 36vw);
+    gap: 10px;
+  }
+
+  .story-copy h2 {
+    font-size: 1.42rem;
+  }
+
+  .story-copy p {
+    font-size: 0.72rem;
+    -webkit-line-clamp: 9;
+  }
+
   .contact-grid {
     grid-template-columns: 1fr;
   }
