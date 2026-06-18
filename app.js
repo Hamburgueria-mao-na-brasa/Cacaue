@@ -1628,24 +1628,6 @@ function isCampaignActive(campaign) {
   return today >= starts && today <= ends;
 }
 
-function fineSweetSubtitle(name) {
-  const map = {
-    "Brigadeiro Ninho com Nutella": "ninho com nutella",
-    "Copinho de Cereja": "de cereja",
-    "Surpresa de Uva": "de uva",
-    "Copinho Physales": "physales",
-    "Coração Dourado": "meio amargo",
-    "Chanfrado de Café": "ganache de café",
-    "Amêndoas": "doce de leite",
-    "Gota de Maracujá": "gel cítrico",
-    "Quadradinho de Coco": "coco cremoso",
-    "Camafeu de Nozes": "noz dourada",
-    "Flor de Sakura": "nutella crocante",
-    "Jarrinho de Cereja": "ganache de cereja",
-  };
-  return map[name] || "";
-}
-
 function productCard(product, index = 0) {
   const favorited = favorites.includes(product.id);
   const statusClass = product.available ? "status" : "status soldout";
@@ -1653,12 +1635,10 @@ function productCard(product, index = 0) {
   const orderText = product.madeToOrder ? `Sob encomenda · mínimo ${product.minimum}` : `Pronta entrega · mínimo ${product.minimum}`;
   const hasPrice = product.price > 0;
   const actionDisabled = !product.available || !hasPrice;
-  const usePremiumCard = selectedCategory === "Doces" && product.subcategory === "Doces finos";
-  const subtitle = selectedCategory === "Vitrine" ? "" : fineSweetSubtitle(product.name) || product.subcategory || "";
+  const subtitle = selectedCategory === "Vitrine" ? "" : product.subcategory || "";
 
   return `
-    <article class="menu-card ${usePremiumCard ? "fine-sweet-card" : ""}" data-product="${product.id}">
-      ${usePremiumCard ? `<span class="fine-sweet-number">${String(index + 1).padStart(2, "0")}</span>` : ""}
+    <article class="menu-card" data-product="${product.id}">
       <div class="menu-card-media">
         <img src="${product.image}" alt="${product.name}" style="object-fit: ${product.imageFit || "cover"}; object-position: ${product.imagePosition || "center"};" />
       </div>
@@ -1756,8 +1736,7 @@ function renderSubcategoryTabs(list = products) {
 function renderProducts(list = products) {
   renderSubcategoryTabs(list);
   const menuProducts = productsForMenu(list);
-  const usePremiumLayout = selectedCategory === "Doces" && (selectedSubcategory === "Todos" || selectedSubcategory === "Doces finos");
-  $("#menuProducts").classList.toggle("premium-layout", usePremiumLayout);
+  $("#menuProducts").classList.remove("premium-layout");
   $("#menuTitle").textContent = selectedCategory === "Vitrine" ? "Vitrine do dia" : selectedCategory;
   $("#menuCount").textContent = `${menuProducts.length} ${menuProducts.length === 1 ? "item" : "itens"}`;
   $("#menuProducts").innerHTML = renderProductGroups(menuProducts);
@@ -1783,7 +1762,7 @@ function renderProductGroups(menuProducts) {
       return `
         <section class="menu-subgroup">
           <h3 class="menu-subtitle">${subcategory}</h3>
-          <div class="menu-subgrid ${selectedCategory === "Doces" && subcategory === "Doces finos" ? "premium-subgrid" : ""}">${cards}</div>
+          <div class="menu-subgrid">${cards}</div>
         </section>
       `;
     })

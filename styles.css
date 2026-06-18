@@ -2353,6 +2353,7 @@ textarea {
 
   .admin-top-button {
     min-height: 38px;
+    height: 38px;
     padding-inline: 9px;
     font-size: 0.85rem;
   }
@@ -2365,6 +2366,7 @@ textarea {
 
   .bag-button {
     min-height: 38px;
+    height: 38px;
     padding-inline: 10px;
     font-size: 0.86rem;
     white-space: nowrap;
@@ -2528,17 +2530,18 @@ textarea {
   .menu-subgrid,
   .menu-grid.premium-layout,
   .menu-subgrid.premium-subgrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
 
   .menu-card {
     width: 100%;
     max-width: 100%;
-    grid-template-columns: 92px minmax(0, 1fr);
-    gap: 12px;
-    min-height: 124px;
-    padding: 10px;
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: 8px;
+    min-height: 0;
+    padding: 9px;
     border: 1px solid rgba(184, 138, 53, 0.18);
     border-radius: 16px;
     background: rgba(255, 254, 251, 0.88);
@@ -2546,37 +2549,43 @@ textarea {
   }
 
   .menu-card-media {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 1 / 1;
+    width: 100%;
     min-height: 0;
+    max-height: 154px;
     border-radius: 12px;
   }
 
   .menu-card-media img {
+    width: 100%;
     height: 100%;
+    object-fit: cover !important;
+    object-position: center !important;
   }
 
   .menu-card p,
   .menu-meta {
-    font-size: 0.78rem;
-    line-height: 1.4;
+    font-size: 0.72rem;
+    line-height: 1.3;
   }
 
   .menu-card p {
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
   }
 
   .menu-card-title {
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
   .menu-card-title h3 {
     display: -webkit-box;
     overflow: hidden;
-    font-size: clamp(1.02rem, 4.8vw, 1.18rem);
+    min-height: 2.2em;
+    font-size: 0.96rem;
     line-height: 1.12;
     overflow-wrap: anywhere;
     word-break: normal;
@@ -2590,9 +2599,9 @@ textarea {
 
   .menu-card .product-footer {
     display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 7px;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 8px;
     margin-top: 2px;
   }
 
@@ -2606,17 +2615,30 @@ textarea {
   }
 
   .menu-card .heart {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     flex: 0 0 auto;
+    font-size: 0.95rem;
   }
 
   .menu-card .add-button {
-    width: auto;
+    width: 100%;
     max-width: 100%;
-    min-height: 34px;
-    padding-inline: 11px;
-    font-size: 0.78rem;
+    min-height: 36px;
+    padding-inline: 8px;
+    font-size: 0.76rem;
+  }
+
+  .menu-card .price,
+  .menu-card .status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+  }
+
+  .menu-card .status {
+    padding: 4px 8px;
+    font-size: 0.7rem;
   }
 
   .fine-sweet-card {
@@ -2640,9 +2662,9 @@ textarea {
   }
 
   .fine-sweet-card .menu-card-media {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
     min-height: 0;
-    max-height: 280px;
+    max-height: 154px;
     margin-top: 10px;
     border-radius: 14px;
   }
@@ -2653,7 +2675,7 @@ textarea {
   }
 
   .fine-sweet-card .menu-card-title {
-    padding-inline: 16px;
+    padding-inline: 8px 28px;
   }
 
   .fine-sweet-card .menu-card-title h3 {
@@ -2669,13 +2691,13 @@ textarea {
   .fine-sweet-card .heart {
     top: 10px;
     right: 9px;
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 
   .fine-sweet-subtitle {
     margin-top: -2px;
-    font-size: 0.86rem;
+    font-size: 0.78rem;
     line-height: 1.05;
   }
 
@@ -2820,9 +2842,14 @@ textarea {
   }
 
   .menu-card {
-    grid-template-columns: 84px 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 7px;
     padding-inline: 8px;
+  }
+
+  .menu-card-media,
+  .fine-sweet-card .menu-card-media {
+    max-height: 132px;
   }
 
   .fine-sweet-card.menu-card {
@@ -2831,14 +2858,17 @@ textarea {
   }
 
   .menu-card-title h3 {
-    font-size: 0.94rem;
+    font-size: 0.86rem;
   }
 
+  .menu-card p,
+  .menu-meta,
   .fine-sweet-card p,
   .fine-sweet-card .menu-meta {
     font-size: 0.7rem;
   }
 
+  .menu-card .add-button,
   .fine-sweet-card .add-button {
     min-height: 32px;
     font-size: 0.72rem;
