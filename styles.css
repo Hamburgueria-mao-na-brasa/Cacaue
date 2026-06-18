@@ -2202,6 +2202,60 @@ textarea {
     max-width: none;
   }
 
+  .admin-product-list {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .admin-product-row {
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .admin-product-row img {
+    width: 72px;
+    grid-row: span 2;
+    border-radius: 12px;
+  }
+
+  .admin-product-row > div:not(.admin-row-actions) {
+    min-width: 0;
+  }
+
+  .admin-product-row strong {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .admin-product-row p {
+    margin-top: 4px;
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+
+  .admin-product-row > span {
+    grid-column: 2;
+    font-size: 1rem;
+  }
+
+  .admin-product-row .admin-row-actions {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 2px;
+  }
+
+  .admin-product-row .admin-row-actions .text-button {
+    width: 100%;
+    min-height: 42px;
+    justify-content: center;
+  }
+
   .admin-row {
     align-items: flex-start;
     flex-direction: column;
@@ -2750,15 +2804,6 @@ textarea {
     max-width: none;
   }
 
-  .admin-product-row {
-    grid-template-columns: 48px 1fr;
-  }
-
-  .admin-product-row span,
-  .admin-product-row button {
-    grid-column: 2;
-  }
-
   .detail-media {
     min-height: 280px;
   }
@@ -2797,5 +2842,18 @@ textarea {
   .fine-sweet-card .add-button {
     min-height: 32px;
     font-size: 0.72rem;
+  }
+
+  .admin-product-row {
+    grid-template-columns: 62px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .admin-product-row img {
+    width: 62px;
+  }
+
+  .admin-product-row .admin-row-actions {
+    grid-template-columns: 1fr;
   }
 }
