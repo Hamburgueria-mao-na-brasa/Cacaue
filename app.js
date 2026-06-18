@@ -1648,7 +1648,7 @@ function productCard(product, index = 0) {
           <h3>${product.name}</h3>
           <button class="heart ${favorited ? "active" : ""}" type="button" data-favorite="${product.id}" aria-label="Favoritar ${product.name}">♡</button>
         </div>
-        ${subtitle ? `<span class="fine-sweet-subtitle">${subtitle}</span>` : ""}
+        ${subtitle ? `<span class="menu-card-subtitle">${subtitle}</span>` : ""}
         <p>${product.short}</p>
         <span class="menu-meta">${orderText}</span>
         <div class="product-footer">
