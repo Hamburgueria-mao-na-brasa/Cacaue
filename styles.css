@@ -2467,7 +2467,7 @@ textarea {
   .section {
     width: 100%;
     max-width: 100%;
-    padding-inline: 14px;
+    padding-inline: 10px;
   }
 
   #cardapio {
@@ -2509,10 +2509,10 @@ textarea {
   }
 
   .category-tabs {
-    width: calc(100% + 28px);
-    max-width: calc(100vw + 28px);
-    margin-inline: -14px;
-    padding-inline: 14px;
+    width: calc(100% + 20px);
+    max-width: calc(100vw + 20px);
+    margin-inline: -10px;
+    padding-inline: 10px;
   }
 
   .category-tabs button {
@@ -2522,10 +2522,10 @@ textarea {
   }
 
   .subcategory-tabs {
-    width: calc(100% + 28px);
-    max-width: calc(100vw + 28px);
-    margin-inline: -14px;
-    padding-inline: 14px;
+    width: calc(100% + 20px);
+    max-width: calc(100vw + 20px);
+    margin-inline: -10px;
+    padding-inline: 10px;
   }
 
   .subcategory-tabs button {
@@ -2538,8 +2538,16 @@ textarea {
   .menu-subgrid,
   .menu-grid.premium-layout,
   .menu-subgrid.premium-subgrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, calc((100vw - 32px) / 2)));
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .menu-subgroup,
+  .menu-subtitle {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .menu-card {
@@ -2549,8 +2557,8 @@ textarea {
     grid-template-rows: auto 1fr;
     align-content: stretch;
     gap: 9px;
-    min-height: 318px;
-    padding: 10px;
+    min-height: 306px;
+    padding: 8px;
     border: 1px solid rgba(184, 138, 53, 0.18);
     border-radius: 16px;
     background: rgba(255, 254, 251, 0.88);
@@ -2561,8 +2569,8 @@ textarea {
     aspect-ratio: 4 / 3;
     width: 100%;
     min-height: 0;
-    max-height: 128px;
-    border-radius: 12px;
+    max-height: 116px;
+    border-radius: 10px;
   }
 
   .menu-card-media img {
@@ -2612,8 +2620,8 @@ textarea {
   .menu-card-title h3 {
     display: -webkit-box;
     overflow: hidden;
-    min-height: 2.35em;
-    font-size: 0.9rem;
+    min-height: 2.25em;
+    font-size: 0.84rem;
     line-height: 1.12;
     overflow-wrap: anywhere;
     word-break: normal;
@@ -2642,8 +2650,8 @@ textarea {
   }
 
   .menu-card .heart {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     flex: 0 0 auto;
     font-size: 0.9rem;
   }
@@ -2651,7 +2659,7 @@ textarea {
   .menu-card .add-button {
     width: 100%;
     max-width: 100%;
-    min-height: 38px;
+    min-height: 36px;
     padding-inline: 8px;
     font-size: 0.74rem;
   }
@@ -2858,16 +2866,19 @@ textarea {
 }
 
 @media (max-width: 370px) {
+  .menu-grid,
+  .menu-subgrid,
   .menu-grid.premium-layout,
   .menu-subgrid.premium-subgrid {
+    grid-template-columns: repeat(2, minmax(0, calc((100vw - 26px) / 2)));
     gap: 8px;
   }
 
   .menu-card {
     grid-template-columns: 1fr;
     gap: 7px;
-    min-height: 300px;
-    padding-inline: 8px;
+    min-height: 292px;
+    padding-inline: 7px;
   }
 
   .menu-card-media,
