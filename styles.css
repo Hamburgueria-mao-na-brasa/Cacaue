@@ -2680,7 +2680,7 @@ textarea {
     grid-template-rows: auto 1fr;
     align-content: stretch;
     gap: 9px;
-    min-height: 306px;
+    min-height: 366px;
     padding: 8px;
     border: 1px solid rgba(184, 138, 53, 0.18);
     border-radius: 16px;
@@ -2689,10 +2689,10 @@ textarea {
   }
 
   .menu-card-media {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 4;
     width: 100%;
     min-height: 0;
-    max-height: 116px;
+    max-height: none;
     border-radius: 10px;
   }
 
@@ -2821,9 +2821,9 @@ textarea {
   }
 
   .fine-sweet-card .menu-card-media {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 3 / 4;
     min-height: 0;
-    max-height: 154px;
+    max-height: none;
     margin-top: 10px;
     border-radius: 14px;
   }
@@ -3008,13 +3008,14 @@ textarea {
   .menu-card {
     grid-template-columns: 1fr;
     gap: 7px;
-    min-height: 292px;
+    min-height: 342px;
     padding-inline: 7px;
   }
 
   .menu-card-media,
   .fine-sweet-card .menu-card-media {
-    max-height: 112px;
+    aspect-ratio: 3 / 4;
+    max-height: none;
   }
 
   .fine-sweet-card.menu-card {
