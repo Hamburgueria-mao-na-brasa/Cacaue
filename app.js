@@ -930,23 +930,44 @@ function supabaseHeaders(useSession = false) {
   };
 }
 
+function supabaseErrorMessage(status, text) {
+  try {
+    const payload = JSON.parse(text);
+    return payload.message || payload.msg || payload.error_description || payload.error || text || `Supabase error ${status}`;
+  } catch {
+    return text || `Supabase error ${status}`;
+  }
+}
+
 async function supabaseJson(path, options = {}) {
   if (options.useSession && !(await ensureAdminSession())) {
     throw new Error("Sessão do admin expirada. Entre novamente para salvar no servidor.");
   }
-  const response = await fetch(`${SUPABASE_REST_URL}${path}`, {
+  const request = () => fetch(`${SUPABASE_REST_URL}${path}`, {
     ...options,
     headers: {
       ...supabaseHeaders(options.useSession),
       ...(options.headers || {}),
     },
   });
+  let response = await request();
+  if (options.useSession && response.status === 401 && (await refreshAdminSession())) {
+    response = await request();
+  }
   const text = await response.text();
   if (!response.ok) {
-    throw new Error(text || `Supabase error ${response.status}`);
+    throw new Error(supabaseErrorMessage(response.status, text));
   }
   if (response.status === 204 || !text.trim()) return null;
   return JSON.parse(text);
+}
+
+async function confirmSupabaseRow(path, label) {
+  const rows = await supabaseJson(path, { useSession: true });
+  if (!Array.isArray(rows) || rows.length === 0) {
+    throw new Error(`${label} não apareceu na leitura do servidor depois de salvar.`);
+  }
+  return rows[0];
 }
 
 async function refreshAdminSession() {
@@ -1144,6 +1165,9 @@ async function saveProductsToSupabase() {
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
       body: JSON.stringify(rows),
     });
+    if (rows[0]?.id) {
+      await confirmSupabaseRow(`/products?select=id,updated_at&id=eq.${encodeURIComponent(rows[0].id)}&limit=1`, "Produto");
+    }
     persistProducts();
     setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     renderProducts();
@@ -1195,6 +1219,9 @@ async function saveCampaignsToSupabase() {
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
       body: JSON.stringify(rows),
     });
+    if (rows[0]?.id) {
+      await confirmSupabaseRow(`/campaigns?select=id&id=eq.${encodeURIComponent(rows[0].id)}&limit=1`, "Campanha");
+    }
     persistCampaigns();
     setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     renderCampaigns();
@@ -1248,6 +1275,7 @@ async function saveStoreSettingsToSupabase() {
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
       body: JSON.stringify([{ id: "main", settings: storeSettings }]),
     });
+    await confirmSupabaseRow("/store_settings?select=id&id=eq.main&limit=1", "Configuração da loja");
     persistStoreSettings();
     setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     renderStoreSettings();
@@ -1271,7 +1299,7 @@ async function uploadDataUrlToSupabase(dataUrl, folder, filename) {
     .replace(/(^-|-$)/g, "")
     .toLowerCase() || "imagem";
   const path = `${folder}/${safeName}-${Date.now()}.${extension}`;
-  const response = await fetch(`${SUPABASE_URL}/storage/v1/object/${SUPABASE_STORAGE_BUCKET}/${path}`, {
+  const upload = () => fetch(`${SUPABASE_URL}/storage/v1/object/${SUPABASE_STORAGE_BUCKET}/${path}`, {
     method: "PUT",
     headers: {
       apikey: SUPABASE_ANON_KEY,
@@ -1281,7 +1309,11 @@ async function uploadDataUrlToSupabase(dataUrl, folder, filename) {
     },
     body: blob,
   });
-  if (!response.ok) throw new Error(await response.text());
+  let response = await upload();
+  if (response.status === 401 && (await refreshAdminSession())) {
+    response = await upload();
+  }
+  if (!response.ok) throw new Error(supabaseErrorMessage(response.status, await response.text()));
   return `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_STORAGE_BUCKET}/${path}`;
 }
 
