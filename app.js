@@ -2258,13 +2258,11 @@ function openCheckout() {
 async function checkout() {
   customer = {
     name: $("#customerName").value.trim(),
-    whatsapp: $("#customerWhatsapp").value.trim(),
-    email: $("#customerEmail").value.trim(),
   };
 
-  if (!customer.name || !customer.whatsapp || bag.length === 0) {
+  if (!customer.name || bag.length === 0) {
     $("#thanksBox").classList.remove("hidden");
-    $("#thanksBox").textContent = "Informe nome, WhatsApp e adicione pelo menos um produto.";
+    $("#thanksBox").textContent = "Informe o nome e adicione pelo menos um produto.";
     return;
   }
 
@@ -2272,7 +2270,7 @@ async function checkout() {
   const summary = bag
     .map((item) => {
       const product = products.find((entry) => entry.id === item.id);
-      return `${item.quantity}x ${product?.name || item.id} - ${money.format((product?.price || 0) * item.quantity)}`;
+      return `• ${item.quantity}x ${product?.name || item.id} - ${money.format((product?.price || 0) * item.quantity)}`;
     })
     .join("\n");
   const subtotal = bagSubtotal();
@@ -2281,29 +2279,31 @@ async function checkout() {
   const fulfillmentText =
     fulfillmentMode === "entrega"
       ? [
-          "Entrega",
-          `Endereço: ${document.querySelector("#deliveryFields input:nth-child(1)")?.value || "não informado"}`,
-          `Número: ${document.querySelector("#deliveryFields input:nth-child(2)")?.value || "não informado"}`,
+          "🚚 *Entrega*",
+          `📍 Endereço: ${document.querySelector("#deliveryFields input:nth-child(1)")?.value || "não informado"}`,
+          `Nº: ${document.querySelector("#deliveryFields input:nth-child(2)")?.value || "não informado"}`,
           `Complemento: ${document.querySelector("#deliveryFields input:nth-child(3)")?.value || "-"}`,
           `Bairro: ${document.querySelector("#deliveryFields input:nth-child(4)")?.value || "não informado"}`,
           `Referência: ${document.querySelector("#deliveryFields input:nth-child(5)")?.value || "-"}`,
         ].join("\n")
-      : [`Retirada`, `Data: ${$("#pickupDate").value || "a combinar"}`, `Horário: ${$("#pickupTime").value || "a combinar"}`].join("\n");
+      : [`🛍️ *Retirada*`, `📅 Data: ${$("#pickupDate").value || "a combinar"}`, `⏰ Horário: ${$("#pickupTime").value || "a combinar"}`].join("\n");
   const whatsappMessage = [
-    `Olá, Cacauê! Quero finalizar meu pedido ${protocol}.`,
+    `Olá, Cacauê! 💛`,
+    `Quero finalizar este pedido: *${protocol}*`,
     "",
-    `Cliente: ${customer.name}`,
-    `WhatsApp: ${customer.whatsapp}`,
-    customer.email ? `E-mail: ${customer.email}` : "",
+    `👤 *Cliente:* ${customer.name}`,
     "",
-    "Itens:",
+    "🍰 *Itens escolhidos:*",
     summary,
     "",
     fulfillmentText,
     "",
+    "💳 *Resumo:*",
     `Subtotal: ${money.format(subtotal)}`,
-    `Entrega: ${money.format(delivery)}`,
-    `Total: ${money.format(total)}`,
+    `Taxa de entrega: ${money.format(delivery)}`,
+    `*Total: ${money.format(total)}*`,
+    "",
+    "Aguardo a confirmação do pedido. ✨",
   ]
     .filter((line) => line !== "")
     .join("\n");
@@ -2699,8 +2699,6 @@ function bindEvents() {
 
 function hydrateCustomer() {
   $("#customerName").value = customer.name || "";
-  $("#customerWhatsapp").value = customer.whatsapp || "";
-  $("#customerEmail").value = customer.email || "";
 }
 
 function isStandaloneApp() {

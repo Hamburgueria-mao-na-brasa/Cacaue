@@ -1138,6 +1138,11 @@ p {
   color: var(--cream);
 }
 
+.contact-copy {
+  display: grid;
+  gap: 12px;
+}
+
 .contact-section p,
 .contact-section .eyebrow {
   color: var(--gold-soft);
@@ -1151,10 +1156,22 @@ p {
 
 .contact-grid a,
 .contact-grid span {
-  padding: 18px;
+  display: flex;
+  align-items: center;
+  min-height: 74px;
+  padding: 16px 18px;
   border: 1px solid rgba(255, 250, 240, 0.18);
   border-radius: var(--radius);
   background: rgba(255, 250, 240, 0.06);
+  color: var(--cream);
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.contact-grid a:is(:hover, :focus-visible) {
+  border-color: rgba(232, 211, 163, 0.58);
+  background: rgba(255, 250, 240, 0.1);
 }
 
 .admin-shell {
@@ -2572,9 +2589,41 @@ textarea {
   }
 
   .product-grid,
-  .gallery-section,
-  .contact-grid {
+  .gallery-section {
     grid-template-columns: 1fr;
+  }
+
+  .contact-section {
+    gap: 20px;
+    padding-top: 44px;
+    padding-bottom: 44px;
+  }
+
+  .contact-copy {
+    gap: 8px;
+  }
+
+  .contact-copy h2 {
+    max-width: 11ch;
+    font-size: 2rem;
+    line-height: 1.08;
+  }
+
+  .contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .contact-grid a,
+  .contact-grid span {
+    min-height: 58px;
+    padding: 12px;
+    border-radius: 14px;
+    font-size: 0.9rem;
+  }
+
+  .contact-grid span:last-child {
+    grid-column: 1 / -1;
   }
 
   .menu-toolbar {
@@ -2940,6 +2989,14 @@ textarea {
 }
 
 @media (max-width: 370px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-grid span:last-child {
+    grid-column: auto;
+  }
+
   .menu-grid,
   .menu-subgrid,
   .menu-grid.premium-layout,
