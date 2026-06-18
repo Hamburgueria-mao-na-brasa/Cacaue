@@ -10,6 +10,8 @@ const categoryConfig = {
   "Presenteável": [],
 };
 const menuCategories = Object.keys(categoryConfig);
+const customerMenuModes = ["Vitrine", "Encomendas"];
+const orderMenuCategories = menuCategories.filter((category) => category !== "Vitrine");
 const adminCategoryFilterOptions = ["Todos", ...menuCategories];
 
 let products = [
@@ -1723,7 +1725,12 @@ function productCard(product, index = 0) {
   const orderText = product.madeToOrder ? `Sob encomenda · mínimo ${product.minimum}` : `Pronta entrega · mínimo ${product.minimum}`;
   const hasPrice = product.price > 0;
   const actionDisabled = !product.available || !hasPrice;
-  const subtitle = selectedCategory === "Vitrine" ? "" : product.subcategory || "";
+  const subtitle =
+    selectedCategory === "Encomendas"
+      ? [product.category, product.subcategory].filter(Boolean).join(" · ")
+      : selectedCategory === "Vitrine"
+        ? ""
+        : product.subcategory || "";
 
   return `
     <article class="menu-card" data-product="${product.id}">
@@ -1776,11 +1783,14 @@ function renderCampaigns() {
 }
 
 function getCategories() {
-  return menuCategories;
+  return customerMenuModes;
 }
 
 function getVisibleSubcategories(category, list = products) {
   if (category === "Vitrine") return [];
+  if (category === "Encomendas") {
+    return orderMenuCategories.filter((menuCategory) => list.some((product) => product.category === menuCategory));
+  }
   const defaults = categoryConfig[category] || [];
   const existing = list
     .filter((product) => product.category === category && product.subcategory)
@@ -1790,6 +1800,13 @@ function getVisibleSubcategories(category, list = products) {
 
 function productsForMenu(list = products) {
   if (selectedCategory === "Vitrine") return list.filter((product) => product.showcase || product.category === "Vitrine");
+  if (selectedCategory === "Encomendas") {
+    return list.filter((product) => {
+      const isOrderProduct = product.category !== "Vitrine";
+      const sameCategory = selectedSubcategory === "Todos" || product.category === selectedSubcategory;
+      return isOrderProduct && sameCategory;
+    });
+  }
   return list.filter((product) => {
     const sameCategory = product.category === selectedCategory;
     const sameSubcategory = selectedSubcategory === "Todos" || product.subcategory === selectedSubcategory;
@@ -1824,8 +1841,8 @@ function renderSubcategoryTabs(list = products) {
 function renderProducts(list = products) {
   renderSubcategoryTabs(list);
   const menuProducts = productsForMenu(list);
-  $("#menuProducts").classList.remove("premium-layout");
-  $("#menuTitle").textContent = selectedCategory === "Vitrine" ? "Vitrine do dia" : selectedCategory;
+  $("#menuProducts").classList.add("premium-layout");
+  $("#menuTitle").textContent = selectedCategory === "Vitrine" ? "Vitrine do dia" : "Sob encomenda";
   $("#menuCount").textContent = `${menuProducts.length} ${menuProducts.length === 1 ? "item" : "itens"}`;
   $("#menuProducts").innerHTML = renderProductGroups(menuProducts);
   renderCategoryTabs();
@@ -1833,6 +1850,25 @@ function renderProducts(list = products) {
 
 function renderProductGroups(menuProducts) {
   if (!menuProducts.length) return `<p>Nenhum produto nesta seleção.</p>`;
+  if (selectedCategory === "Encomendas" && selectedSubcategory === "Todos") {
+    const groups = new Map();
+    menuProducts.forEach((product) => {
+      const key = product.category || "Encomendas";
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(product);
+    });
+    return [...groups.entries()]
+      .map(([category, groupProducts]) => {
+        const cards = groupProducts.map((product) => productCard(product)).join("");
+        return `
+          <section class="menu-subgroup">
+            <h3 class="menu-subtitle">${category}</h3>
+            <div class="menu-subgrid premium-subgrid">${cards}</div>
+          </section>
+        `;
+      })
+      .join("");
+  }
   const shouldGroup = selectedCategory !== "Vitrine" && selectedSubcategory === "Todos" && menuProducts.some((product) => product.subcategory);
   if (!shouldGroup) return menuProducts.map(productCard).join("");
 
@@ -1850,7 +1886,7 @@ function renderProductGroups(menuProducts) {
       return `
         <section class="menu-subgroup">
           <h3 class="menu-subtitle">${subcategory}</h3>
-          <div class="menu-subgrid">${cards}</div>
+          <div class="menu-subgrid premium-subgrid">${cards}</div>
         </section>
       `;
     })
