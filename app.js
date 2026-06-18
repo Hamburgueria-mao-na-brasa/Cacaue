@@ -776,6 +776,10 @@ let storeSettings = JSON.parse(localStorage.getItem("cacaue:storeSettings") || "
   heroText: "Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.",
   heroImage: "assets/hero-cacaue.png",
   logoImage: "assets/logo-cacaue-app.jpg",
+  storyEyebrow: "Nossa história",
+  storyTitle: "Uma confeitaria criada para transformar afeto em experiência.",
+  storyText: "A Cacauê nasceu do cuidado com os detalhes: receitas autorais, ingredientes selecionados e uma apresentação feita para que cada pedido tenha sabor de momento especial.",
+  storyImage: "assets/hero-cacaue.png",
 };
 
 function normalizeStoreSettings(settings) {
@@ -792,6 +796,12 @@ function normalizeStoreSettings(settings) {
   if (!normalized.heroTitle || normalized.heroTitle.toLowerCase() === "cacaue") {
     normalized.heroTitle = "Cacauê";
   }
+  normalized.storyEyebrow = normalized.storyEyebrow || "Nossa história";
+  normalized.storyTitle = normalized.storyTitle || "Uma confeitaria criada para transformar afeto em experiência.";
+  normalized.storyText =
+    normalized.storyText ||
+    "A Cacauê nasceu do cuidado com os detalhes: receitas autorais, ingredientes selecionados e uma apresentação feita para que cada pedido tenha sabor de momento especial.";
+  normalized.storyImage = normalized.storyImage || normalized.heroImage || "assets/hero-cacaue.png";
   if (normalized.heroText) {
     normalized.heroText = normalized.heroText
       .replace(/Cacaue/g, "Cacauê")
@@ -1229,6 +1239,9 @@ async function saveStoreSettingsToSupabase() {
     if (storeSettings.logoImage?.startsWith("data:")) {
       storeSettings.logoImage = await uploadDataUrlToSupabase(storeSettings.logoImage, "store", "logo");
     }
+    if (storeSettings.storyImage?.startsWith("data:")) {
+      storeSettings.storyImage = await uploadDataUrlToSupabase(storeSettings.storyImage, "store", "story");
+    }
     await supabaseJson("/store_settings?on_conflict=id", {
       method: "POST",
       useSession: true,
@@ -1450,6 +1463,7 @@ function resetProductForm() {
   $("#productName").value = "";
   $("#productCategory").value = "Vitrine";
   $("#productSubcategory").value = "";
+  $("#productSubcategoryCustom").value = "";
   $("#productPrice").value = "";
   $("#productMinimum").value = "1";
   $("#productImage").value = "assets/products/doces-finos.png";
@@ -1470,7 +1484,6 @@ function fillProductForm(product) {
   $("#productId").value = product.id;
   $("#productName").value = product.name;
   $("#productCategory").value = product.category;
-  $("#productSubcategory").value = product.subcategory || "";
   $("#productPrice").value = product.price;
   $("#productMinimum").value = product.minimum;
   $("#productImage").value = product.image;
@@ -1484,7 +1497,7 @@ function fillProductForm(product) {
   $("#productAvailable").checked = product.available;
   $("#productShowcase").checked = product.showcase || product.category === "Vitrine";
   $("#productMadeToOrder").checked = product.madeToOrder;
-  updateSubcategoryField();
+  updateSubcategoryField(product.subcategory || "");
   showAdminTab("product-add");
   document.querySelector("#admin-product-add").scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -1542,6 +1555,13 @@ function updateStoreLogoPreview(src = "") {
   image.src = src || "assets/logo-cacaue-app.jpg";
 }
 
+function updateStoreStoryPreview(src = "") {
+  const preview = $("#storeStoryImagePreview");
+  if (!preview) return;
+  const image = preview.querySelector("img");
+  image.src = src || "assets/hero-cacaue.png";
+}
+
 function subcategoriesForCategory(category) {
   const defaults = categoryConfig[category] || [];
   const custom = products
@@ -1550,31 +1570,67 @@ function subcategoriesForCategory(category) {
   return [...new Set([...defaults, ...custom])];
 }
 
-function updateSubcategoryField() {
+function setCustomSubcategoryVisible(visible, { clear = false, focus = false } = {}) {
+  const customInput = $("#productSubcategoryCustom");
+  if (!customInput) return;
+  customInput.classList.toggle("hidden", !visible);
+  customInput.disabled = !visible;
+  customInput.required = visible;
+  if (!visible && clear) customInput.value = "";
+  if (visible && focus) customInput.focus();
+}
+
+function updateSubcategoryField(preferredValue = null) {
   const category = $("#productCategory")?.value || "Vitrine";
-  const subcategoryInput = $("#productSubcategory");
-  const datalist = $("#productSubcategoryOptions");
+  const subcategorySelect = $("#productSubcategory");
   const subcategoryField = $("#productSubcategoryField");
   const showcaseInput = $("#productShowcase");
-  if (!subcategoryInput || !datalist) return;
+  if (!subcategorySelect) return;
   const disabled = category === "Vitrine";
+  const subcategories = subcategoriesForCategory(category);
   subcategoryField?.classList.toggle("hidden", disabled);
-  subcategoryInput.disabled = disabled;
-  subcategoryInput.required = !disabled && subcategoriesForCategory(category).length > 0;
-  if (disabled) subcategoryInput.value = "";
+  subcategorySelect.disabled = disabled;
+  subcategorySelect.required = !disabled;
+  setCustomSubcategoryVisible(false, { clear: disabled });
+
+  if (disabled) {
+    subcategorySelect.innerHTML = "";
+    subcategorySelect.value = "";
+  } else {
+    const currentSelection = subcategories.includes(subcategorySelect.value) ? subcategorySelect.value : "";
+    const currentValue = preferredValue ?? (currentSelection || subcategories[0] || "");
+    const hasCurrentValue = subcategories.includes(currentValue);
+    subcategorySelect.innerHTML = [
+      ...subcategories.map((subcategory) => `<option value="${subcategory}">${subcategory}</option>`),
+      `<option value="__custom__">+ Nova subaba</option>`,
+    ].join("");
+
+    if (currentValue && !hasCurrentValue) {
+      subcategorySelect.value = "__custom__";
+      $("#productSubcategoryCustom").value = currentValue;
+      setCustomSubcategoryVisible(true);
+    } else if (subcategories.length) {
+      subcategorySelect.value = currentValue;
+    } else {
+      subcategorySelect.value = "__custom__";
+      setCustomSubcategoryVisible(true);
+    }
+  }
+
   if (showcaseInput) {
     showcaseInput.checked = disabled ? true : showcaseInput.checked;
     showcaseInput.disabled = disabled;
   }
-  datalist.innerHTML = subcategoriesForCategory(category)
-    .map((subcategory) => `<option value="${subcategory}"></option>`)
-    .join("");
 }
 
 function productFromForm() {
   const name = $("#productName").value.trim();
   const existingId = $("#productId").value.trim();
   const id = existingId || name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const category = $("#productCategory").value;
+  const selectedSubcategory = $("#productSubcategory").value;
+  const customSubcategory = $("#productSubcategoryCustom")?.value.trim() || "";
+  const subcategory = category === "Vitrine" ? "" : selectedSubcategory === "__custom__" ? customSubcategory : selectedSubcategory;
   const tags = $("#productTags").value
     .split(",")
     .map((tag) => tag.trim())
@@ -1585,14 +1641,14 @@ function productFromForm() {
     image: $("#productImage").value.trim() || "assets/products/doces-finos.png",
     imageFit: $("#productImageFit").value || "cover",
     imagePosition: $("#productImagePosition").value || "center",
-    category: $("#productCategory").value,
-    subcategory: $("#productCategory").value === "Vitrine" ? "" : $("#productSubcategory").value.trim(),
+    category,
+    subcategory,
     price: Number($("#productPrice").value || 0),
     short: $("#productShort").value.trim(),
     description: $("#productDescription").value.trim(),
     minimum: Math.max(1, Number($("#productMinimum").value || 1)),
     available: $("#productAvailable").checked,
-    showcase: $("#productCategory").value === "Vitrine" ? true : $("#productShowcase").checked,
+    showcase: category === "Vitrine" ? true : $("#productShowcase").checked,
     madeToOrder: $("#productMadeToOrder").checked,
     tags: tags.length ? tags : existingId ? ["Editado"] : ["Novo"],
   };
@@ -1853,6 +1909,14 @@ function renderStoreSettings() {
   if (heroEyebrow) heroEyebrow.textContent = storeSettings.heroEyebrow || "Cardápio online";
   if (heroTitle) heroTitle.textContent = storeSettings.heroTitle || "Cacauê";
   if (heroText) heroText.textContent = storeSettings.heroText || "Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.";
+  const storyEyebrow = $("#storyEyebrow");
+  const storyTitle = $("#storyTitle");
+  const storyText = $("#storyText");
+  const storyImage = $("#storyImage");
+  if (storyEyebrow) storyEyebrow.textContent = storeSettings.storyEyebrow || "Nossa história";
+  if (storyTitle) storyTitle.textContent = storeSettings.storyTitle || "Uma confeitaria criada para transformar afeto em experiência.";
+  if (storyText) storyText.textContent = storeSettings.storyText || "";
+  if (storyImage) storyImage.src = storeSettings.storyImage || "assets/hero-cacaue.png";
 
   if ($("#storeSettingsForm")) {
     $("#storeWhatsapp").value = storeSettings.whatsapp;
@@ -1866,8 +1930,13 @@ function renderStoreSettings() {
     $("#storeHeroText").value = storeSettings.heroText || "";
     $("#storeHeroImage").value = storeSettings.heroImage || "assets/hero-cacaue.png";
     $("#storeLogoImage").value = storeSettings.logoImage || "assets/logo-cacaue-app.jpg";
+    $("#storeStoryEyebrow").value = storeSettings.storyEyebrow || "";
+    $("#storeStoryTitle").value = storeSettings.storyTitle || "";
+    $("#storeStoryText").value = storeSettings.storyText || "";
+    $("#storeStoryImage").value = storeSettings.storyImage || "assets/hero-cacaue.png";
     updateStoreHeroPreview(storeSettings.heroImage || "assets/hero-cacaue.png");
     updateStoreLogoPreview(storeSettings.logoImage || "assets/logo-cacaue-app.jpg");
+    updateStoreStoryPreview(storeSettings.storyImage || "assets/hero-cacaue.png");
   }
 
   if ($("#storeSettingsPreview")) {
@@ -1878,6 +1947,7 @@ function renderStoreSettings() {
       ["Funcionamento", `${storeSettings.weekHours} / ${storeSettings.sundayHours}`],
       ["Pedidos", storeSettings.orderRule],
       ["Capa", storeSettings.heroTitle || "Cacauê"],
+      ["História", storeSettings.storyTitle || "Configurada"],
       ["Logo", storeSettings.logoImage ? "Configurada" : "Padrão"],
     ]
       .map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`)
@@ -2416,7 +2486,11 @@ function bindEvents() {
     await saveProductFromForm();
   });
   $("#cancelProductEdit").addEventListener("click", resetProductForm);
-  $("#productCategory").addEventListener("change", updateSubcategoryField);
+  $("#productCategory").addEventListener("change", () => updateSubcategoryField());
+  $("#productSubcategory").addEventListener("change", () => {
+    const isCustom = $("#productSubcategory").value === "__custom__";
+    setCustomSubcategoryVisible(isCustom, { clear: !isCustom, focus: isCustom });
+  });
   $("#productImage").addEventListener("input", (event) => {
     updateProductImagePreview(event.target.value);
   });
@@ -2548,6 +2622,13 @@ function bindEvents() {
     const [file] = event.target.files;
     await applyImageFileToInput(file, "#storeLogoImage", updateStoreLogoPreview, { maxWidth: 1200, maxHeight: 500 });
   });
+  $("#storeStoryImage").addEventListener("input", (event) => {
+    updateStoreStoryPreview(event.target.value);
+  });
+  $("#storeStoryImageFile").addEventListener("change", async (event) => {
+    const [file] = event.target.files;
+    await applyImageFileToInput(file, "#storeStoryImage", updateStoreStoryPreview, { maxWidth: 1200, maxHeight: 1200 });
+  });
   $("#storeSettingsForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -2564,6 +2645,12 @@ function bindEvents() {
       heroText: formData.get("heroText") || "Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.",
       heroImage: formData.get("heroImage") || "assets/hero-cacaue.png",
       logoImage: formData.get("logoImage") || "assets/logo-cacaue-app.jpg",
+      storyEyebrow: formData.get("storyEyebrow") || "Nossa história",
+      storyTitle: formData.get("storyTitle") || "Uma confeitaria criada para transformar afeto em experiência.",
+      storyText:
+        formData.get("storyText") ||
+        "A Cacauê nasceu do cuidado com os detalhes: receitas autorais, ingredientes selecionados e uma apresentação feita para que cada pedido tenha sabor de momento especial.",
+      storyImage: formData.get("storyImage") || "assets/hero-cacaue.png",
     });
     setAdminSyncMessage("Salvando configurações da loja no servidor...", "info");
     const saved = await saveStoreSettingsToSupabase();

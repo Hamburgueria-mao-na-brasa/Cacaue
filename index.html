@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=30" />
+    <link rel="stylesheet" href="styles.css?v=32" />
   </head>
   <body>
     <header class="topbar">
@@ -23,6 +23,7 @@
         <img class="brand-logo-img" src="assets/logo-cacaue-app.jpg" alt="Cacauê" />
       </a>
       <nav class="desktop-nav" aria-label="Navegação principal">
+        <a href="#historia">História</a>
         <a href="#cardapio">Cardápio</a>
         <a href="#contato">Contato</a>
         <button class="admin-open-button" type="button" data-open-admin>Admin</button>
@@ -48,6 +49,17 @@
             <span>Domingo: 09h às 15h</span>
             <span>Retirada ou entrega</span>
           </div>
+        </div>
+      </section>
+
+      <section class="section story-section" id="historia">
+        <div class="story-copy">
+          <span class="eyebrow" id="storyEyebrow">Nossa história</span>
+          <h2 id="storyTitle">Uma confeitaria criada para transformar afeto em experiência.</h2>
+          <p id="storyText">A Cacauê nasceu do cuidado com os detalhes: receitas autorais, ingredientes selecionados e uma apresentação feita para que cada pedido tenha sabor de momento especial.</p>
+        </div>
+        <div class="story-media">
+          <img id="storyImage" src="assets/hero-cacaue.png" alt="História da Cacauê" />
         </div>
       </section>
 
@@ -211,10 +223,10 @@
                 <small>Escolha a aba onde esse produto vai aparecer no site.</small>
                 <select id="productCategory" required></select>
                 <div class="admin-subcategory-field" id="productSubcategoryField">
-                  <label for="productSubcategory">Subtítulo / subcategoria</label>
-                  <small>Use um subtítulo existente ou digite um novo. Assim você cria novas subabas sem mexer no código.</small>
-                  <input id="productSubcategory" list="productSubcategoryOptions" placeholder="Exemplo: Bolos caseiros" />
-                  <datalist id="productSubcategoryOptions"></datalist>
+                  <label for="productSubcategory">Subaba / subcategoria</label>
+                  <small>Escolha a subaba correta. Use "Nova subaba" apenas quando precisar criar outra opção.</small>
+                  <select id="productSubcategory"></select>
+                  <input id="productSubcategoryCustom" class="hidden" placeholder="Digite o nome da nova subaba" />
                 </div>
                 <label for="productPrice">Preço</label>
                 <small>Use 0 quando o valor precisar aparecer como "Consultar".</small>
@@ -359,6 +371,17 @@
                 <div class="admin-image-preview logo-preview" id="storeLogoImagePreview">
                   <img src="assets/logo-cacaue-app.jpg" alt="Prévia da logo" />
                   <span>Prévia da logo</span>
+                </div>
+                <label for="storeStoryTitle">História da Cacauê</label>
+                <small>Esse texto aparece na página inicial para contar um pouco da marca.</small>
+                <input id="storeStoryEyebrow" name="storyEyebrow" placeholder="Nossa história" />
+                <input id="storeStoryTitle" name="storyTitle" placeholder="Título da história" />
+                <textarea id="storeStoryText" name="storyText" placeholder="Conte aqui a história da Cacauê"></textarea>
+                <input id="storeStoryImage" name="storyImage" placeholder="assets/hero-cacaue.png" />
+                <input id="storeStoryImageFile" type="file" accept="image/*" />
+                <div class="admin-image-preview" id="storeStoryImagePreview">
+                  <img src="assets/hero-cacaue.png" alt="Prévia da história" />
+                  <span>Prévia da história</span>
                 </div>
                 <button class="primary-button compact" type="submit">Salvar dados da loja</button>
               </form>

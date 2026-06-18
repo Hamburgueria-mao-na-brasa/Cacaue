@@ -166,7 +166,11 @@ values (
     "heroTitle": "Cacauê",
     "heroText": "Bolos, doces, sobremesas, kits e presenteáveis feitos com carinho em Mineiros - GO.",
     "heroImage": "assets/hero-cacaue.png",
-    "logoImage": "assets/logo-cacaue-app.jpg"
+    "logoImage": "assets/logo-cacaue-app.jpg",
+    "storyEyebrow": "Nossa história",
+    "storyTitle": "Uma confeitaria criada para transformar afeto em experiência.",
+    "storyText": "A Cacauê nasceu do cuidado com os detalhes: receitas autorais, ingredientes selecionados e uma apresentação feita para que cada pedido tenha sabor de momento especial.",
+    "storyImage": "assets/hero-cacaue.png"
   }'::jsonb
 )
 on conflict (id) do nothing;
