@@ -2601,7 +2601,7 @@ textarea {
   }
 
   .story-media {
-    order: -1;
+    order: 0;
     border-radius: 18px;
     box-shadow: 0 14px 34px rgba(50, 31, 24, 0.08);
   }
