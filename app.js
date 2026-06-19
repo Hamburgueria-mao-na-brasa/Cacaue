@@ -1138,8 +1138,8 @@ function orderFromDb(row) {
 async function loadRemoteData() {
   try {
     const [remoteProducts, remoteCampaigns, remoteSettings] = await Promise.all([
-      supabaseJson("/products?select=*&order=sort_order.asc"),
-      supabaseJson("/campaigns?select=*&order=sort_order.asc"),
+      supabaseJson("/products?select=*&order=sort_order.asc&limit=500"),
+      supabaseJson("/campaigns?select=*&order=sort_order.asc&limit=200"),
       supabaseJson("/store_settings?select=*&id=eq.main&limit=1"),
     ]);
 
