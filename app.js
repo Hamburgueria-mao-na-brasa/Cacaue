@@ -2189,6 +2189,7 @@ function openProduct(id) {
 
   $("#productModal").classList.add("open");
   $("#productModal").setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
 
   $("#productDetail").querySelectorAll("[data-qty]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -2207,6 +2208,7 @@ function openProduct(id) {
 function closeProduct() {
   $("#productModal").classList.remove("open");
   $("#productModal").setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
 }
 
 function toggleFavorite(id) {
@@ -2500,6 +2502,9 @@ function bindEvents() {
   });
 
   $("[data-close-modal]").addEventListener("click", closeProduct);
+  $("#productModal").addEventListener("click", (event) => {
+    if (event.target === $("#productModal")) closeProduct();
+  });
   $("#bagButton").addEventListener("click", openBag);
   $("#closeBag").addEventListener("click", closeBag);
   $("#checkoutButton").addEventListener("click", checkout);
@@ -2528,6 +2533,10 @@ function bindEvents() {
   });
   $("#closeAdminButton").addEventListener("click", closeAdminPanel);
   document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && $("#productModal").classList.contains("open")) {
+      closeProduct();
+      return;
+    }
     if (event.key === "Escape" && !$("#admin").classList.contains("hidden")) {
       closeAdminPanel();
     }

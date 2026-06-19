@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=46" />
+    <link rel="stylesheet" href="styles.css?v=48" />
   </head>
   <body>
     <header class="topbar">
@@ -238,9 +238,11 @@
                 <small>Escolha uma foto do telefone ou cole o endereço da imagem.</small>
                 <input id="productImage" placeholder="Imagem" value="assets/products/doces-finos.png" />
                 <input id="productImageFile" type="file" accept="image/*" />
-                <div class="admin-image-preview" id="productImagePreview">
-                  <img src="assets/products/doces-finos.png" alt="Prévia da foto do produto" />
-                  <span>Prévia da foto</span>
+                <div class="admin-image-preview product-frame-preview" id="productImagePreview">
+                  <div class="admin-crop-frame" aria-label="Enquadramento 3 por 4 do produto">
+                    <img src="assets/products/doces-finos.png" alt="Prévia da foto do produto" />
+                  </div>
+                  <span>Enquadramento 3x4 do card</span>
                 </div>
                 <label for="productImageFit">Como a foto aparece</label>
                 <small>Use preencher para vitrine 3x4. Use foto inteira quando não quiser cortar nada.</small>
@@ -256,6 +258,14 @@
                   <option value="bottom">Baixo</option>
                   <option value="left">Esquerda</option>
                   <option value="right">Direita</option>
+                  <option value="top center">Topo centro</option>
+                  <option value="bottom center">Baixo centro</option>
+                  <option value="center left">Centro esquerda</option>
+                  <option value="center right">Centro direita</option>
+                  <option value="top left">Topo esquerda</option>
+                  <option value="top right">Topo direita</option>
+                  <option value="bottom left">Baixo esquerda</option>
+                  <option value="bottom right">Baixo direita</option>
                 </select>
                 <label for="productShort">Descrição curta</label>
                 <small>Aparece no card do produto.</small>
