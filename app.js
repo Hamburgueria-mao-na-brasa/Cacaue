@@ -1874,6 +1874,8 @@ function renderCare() {
 
 function renderCampaigns() {
   const active = campaigns.filter(isCampaignActive);
+  const section = $("#eventos");
+  if (section) section.hidden = active.length === 0;
   $("#campaignGrid").innerHTML = active
     .map(
       (campaign) => `
