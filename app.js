@@ -890,6 +890,38 @@ function setAdminSyncMessage(message, type = "info") {
   target.dataset.type = type;
 }
 
+function slugify(value, fallback = "produto") {
+  const slug = String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  return slug || fallback;
+}
+
+function uniqueProductId(name) {
+  const base = slugify(name);
+  const existingIds = new Set(products.map((product) => product.id));
+  if (!existingIds.has(base)) return base;
+  let counter = 2;
+  while (existingIds.has(`${base}-${counter}`)) {
+    counter += 1;
+  }
+  return `${base}-${counter}`;
+}
+
+function mergeRemoteProducts(remoteProducts) {
+  const remote = remoteProducts.map(productFromDb);
+  const remoteIds = new Set(remote.map((product) => product.id));
+  const now = Date.now();
+  const freshLocalProducts = products.filter((product) => {
+    const touchedAt = Number(product._localTouchedAt || 0);
+    return !remoteIds.has(product.id) && (product._pendingServerSave || (touchedAt && now - touchedAt < 120000));
+  });
+  return [...remote, ...freshLocalProducts];
+}
+
 function normalizeProductCategory(product = {}) {
   const originalCategory = product.category || "Vitrine";
   const tags = product.tags || [];
@@ -1112,7 +1144,7 @@ async function loadRemoteData() {
     ]);
 
     if (Array.isArray(remoteProducts)) {
-      products = remoteProducts.map(productFromDb);
+      products = mergeRemoteProducts(remoteProducts);
       localStorage.setItem("cacaue:products", JSON.stringify(products));
     }
     if (Array.isArray(remoteCampaigns)) {
@@ -1196,7 +1228,12 @@ async function saveProductToSupabase(product) {
     product.image = savedImage;
     const currentIndex = products.findIndex((entry) => entry.id === product.id);
     if (currentIndex >= 0) {
-      products[currentIndex] = { ...products[currentIndex], image: savedImage };
+      products[currentIndex] = {
+        ...products[currentIndex],
+        image: savedImage,
+        _pendingServerSave: false,
+        _localTouchedAt: Date.now(),
+      };
     }
     const [savedRow] = await supabaseJson("/products?on_conflict=id&select=id,name,image,updated_at", {
       method: "POST",
@@ -1729,7 +1766,7 @@ function updateSubcategoryField(preferredValue = null) {
 function productFromForm() {
   const name = $("#productName").value.trim();
   const existingId = $("#productId").value.trim();
-  const id = existingId || name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const id = existingId || uniqueProductId(name);
   const category = $("#productCategory").value;
   const selectedSubcategory = $("#productSubcategory").value;
   const customSubcategory = $("#productSubcategoryCustom")?.value.trim() || "";
@@ -1761,6 +1798,8 @@ async function saveProductFromForm() {
   const product = productFromForm();
   const previousProducts = products.map((entry) => ({ ...entry, tags: [...(entry.tags || [])] }));
   const index = products.findIndex((entry) => entry.id === product.id);
+  product._pendingServerSave = true;
+  product._localTouchedAt = Date.now();
   if (index >= 0) {
     products[index] = { ...products[index], ...product };
   } else {
