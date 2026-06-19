@@ -772,6 +772,7 @@ let storeSettings = JSON.parse(localStorage.getItem("cacaue:storeSettings") || "
   city: "Mineiros - GO",
   weekHours: "Seg a sáb 08h às 18h",
   sundayHours: "Domingo 09h às 15h",
+  deliveryFee: 12,
   orderRule: "50% na confirmação e restante na retirada",
   heroEyebrow: "Cardápio online",
   heroTitle: "Bem-vindo à Cacauê",
@@ -804,6 +805,7 @@ function normalizeStoreSettings(settings) {
     normalized.storyText ||
     "A Cacauê nasceu do cuidado com os detalhes: receitas autorais, ingredientes selecionados e uma apresentação feita para que cada pedido tenha sabor de momento especial.";
   normalized.storyImage = normalized.storyImage || normalized.heroImage || "assets/hero-cacaue.png";
+  normalized.deliveryFee = Math.max(0, Number(String(normalized.deliveryFee ?? 12).replace(",", ".")) || 0);
   if (normalized.heroText) {
     normalized.heroText = normalized.heroText
       .replace(/Cacaue/g, "Cacauê")
@@ -1383,7 +1385,11 @@ async function saveStoreSettingsToSupabase() {
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
       body: JSON.stringify([{ id: "main", settings: storeSettings, updated_at: new Date().toISOString() }]),
     });
-    await confirmSupabaseRow("/store_settings?select=id&id=eq.main&limit=1", "Configuração da loja");
+    const savedSettings = await confirmSupabaseRow("/store_settings?select=id,settings&id=eq.main&limit=1", "Configuração da loja");
+    const savedDeliveryFee = Number(savedSettings.settings?.deliveryFee ?? 0);
+    if (savedDeliveryFee !== Number(storeSettings.deliveryFee || 0)) {
+      throw new Error("A taxa de entrega não voltou igual na confirmação do servidor.");
+    }
     persistStoreSettings();
     setAdminSyncMessage("Alterações salvas no servidor com sucesso.", "success");
     renderStoreSettings();
@@ -2102,6 +2108,7 @@ function renderStoreSettings() {
     $("#storeCity").value = storeSettings.city;
     $("#storeWeekHours").value = storeSettings.weekHours;
     $("#storeSundayHours").value = storeSettings.sundayHours;
+    $("#storeDeliveryFee").value = Number(storeSettings.deliveryFee || 0).toFixed(2);
     $("#storeOrderRule").value = storeSettings.orderRule;
     $("#storeHeroEyebrow").value = storeSettings.heroEyebrow || "";
     $("#storeHeroTitle").value = storeSettings.heroTitle || "";
@@ -2123,6 +2130,7 @@ function renderStoreSettings() {
       ["Instagram", storeSettings.instagram],
       ["Cidade", storeSettings.city],
       ["Funcionamento", `${storeSettings.weekHours} / ${storeSettings.sundayHours}`],
+      ["Taxa de entrega", money.format(Number(storeSettings.deliveryFee || 0))],
       ["Pedidos", storeSettings.orderRule],
       ["Capa", storeSettings.heroTitle || "Bem-vindo à Cacauê"],
       ["História", storeSettings.storyTitle || "Configurada"],
@@ -2255,6 +2263,10 @@ function bagSubtotal() {
   }, 0);
 }
 
+function configuredDeliveryFee(subtotal = bagSubtotal()) {
+  return fulfillmentMode === "entrega" && subtotal > 0 ? Math.max(0, Number(storeSettings.deliveryFee || 0)) : 0;
+}
+
 function updateBagSummary(lastProductName = "") {
   const count = bag.reduce((sum, item) => sum + item.quantity, 0);
   if (!$("#bagSummary")) return;
@@ -2376,7 +2388,7 @@ function renderBag() {
     const product = products.find((entry) => entry.id === item.id);
     return sum + product.price * item.quantity;
   }, 0);
-  const delivery = fulfillmentMode === "entrega" && subtotal > 0 ? 12 : 0;
+  const delivery = configuredDeliveryFee(subtotal);
   $("#totals").innerHTML = `
     <div><span>Subtotal</span><strong>${money.format(subtotal)}</strong></div>
     <div><span>Taxa de entrega</span><strong>${money.format(delivery)}</strong></div>
@@ -2422,7 +2434,7 @@ async function checkout() {
     })
     .join("\n");
   const subtotal = bagSubtotal();
-  const delivery = fulfillmentMode === "entrega" && subtotal > 0 ? 12 : 0;
+  const delivery = configuredDeliveryFee(subtotal);
   const total = subtotal + delivery;
   const fulfillmentText =
     fulfillmentMode === "entrega"
@@ -2826,6 +2838,7 @@ function bindEvents() {
       city: formData.get("city"),
       weekHours: formData.get("weekHours"),
       sundayHours: formData.get("sundayHours"),
+      deliveryFee: Number(String(formData.get("deliveryFee") || "0").replace(",", ".")) || 0,
       orderRule: formData.get("orderRule"),
       heroEyebrow: formData.get("heroEyebrow") || "Cardápio online",
       heroTitle: formData.get("heroTitle") || "Bem-vindo à Cacauê",
@@ -2844,6 +2857,7 @@ function bindEvents() {
     if (saved) {
       persistStoreSettings();
       renderStoreSettings();
+      renderBag();
       renderAdmin();
       return;
     }

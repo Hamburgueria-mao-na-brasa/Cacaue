@@ -316,7 +316,7 @@
                 <small>Escolha uma imagem do telefone ou cole o caminho da imagem.</small>
                 <input id="campaignImage" name="image" placeholder="assets/hero-cacaue.png" value="assets/hero-cacaue.png" />
                 <input id="campaignImageFile" type="file" accept="image/*" />
-                <div class="admin-image-preview" id="campaignImagePreview">
+                <div class="admin-image-preview campaign-frame-preview" id="campaignImagePreview">
                   <img src="assets/hero-cacaue.png" alt="Prévia da campanha" />
                   <span>Prévia da campanha</span>
                 </div>
@@ -360,6 +360,9 @@
                 <input id="storeWeekHours" name="weekHours" placeholder="Seg a sáb 08h às 18h" required />
                 <label for="storeSundayHours">Horário de domingo</label>
                 <input id="storeSundayHours" name="sundayHours" placeholder="Domingo 09h às 15h" required />
+                <label for="storeDeliveryFee">Taxa de entrega</label>
+                <small>Valor cobrado quando o cliente escolher entrega. Use 0 para entrega grátis ou combinar no WhatsApp.</small>
+                <input id="storeDeliveryFee" name="deliveryFee" type="number" min="0" step="0.01" placeholder="12,00" required />
                 <label for="storeOrderRule">Regra de pedidos</label>
                 <small>Exemplo: 50% na confirmação e restante na retirada.</small>
                 <textarea id="storeOrderRule" name="orderRule" placeholder="Regra de pagamento ou retirada" required></textarea>

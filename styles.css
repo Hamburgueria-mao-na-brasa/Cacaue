@@ -1546,6 +1546,17 @@ body.admin-panel-open {
   grid-template-columns: auto minmax(0, 1fr);
 }
 
+.campaign-frame-preview {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.campaign-frame-preview img {
+  width: min(126px, 34vw);
+  aspect-ratio: 9 / 16;
+  height: auto;
+  object-fit: cover;
+}
+
 .admin-crop-frame {
   position: relative;
   width: min(140px, 34vw);
@@ -2928,8 +2939,6 @@ body.modal-open {
   .menu-card-media img {
     width: 100%;
     height: 100%;
-    object-fit: cover !important;
-    object-position: center !important;
   }
 
   .menu-card p,
@@ -3064,8 +3073,8 @@ body.modal-open {
   }
 
   .fine-sweet-card .menu-card-media img {
-    object-fit: cover !important;
-    object-position: center !important;
+    width: 100%;
+    height: 100%;
   }
 
   .fine-sweet-card .menu-card-title {
