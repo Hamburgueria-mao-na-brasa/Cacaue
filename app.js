@@ -946,6 +946,7 @@ async function supabaseJson(path, options = {}) {
     throw new Error("Sessão do admin expirada. Entre novamente para salvar no servidor.");
   }
   const request = () => fetch(`${SUPABASE_REST_URL}${path}`, {
+    cache: "no-store",
     ...options,
     headers: {
       ...supabaseHeaders(options.useSession),
@@ -1040,6 +1041,7 @@ function productToDb(product, index = 0) {
     made_to_order: product.madeToOrder,
     tags: product.tags || [],
     sort_order: index,
+    updated_at: new Date().toISOString(),
   };
 }
 
@@ -1072,6 +1074,7 @@ function campaignToDb(campaign, index = 0) {
     starts: campaign.starts,
     ends: campaign.ends,
     sort_order: index,
+    updated_at: new Date().toISOString(),
   };
 }
 
@@ -1182,6 +1185,39 @@ async function saveProductsToSupabase() {
   }
 }
 
+async function saveProductToSupabase(product) {
+  if (!(await ensureAdminSession())) {
+    setAdminSyncMessage("Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase.", "error");
+    return false;
+  }
+  try {
+    const index = Math.max(0, products.findIndex((entry) => entry.id === product.id));
+    const savedImage = await uploadDataUrlToSupabase(product.image, "products", product.id);
+    product.image = savedImage;
+    const currentIndex = products.findIndex((entry) => entry.id === product.id);
+    if (currentIndex >= 0) {
+      products[currentIndex] = { ...products[currentIndex], image: savedImage };
+    }
+    const [savedRow] = await supabaseJson("/products?on_conflict=id&select=id,name,image,updated_at", {
+      method: "POST",
+      useSession: true,
+      headers: { Prefer: "resolution=merge-duplicates,return=representation" },
+      body: JSON.stringify([productToDb(product, index)]),
+    });
+    await confirmSupabaseRow(`/products?select=id,name,image,updated_at&id=eq.${encodeURIComponent(product.id)}&limit=1`, "Produto");
+    persistProducts();
+    const savedAt = savedRow?.updated_at ? new Date(savedRow.updated_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    setAdminSyncMessage(`Alterações salvas no servidor com sucesso. Produto: ${product.name}. Horário: ${savedAt}.`, "success");
+    renderProducts();
+    renderAdmin();
+    return true;
+  } catch (error) {
+    console.warn("Não foi possível salvar produto no Supabase.", error);
+    setAdminSyncMessage(`Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
+    return false;
+  }
+}
+
 async function deleteProductFromSupabase(id) {
   if (!(await ensureAdminSession())) {
     setAdminSyncMessage("Sessão expirada. Entre novamente no admin para excluir no servidor.", "error");
@@ -1236,6 +1272,39 @@ async function saveCampaignsToSupabase() {
   }
 }
 
+async function saveCampaignToSupabase(campaign) {
+  if (!(await ensureAdminSession())) {
+    setAdminSyncMessage("Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase.", "error");
+    return false;
+  }
+  try {
+    const index = Math.max(0, campaigns.findIndex((entry) => entry.id === campaign.id));
+    const savedImage = await uploadDataUrlToSupabase(campaign.image, "campaigns", campaign.id);
+    campaign.image = savedImage;
+    const currentIndex = campaigns.findIndex((entry) => entry.id === campaign.id);
+    if (currentIndex >= 0) {
+      campaigns[currentIndex] = { ...campaigns[currentIndex], image: savedImage };
+    }
+    const [savedRow] = await supabaseJson("/campaigns?on_conflict=id&select=id,title,image,updated_at", {
+      method: "POST",
+      useSession: true,
+      headers: { Prefer: "resolution=merge-duplicates,return=representation" },
+      body: JSON.stringify([campaignToDb(campaign, index)]),
+    });
+    await confirmSupabaseRow(`/campaigns?select=id,title,image,updated_at&id=eq.${encodeURIComponent(campaign.id)}&limit=1`, "Campanha");
+    persistCampaigns();
+    const savedAt = savedRow?.updated_at ? new Date(savedRow.updated_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    setAdminSyncMessage(`Alterações salvas no servidor com sucesso. Campanha: ${campaign.title}. Horário: ${savedAt}.`, "success");
+    renderCampaigns();
+    renderAdmin();
+    return true;
+  } catch (error) {
+    console.warn("Não foi possível salvar campanha no Supabase.", error);
+    setAdminSyncMessage(`Não foi possível salvar no servidor. Verifique login, conexão ou permissões do Supabase. Detalhe: ${error.message}`, "error");
+    return false;
+  }
+}
+
 async function deleteCampaignFromSupabase(id) {
   if (!(await ensureAdminSession())) {
     setAdminSyncMessage("Sessão expirada. Entre novamente no admin para excluir no servidor.", "error");
@@ -1275,7 +1344,7 @@ async function saveStoreSettingsToSupabase() {
       method: "POST",
       useSession: true,
       headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
-      body: JSON.stringify([{ id: "main", settings: storeSettings }]),
+      body: JSON.stringify([{ id: "main", settings: storeSettings, updated_at: new Date().toISOString() }]),
     });
     await confirmSupabaseRow("/store_settings?select=id&id=eq.main&limit=1", "Configuração da loja");
     persistStoreSettings();
@@ -1698,7 +1767,7 @@ async function saveProductFromForm() {
     products = [product, ...products];
   }
   setAdminSyncMessage("Salvando produto no servidor...", "info");
-  const saved = await saveProductsToSupabase();
+  const saved = await saveProductToSupabase(product);
   if (saved) {
     persistProducts();
     resetProductForm();
@@ -2665,7 +2734,7 @@ function bindEvents() {
       campaigns.push(campaign);
     }
     setAdminSyncMessage("Salvando campanha no servidor...", "info");
-    const saved = await saveCampaignsToSupabase();
+    const saved = await saveCampaignToSupabase(campaign);
     if (saved) {
       persistCampaigns();
       resetCampaignForm();
